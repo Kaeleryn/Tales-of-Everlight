@@ -1,0 +1,42 @@
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\Tales of Everlight.exe
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\Tales of Everlight.deps.json
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\Tales of Everlight.runtimeconfig.json
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\Tales of Everlight.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\Tales of Everlight.pdb
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\Microsoft.CodeAnalysis.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\Microsoft.CodeAnalysis.CSharp.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\Microsoft.CodeAnalysis.VisualBasic.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\MonoGame.Framework.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\SharpDX.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\SharpDX.Direct2D1.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\SharpDX.Direct3D11.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\SharpDX.Direct3D9.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\SharpDX.DXGI.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\SharpDX.Mathematics.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\SharpDX.MediaFoundation.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\SharpDX.XAudio2.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\SharpDX.XInput.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\runtimes\debian-x64\native\libuv.so
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\runtimes\fedora-x64\native\libuv.so
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\runtimes\opensuse-x64\native\libuv.so
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\runtimes\osx\native\libuv.dylib
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\runtimes\rhel-x64\native\libuv.so
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\runtimes\win7-arm\native\libuv.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\runtimes\win7-x64\native\libuv.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\runtimes\win7-x86\native\libuv.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\obj\Debug\net6.0-windows\Tales of Everlight.csproj.AssemblyReference.cache
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\obj\Debug\net6.0-windows\Tales of Everlight.GeneratedMSBuildEditorConfig.editorconfig
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\obj\Debug\net6.0-windows\Tales of Everlight.AssemblyInfoInputs.cache
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\obj\Debug\net6.0-windows\Tales of Everlight.AssemblyInfo.cs
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\obj\Debug\net6.0-windows\Tales of Everlight.csproj.CoreCompileInputs.cache
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\obj\Debug\net6.0-windows\Tales of.5C2A26EB.Up2Date
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\obj\Debug\net6.0-windows\Tales of Everlight.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\obj\Debug\net6.0-windows\refint\Tales of Everlight.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\obj\Debug\net6.0-windows\Tales of Everlight.pdb
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\obj\Debug\net6.0-windows\Tales of Everlight.genruntimeconfig.cache
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\obj\Debug\net6.0-windows\ref\Tales of Everlight.dll
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\Content\animatedSprite.xnb
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\Content\enemy1.xnb
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\Content\hud+.xnb
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\Content\tileset_collisions.xnb
+E:\itpohuiiverse\ToE\Tales of Everlight\Tales of Everlight\bin\Debug\net6.0-windows\Content\tileset_ground.xnb

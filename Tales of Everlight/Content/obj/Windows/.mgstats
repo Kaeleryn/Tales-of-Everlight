@@ -1,0 +1,6 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"E:/itpohuiiverse/ToE/Tales of Everlight/Tales of Everlight/Content/animatedSprite.png","E:/itpohuiiverse/ToE/Tales of Everlight/Tales of Everlight/Content/bin/Windows/animatedSprite.xnb","TextureProcessor","Texture2DContent",61055,682837,0,145638
+"E:/itpohuiiverse/ToE/Tales of Everlight/Tales of Everlight/Content/enemy1.png","E:/itpohuiiverse/ToE/Tales of Everlight/Tales of Everlight/Content/bin/Windows/enemy1.xnb","TextureProcessor","Texture2DContent",7408,200085,0,0087523
+"E:/itpohuiiverse/ToE/Tales of Everlight/Tales of Everlight/Content/hud+.png","E:/itpohuiiverse/ToE/Tales of Everlight/Tales of Everlight/Content/bin/Windows/hud+.xnb","TextureProcessor","Texture2DContent",258482,2119765,0,0555198
+"E:/itpohuiiverse/ToE/Tales of Everlight/Tales of Everlight/Content/tileset_collisions.png","E:/itpohuiiverse/ToE/Tales of Everlight/Tales of Everlight/Content/bin/Windows/tileset_collisions.xnb","TextureProcessor","Texture2DContent",2383,49237,0,0064799
+"E:/itpohuiiverse/ToE/Tales of Everlight/Tales of Everlight/Content/tileset_ground.png","E:/itpohuiiverse/ToE/Tales of Everlight/Tales of Everlight/Content/bin/Windows/tileset_ground.xnb","TextureProcessor","Texture2DContent",742426,4194389,0,1118664
