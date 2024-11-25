@@ -28,4 +28,4 @@ public class Camera
                Matrix.CreateTranslation(new Vector3(Viewport.Width * 0.5f, Viewport.Height * 0.5f, 0));
     }
     
-}
+} // Camera
