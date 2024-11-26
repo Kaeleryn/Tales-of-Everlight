@@ -1,330 +1,271 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Net.Mail;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Graphics.PackedVector;
 using Microsoft.Xna.Framework.Input;
 
-namespace Tales_of_Everlight;
-
-public class Main : Game
+namespace Tales_of_Everlight
 {
-    private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
-    private Camera _camera;
-    private Level1 _level1;
-
-    private bool isHudVisible = false;
-
-    private Texture2D mainHeroSprite;
-    private Texture2D squareSprite;
-    private Texture2D rectangleTexture;
-    private Texture2D hudTexture;
-
-    private Color backgroundColor = new Color(145, 221, 207, 255);
-
-    private MainHero mainHero = new MainHero();
-    private Square square = new Square();
-
-    private KeyboardState keyState;
-
-    private const int TILESIZE = 64;
-
-
-    private List<Rectangle> intersections;
-
-    private Dictionary<Vector2, int> LoadMap(string filepath)
+    public class Main : Game
     {
-        Dictionary<Vector2, int> result = new();
+        // Graphics device manager
+        private GraphicsDeviceManager _graphics;
 
-        StreamReader reader = new(filepath);
-        int y = 0;
-        string line;
-        while ((line = reader.ReadLine()) != null)
+        // Sprite batch for drawing
+        private SpriteBatch _spriteBatch;
+
+        // Camera for the game
+        private Camera _camera;
+
+        // Level 1 of the game
+        private Level1 _level1;
+
+        // Flags for menu and HUD visibility
+        private bool _isMainMenuVisible;
+        private bool _isHudVisible;
+
+        // Textures for the main hero, square, rectangle, and HUD
+        private Texture2D _mainHeroSprite;
+        private Texture2D _squareSprite;
+        private Texture2D _rectangleTexture;
+
+        private Texture2D _hudTexture;
+
+        // Font for the HUD
+        private SpriteFont _hudFont;
+
+        // Background color
+        private Color _backgroundColor = new(145, 221, 207, 255);
+
+        // Main hero and square objects
+        private MainHero _mainHero = new();
+        private Square _square = new();
+
+        // Keyboard states
+        private KeyboardState _keyState;
+        private KeyboardState _previousKeyState;
+
+        // Tile size constant
+        private const int Tilesize = 64;
+
+        // List of intersections and dictionaries for foreground and collisions
+        private List<Rectangle> intersections;
+        private Dictionary<Vector2, int> foreground;
+
+        private Dictionary<Vector2, int> collisions;
+
+        // Texture for hitboxes
+        private Texture2D _hitboxTexture;
+
+        // Constructor
+        public Main()
         {
-            string[] items = line.Split(',');
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = true;
+            _graphics.PreferredBackBufferHeight = 1080;
+            _graphics.PreferredBackBufferWidth = 1920;
 
-            for (int x = 0; x < items.Length; x++)
+            _camera = new Camera(new Rectangle(0, 0, _graphics.PreferredBackBufferWidth,
+                _graphics.PreferredBackBufferHeight));
+            intersections = new List<Rectangle>();
+            _level1 = new Level1();
+        }
+
+        // Initializes the game
+        protected override void Initialize()
+        {
+            base.Initialize();
+            _previousKeyState = Keyboard.GetState();
+            _graphics.IsFullScreen = true;
+            _graphics.ApplyChanges();
+
+            _mainHero.Position = new Vector2(100, 100);
+            _square.Position = new Vector2(1000, 100);
+        }
+
+        // Loads the game content
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            _mainHeroSprite = Content.Load<Texture2D>("animatedSprite");
+            _squareSprite = Content.Load<Texture2D>("enemy1");
+            _mainHero = new MainHero(_mainHeroSprite, new Vector2(500, 1000), 1, 6);
+            _square = new Square(_squareSprite, new Vector2(1000, 100), 5, 1);
+
+            _hudTexture = Content.Load<Texture2D>("hud+");
+            _hudFont = Content.Load<SpriteFont>("hudFont");
+
+            _rectangleTexture = new Texture2D(GraphicsDevice, 1, 1);
+            _rectangleTexture.SetData(new Color[] { new(255, 0, 0, 255) });
+
+            _hitboxTexture = new Texture2D(GraphicsDevice, 1, 1);
+            _hitboxTexture.SetData(new[] { Color.White });
+
+            _level1.Initialize(Content);
+        }
+
+        // Updates the game state
+        protected override void Update(GameTime gameTime)
+        {
+            HandleInput();
+
+            if (!_isMainMenuVisible)
             {
-                if (int.TryParse(items[x], out int value))
+                UpdateCameraPosition();
+                UpdateGameElements(gameTime);
+            }
+
+            base.Update(gameTime);
+        }
+
+        // Handles user input
+        private void HandleInput()
+        {
+            KeyboardState currentKeyState = Keyboard.GetState();
+
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+                Exit();
+
+            if (currentKeyState.IsKeyDown(Keys.I) && !_previousKeyState.IsKeyDown(Keys.I))
+            {
+                _isHudVisible = !_isHudVisible;
+            }
+
+            if (currentKeyState.IsKeyDown(Keys.Escape) && !_previousKeyState.IsKeyDown(Keys.Escape))
+            {
+                _isMainMenuVisible = !_isMainMenuVisible;
+            }
+
+            _previousKeyState = currentKeyState;
+        }
+
+        // Updates the camera position based on the main hero's position
+        private void UpdateCameraPosition()
+        {
+            Vector2 characterPosition = _mainHero.Position;
+
+            if (characterPosition.X >= (_graphics.PreferredBackBufferWidth / 2) && characterPosition.X <= 3000)
+            {
+                _camera.Position = new Vector2(characterPosition.X, _camera.Position.Y);
+            }
+        }
+
+        // Updates the game elements
+        private void UpdateGameElements(GameTime gameTime)
+        {
+            _mainHero.CollisionHandler(_level1.Collisions, Tilesize);
+            _mainHero.MovementHandler(gameTime);
+
+            _square.CollisionHandler(_level1.Collisions, Tilesize);
+            _square.MovementHandler();
+        }
+
+        // Draws the game elements
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(_backgroundColor);
+
+            if (_isMainMenuVisible)
+            {
+                DrawMainMenu();
+            }
+            else
+            {
+                DrawGameElements();
+                DrawHudElements();
+            }
+
+            base.Draw(gameTime);
+        }
+
+        // Draws the game elements
+        private void DrawGameElements()
+        {
+            _spriteBatch.Begin(transformMatrix: _camera.GetTransformation());
+
+            _mainHero.Draw(_spriteBatch, _mainHero.Position, _hitboxTexture);
+            _square.Draw(_spriteBatch, _square.Position, _hitboxTexture);
+            _level1.Draw(_spriteBatch);
+
+            foreach (var rect in intersections)
+            {
+                DrawRectHollow(_spriteBatch, new Rectangle(rect.X * Tilesize, rect.Y * Tilesize, Tilesize, Tilesize),
+                    4);
+            }
+
+            _spriteBatch.End();
+        }
+
+        // Draws the main menu
+        private void DrawMainMenu()
+        {
+            _spriteBatch.Begin();
+
+            // Draw the main menu background
+            _spriteBatch.Draw(_rectangleTexture,
+                new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight),
+                Color.Black * 0.5f);
+
+            // Draw the main menu text
+            _spriteBatch.DrawString(_hudFont, "Main Menu", new Vector2(800, 400), Color.White);
+            _spriteBatch.DrawString(_hudFont, "Press Escape to Resume", new Vector2(800, 450), Color.White);
+
+            _spriteBatch.End();
+        }
+
+        // Draws the HUD elements
+        private void DrawHudElements()
+        {
+            _spriteBatch.Begin();
+
+            if (_isHudVisible)
+            {
+                _spriteBatch.DrawString(_hudFont, $"Velocity: {_mainHero.Velocity}", new Vector2(10, 0), Color.White);
+                _spriteBatch.DrawString(_hudFont, $"isMoving: {_mainHero.IsMoving}", new Vector2(10, 30), Color.White);
+            }
+
+            _spriteBatch.End();
+        }
+
+        // Loads the map from a file
+        private Dictionary<Vector2, int> LoadMap(string filepath)
+        {
+            Dictionary<Vector2, int> result = new Dictionary<Vector2, int>();
+
+            using (StreamReader reader = new StreamReader(filepath))
+            {
+                int y = 0;
+                string line;
+                while ((line = reader.ReadLine()) != null)
                 {
-                    if (value > -1)
+                    string[] items = line.Split(',');
+
+                    for (int x = 0; x < items.Length; x++)
                     {
-                        result[new Vector2(x, y)] = value;
+                        if (int.TryParse(items[x], out int value) && value > -1)
+                        {
+                            result[new Vector2(x, y)] = value;
+                        }
                     }
+
+                    y++;
                 }
             }
 
-            y++;
+            return result;
         }
 
-        return result;
-    } // яка  зчитує карту з файлу
-
-    private Dictionary<Vector2, int> foreground;
-    private Dictionary<Vector2, int> collisions;
-    private Texture2D hitboxTexture;
-
-    public Main()
-    {
-        _graphics = new GraphicsDeviceManager(this);
-        Content.RootDirectory = "Content";
-        IsMouseVisible = true;
-        _graphics.PreferredBackBufferHeight = 1080;
-        _graphics.PreferredBackBufferWidth = 1920
-            ;
-
-        _camera = new Camera(new Rectangle(0, 0, _graphics.PreferredBackBufferWidth,
-            _graphics.PreferredBackBufferHeight));
-
-        // foreground = LoadMap("Content/map/level1_foreground.csv");
-        // collisions = LoadMap("Content/map/level1_collisions.csv");
-
-        intersections = new();
-        _level1 = new Level1();
-    }
-
-    protected override void Initialize()
-    {
-        // TODO: Add your initialization logic here
-
-        base.Initialize();
-
-        _graphics.IsFullScreen = true;
-        _graphics.ApplyChanges();
-
-        mainHero.Position = new Vector2(100, 100);
-        square.Position = new Vector2(1000, 100);
-        
-    }
-
-    protected override void LoadContent()
-    {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-        mainHeroSprite = Content.Load<Texture2D>("animatedSprite");
-        squareSprite = Content.Load<Texture2D>("enemy1");
-        mainHero = new MainHero(mainHeroSprite, new Vector2(500, 1000), 1, 6);
-        square = new Square(squareSprite, new Vector2(1000, 100), 5, 1);
-
-   
-        hudTexture = Content.Load<Texture2D>("hud+");
-
-
-        rectangleTexture = new Texture2D(GraphicsDevice, 1, 1);
-        rectangleTexture.SetData(new Color[] { new(255, 0, 0, 255) });
-
-        hitboxTexture = new Texture2D(GraphicsDevice, 1, 1);
-        hitboxTexture.SetData(new[] { Color.White });
-        
-        _level1.Initialize(Content);
-
-
-        // TODO: use this.Content to load your game content here
-    }
-
-    protected override void Update(GameTime gameTime)
-    {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
-            Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
-
-        Vector2 characterPosition = mainHero.Position;
-
-        if (characterPosition.X >= (_graphics.PreferredBackBufferWidth / 2) && characterPosition.X <= 3000)
+        // Draws a hollow rectangle
+        private void DrawRectHollow(SpriteBatch spriteBatch, Rectangle rect, int thickness)
         {
-            _camera.Position = new Vector2(characterPosition.X, _camera.Position.Y);
+            spriteBatch.Draw(_rectangleTexture, new Rectangle(rect.X, rect.Y, rect.Width, thickness), Color.White);
+            spriteBatch.Draw(_rectangleTexture, new Rectangle(rect.X, rect.Bottom - thickness, rect.Width, thickness),
+                Color.White);
+            spriteBatch.Draw(_rectangleTexture, new Rectangle(rect.X, rect.Y, thickness, rect.Height), Color.White);
+            spriteBatch.Draw(_rectangleTexture, new Rectangle(rect.Right - thickness, rect.Y, thickness, rect.Height),
+                Color.White);
         }
-
-
-        // Update camera position based on player movement
-        
-        if (Keyboard.GetState().IsKeyDown(Keys.I)) isHudVisible = !isHudVisible;
-
-
-        mainHero.CollisionHandler(_level1.Collisions, TILESIZE);
-        mainHero.MovementHandler();
-        
-        square.CollisionHandler(_level1.Collisions, TILESIZE);
-        square.MovementHandler();
-
-
-        // TODO: Add your update logic here
-
-        base.Update(gameTime);
-    }
-
-    public List<Rectangle> getIntersectingTilesHorizontal(Rectangle target)
-    {
-        List<Rectangle> intersections = new();
-
-        int leftTile = target.Left / TILESIZE;
-        int rightTile = (target.Right - 1) / TILESIZE;
-        int topTile = target.Top / TILESIZE;
-        int bottomTile = (target.Bottom - 1) / TILESIZE;
-
-        for (int x = leftTile; x <= rightTile; x++)
-        {
-            for (int y = topTile; y <= bottomTile; y++)
-            {
-                intersections.Add(new Rectangle(x, y, TILESIZE, TILESIZE));
-            }
-        }
-
-        return intersections;
-    }
-
-    public List<Rectangle> getIntersectingTilesVertical(Rectangle target)
-    {
-        List<Rectangle> intersections = new();
-
-        int leftTile = target.Left / TILESIZE;
-        int rightTile = (target.Right - 1) / TILESIZE;
-        int topTile = target.Top / TILESIZE;
-        int bottomTile = (target.Bottom - 1) / TILESIZE;
-
-        for (int x = leftTile; x <= rightTile; x++)
-        {
-            for (int y = topTile; y <= bottomTile; y++)
-            {
-                intersections.Add(new Rectangle(x, y, TILESIZE, TILESIZE));
-            }
-        }
-
-        return intersections;
-    }
-
-    protected override void Draw(GameTime gameTime)
-    {
-        GraphicsDevice.Clear(backgroundColor);
-        // TODO: Add your drawing code here
-
-        _spriteBatch.Begin(transformMatrix: _camera.GetTransformation()); //spritebatch begin
-
-        mainHero.Draw(_spriteBatch, mainHero.Position, hitboxTexture);
-        square.Draw(_spriteBatch, square.Position, hitboxTexture);
-
-        
-        _level1.Draw(_spriteBatch);
-
-        // foreach (var item in foreground)
-        // {
-        //     int display_tilesize = 64;
-        //     int num_tiles_per_row = 16;
-        //     int pixel_tilesize = 64;
-        //
-        //     Rectangle drect = new(
-        //         (int)item.Key.X * display_tilesize,
-        //         (int)item.Key.Y * display_tilesize,
-        //         display_tilesize,
-        //         display_tilesize
-        //     );
-        //
-        //
-        //     int x = item.Value % num_tiles_per_row;
-        //     int y = item.Value / num_tiles_per_row;
-        //
-        //     Rectangle src = new(
-        //         x * pixel_tilesize,
-        //         y * pixel_tilesize,
-        //         pixel_tilesize,
-        //         pixel_tilesize
-        //     );
-        //
-        //     _spriteBatch.Draw(textureAtlas_foreground, drect, src, Color.White);
-        // }
-        //
-        // foreach (var item in collisions)
-        // {
-        //     int display_tilesize = 64;
-        //     int num_tiles_per_row = 3;
-        //     int pixel_tilesize = 64;
-        //
-        //     Rectangle drect = new(
-        //         (int)item.Key.X * display_tilesize,
-        //         (int)item.Key.Y * display_tilesize,
-        //         display_tilesize,
-        //         display_tilesize
-        //     );
-        //
-        //
-        //     int x = item.Value % num_tiles_per_row;
-        //     int y = item.Value / num_tiles_per_row;
-        //
-        //     Rectangle src = new(
-        //         x * pixel_tilesize,
-        //         y * pixel_tilesize,
-        //         pixel_tilesize,
-        //         pixel_tilesize
-        //     );
-        //
-        //     // _spriteBatch.Draw(textureAtlas_collisions, drect, src, Color.White);
-        // }
-
-        foreach (var rect in intersections)
-        {
-            DrawRectHollow(
-                _spriteBatch,
-                new Rectangle(
-                    rect.X * TILESIZE,
-                    rect.Y * TILESIZE,
-                    TILESIZE,
-                    TILESIZE
-                ),
-                4
-            );
-        }
-
-        if(isHudVisible) _spriteBatch.Draw(hudTexture, new Vector2(0, 0), Color.White);
-        
-        _spriteBatch.End(); //spritebatch end 
-
-        base.Draw(gameTime);
-    }
-
-    public void DrawRectHollow(SpriteBatch spriteBatch, Rectangle rect, int thickness)
-    {
-        spriteBatch.Draw(
-            rectangleTexture,
-            new Rectangle(
-                rect.X,
-                rect.Y,
-                rect.Width,
-                thickness
-            ),
-            Color.White
-        );
-        spriteBatch.Draw(
-            rectangleTexture,
-            new Rectangle(
-                rect.X,
-                rect.Bottom - thickness,
-                rect.Width,
-                thickness
-            ),
-            Color.White
-        );
-        spriteBatch.Draw(
-            rectangleTexture,
-            new Rectangle(
-                rect.X,
-                rect.Y,
-                thickness,
-                rect.Height
-            ),
-            Color.White
-        );
-        spriteBatch.Draw(
-            rectangleTexture,
-            new Rectangle(
-                rect.Right - thickness,
-                rect.Y,
-                thickness,
-                rect.Height
-            ),
-            Color.White
-        );
     }
 }
