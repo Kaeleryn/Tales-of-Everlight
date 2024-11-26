@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin hudFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/build:hudFont.spritefont
+
 #begin animatedSprite.png
 /importer:TextureImporter
 /processor:TextureProcessor
