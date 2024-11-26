@@ -194,7 +194,8 @@ public abstract class Actor
         {
             _currentFrame = (_currentFrame + 1) % _totalFrames;
             _timeSinceLastFrame -= FrameTime;
-            _stepsDone++;
+            _stepsDone += _currentFrame == 0 ? 1 : 0;
+            _stepsDone += _currentFrame == 3 ? 1 : 0;
         }
     }
 
