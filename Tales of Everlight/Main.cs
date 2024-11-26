@@ -125,18 +125,14 @@ namespace Tales_of_Everlight
         {
             KeyboardState currentKeyState = Keyboard.GetState();
 
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (currentKeyState.IsKeyDown(Keys.Delete) && !_previousKeyState.IsKeyDown(Keys.Delete))
                 Exit();
 
             if (currentKeyState.IsKeyDown(Keys.I) && !_previousKeyState.IsKeyDown(Keys.I))
-            {
                 _isHudVisible = !_isHudVisible;
-            }
 
             if (currentKeyState.IsKeyDown(Keys.Escape) && !_previousKeyState.IsKeyDown(Keys.Escape))
-            {
                 _isMainMenuVisible = !_isMainMenuVisible;
-            }
 
             _previousKeyState = currentKeyState;
         }
@@ -209,9 +205,12 @@ namespace Tales_of_Everlight
                 Color.Black * 0.5f);
 
             // Draw the main menu text
-            _spriteBatch.DrawString(_hudFont, "Main Menu", new Vector2(800, 400), Color.White);
-            _spriteBatch.DrawString(_hudFont, "Press Escape to Resume", new Vector2(800, 450), Color.White);
-
+            _spriteBatch.DrawString(_hudFont, "THE GAME IS PAUSED", new Vector2(800, 300), Color.White);
+            _spriteBatch.DrawString(_hudFont, "A, D: Move the main hero", new Vector2(800, 450), Color.White);
+            _spriteBatch.DrawString(_hudFont, "Space: Jump", new Vector2(800, 500), Color.White);
+            _spriteBatch.DrawString(_hudFont, "Escape: Pause", new Vector2(800, 550), Color.White);
+            _spriteBatch.DrawString(_hudFont, "I: Toggle HUD visibility", new Vector2(800, 600), Color.White);
+            _spriteBatch.DrawString(_hudFont, "Delete: Exit the game", new Vector2(800, 650), Color.White);
             _spriteBatch.End();
         }
 
@@ -224,6 +223,7 @@ namespace Tales_of_Everlight
             {
                 _spriteBatch.DrawString(_hudFont, $"Velocity: {_mainHero.Velocity}", new Vector2(10, 0), Color.White);
                 _spriteBatch.DrawString(_hudFont, $"isMoving: {_mainHero.IsMoving}", new Vector2(10, 30), Color.White);
+                _spriteBatch.DrawString(_hudFont, $"isJumping: {_mainHero.IsJumping}", new Vector2(10, 60), Color.White);
             }
 
             _spriteBatch.End();

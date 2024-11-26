@@ -22,7 +22,7 @@ public abstract class Actor
         _texture.Width / Columns - 160, _texture.Height / Rows);
 
     public bool IsMoving { get; set; } = true; // Indicates if the actor is moving
-    private bool IsJumping { get; set; } = true; // Indicates if the actor is jumping
+    public bool IsJumping { get; set; } = true; // Indicates if the actor is jumping
 
     public Vector2 Position
     {
