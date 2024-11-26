@@ -40,6 +40,8 @@ public abstract class Actor
     private int Columns { get; set; } // Number of columns in the texture
     private int _currentFrame; // Current frame of the animation
     private int _totalFrames; // Total frames in the animation
+    private int _stepsDone { get; set; } = 0; // Number of steps done in the animation
+    public int StepsDone => _stepsDone; // Number of steps done in the animation
     private double _timeSinceLastFrame; // Time since the last frame update
 
     // Constructor with parameters
@@ -192,6 +194,7 @@ public abstract class Actor
         {
             _currentFrame = (_currentFrame + 1) % _totalFrames;
             _timeSinceLastFrame -= FrameTime;
+            _stepsDone++;
         }
     }
 
