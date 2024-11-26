@@ -61,9 +61,9 @@ public abstract class Actor
     // Handles collisions with the environment
     public void CollisionHandler(Dictionary<Vector2, int> collisions, int tileSize)
     {
-        _position += _velocity;
         HandleVerticalCollisions(collisions, tileSize);
         HandleHorizontalCollisions(collisions, tileSize);
+        _position += _velocity;
     }
 
     // Handles vertical collisions
