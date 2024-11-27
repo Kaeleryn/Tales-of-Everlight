@@ -1,7 +1,5 @@
 using Microsoft.Xna.Framework;
 
-namespace Tales_of_Everlight;
-
 public class Camera
 {
     
