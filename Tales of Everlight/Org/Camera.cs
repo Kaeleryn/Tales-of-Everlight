@@ -14,6 +14,13 @@ public class Camera
         Zoom = 1.0f;
     }
 
+    public Vector2 ScaleMouseCoordinates(Vector2 mousePosition, Vector2 currentResolution, Vector2 targetResolution)
+    {
+        float scaleX = targetResolution.X / currentResolution.X;
+        float scaleY = targetResolution.Y / currentResolution.Y;
+        return new Vector2(mousePosition.X * scaleX, mousePosition.Y * scaleY);
+    }
+    
     public void Move(Vector2 amount)
     {
         Position += amount;

@@ -41,11 +41,11 @@ public class MainMenu
         _game.Exit();
     }
 
-    public void Update(MouseState mouseState)
+    public void Update(MouseState mouseState, Camera camera, Vector2 currentResolution, Vector2 targetResolution)
     {
         foreach (var button in _buttons)
         {
-            button.Update(mouseState);
+            button.Update(mouseState, camera, currentResolution, targetResolution);
         }
     }
 

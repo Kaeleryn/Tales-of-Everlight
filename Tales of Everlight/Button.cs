@@ -26,9 +26,10 @@ public class Button
         _boundingBox = new Rectangle((int)_position.X, (int)_position.Y, (int)textSize.X, (int)textSize.Y);
     }
 
-    public void Update(MouseState mouseState)
+    public void Update(MouseState mouseState, Camera camera, Vector2 currentResolution, Vector2 targetResolution)
     {
-        _isHovered = _boundingBox.Contains(mouseState.Position);
+        Vector2 scaledMousePosition = camera.ScaleMouseCoordinates(new Vector2(mouseState.X, mouseState.Y), currentResolution, targetResolution);
+        _isHovered = _boundingBox.Contains(scaledMousePosition);
 
         if (_isHovered && mouseState.LeftButton == ButtonState.Pressed)
         {

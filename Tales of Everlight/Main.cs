@@ -87,6 +87,9 @@ namespace Tales_of_Everlight
 
         protected override void Update(GameTime gameTime)
         {
+            Vector2 currentResolution = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+            Vector2 targetResolution = new Vector2(1920, 1080); // Example target resolution
+
             if (_isSplashScreenVisible)
             {
                 _splashScreen.Update(gameTime);
@@ -102,11 +105,11 @@ namespace Tales_of_Everlight
 
                 if (MainMenu.IsVisible)
                 {
-                    MainMenu.Update(Mouse.GetState());
+                    MainMenu.Update(Mouse.GetState(), _camera, currentResolution, targetResolution);
                 }
                 else if (PauseMenu.IsVisible)
                 {
-                    PauseMenu.Update(Mouse.GetState());
+                    PauseMenu.Update(Mouse.GetState(), _camera, currentResolution, targetResolution);
                 }
                 else
                 {
