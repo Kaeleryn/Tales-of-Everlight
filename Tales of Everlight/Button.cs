@@ -22,11 +22,6 @@ public class Button
         _position = position;
         _textColor = textColor;
         _hoverColor = hoverColor;
-        UpdateBoundingBox();
-    }
-
-    public void UpdateBoundingBox()
-    {
         Vector2 textSize = _font.MeasureString(_text);
         _boundingBox = new Rectangle((int)_position.X, (int)_position.Y, (int)textSize.X, (int)textSize.Y);
     }
