@@ -14,7 +14,9 @@ namespace Tales_of_Everlight
         private bool _isHudVisible;
         private Texture2D _mainHeroSprite;
         private Texture2D _squareSprite;
+
         private Texture2D _rectangleTexture;
+
         //private Texture2D _hudTexture;
         private SpriteFont _hudFont;
         private Color _backgroundColor = new(145, 221, 207, 255);
@@ -41,7 +43,8 @@ namespace Tales_of_Everlight
             _graphics.PreferredBackBufferHeight = 1080;
             _graphics.PreferredBackBufferWidth = 1920;
 
-            _camera = new Camera(new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight));
+            _camera = new Camera(new Rectangle(0, 0, _graphics.PreferredBackBufferWidth,
+                _graphics.PreferredBackBufferHeight));
             intersections = new List<Rectangle>();
             _level1 = new Level1();
         }
@@ -61,9 +64,15 @@ namespace Tales_of_Everlight
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            //_mainHeroSprite = Content.Load<Texture2D>("animatedSprite");
             _mainHeroSprite = Content.Load<Texture2D>("animatedSprite");
             _squareSprite = Content.Load<Texture2D>("enemy1");
-            _mainHero = new MainHero(_mainHeroSprite, new Vector2(500, 1000), 1, 6);
+            //_mainHero = new MainHero(_mainHeroSprite, new Vector2(500, 1000), 1, 6);
+            _mainHero = new MainHero(_mainHeroSprite,
+                 new Rectangle(0, 0, 64, 128),//rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static
+                new Rectangle(0, 0, 128, 128)
+                 , 1, 6);
+           
             _square = new Square(_squareSprite, new Vector2(1000, 100), 5, 1);
 
             //_hudTexture = Content.Load<Texture2D>("hud+");
@@ -80,13 +89,83 @@ namespace Tales_of_Everlight
             _isSplashScreenVisible = true;
 
             _level1.Initialize(Content);
-            
+
             MainMenu = MainMenu.LoadContent(this, Content);
             PauseMenu = PauseMenu.LoadContent(this, Content);
         }
 
         protected override void Update(GameTime gameTime)
         {
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
+                Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
+
+            _mainHero.HandleMovement(Keyboard.GetState(), _previousKeyState, gameTime);
+
+            _previousKeyState = Keyboard.GetState();
+            #region Collision Handler
+
+            // add player's velocity and grab the intersecting tiles
+            _mainHero.Rect = _mainHero.Rect with { X = _mainHero.Rect.X + (int)_mainHero.Velocity.X };
+            intersections = GetIntersectingTilesHorizontal(_mainHero.Rect);
+
+            foreach (var rect in intersections) {
+
+                // handle collisions if the tile position exists in the tile map layer.
+                if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _val)) {
+                
+                    // create temp rect to handle collisions (not necessary, you can optimize!)
+                    Rectangle collision = new(
+                        rect.X * Tilesize,
+                        rect.Y * Tilesize,
+                        Tilesize,
+                        Tilesize
+                    );
+
+                    // handle collisions based on the direction the player is moving
+                    if (_mainHero.Velocity.X > 0.0f) {
+                        _mainHero.Rect = _mainHero.Rect with { X = collision.Left - _mainHero.Rect.Width };
+                    } else if (_mainHero.Velocity.X < 0.0f) {
+                        _mainHero.Rect = _mainHero.Rect with { X = collision.Right };
+                    }
+
+                }
+
+            }
+
+            // same as horizontal collisions
+
+            _mainHero.Rect = _mainHero.Rect with { Y = _mainHero.Rect.Y + (int)_mainHero.Velocity.Y };
+            intersections = GetIntersectingTilesVertical(_mainHero.Rect);
+            
+            _mainHero.IsOnGround = false;
+
+            foreach (var rect in intersections) {
+
+                if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _val)) {
+
+                    Rectangle collision = new (
+                        rect.X * Tilesize,
+                        rect.Y * Tilesize,
+                        Tilesize,
+                        Tilesize
+                    );
+
+                    if (_mainHero.Velocity.Y > 0.0f) {
+                        _mainHero.Rect = _mainHero.Rect with { Y = collision.Top - _mainHero.Rect.Height };
+                        _mainHero.IsOnGround = true;
+                        _mainHero.Velocity = _mainHero.Velocity with { Y = 0.0f };
+                    } else if (_mainHero.Velocity.Y < 0.0f) {
+                        _mainHero.Rect = _mainHero.Rect with { Y = collision.Bottom };
+                       
+                    }
+                
+                }
+            }
+
+            #endregion
+
+
             if (_isSplashScreenVisible)
             {
                 _splashScreen.Update(gameTime);
@@ -114,6 +193,7 @@ namespace Tales_of_Everlight
                     UpdateGameElements(gameTime);
                 }
             }
+
 
             base.Update(gameTime);
         }
@@ -145,9 +225,6 @@ namespace Tales_of_Everlight
 
         private void UpdateGameElements(GameTime gameTime)
         {
-            _mainHero.CollisionHandler(_level1.Collisions, Tilesize);
-            _mainHero.MovementHandler(gameTime);
-
             _square.CollisionHandler(_level1.Collisions, Tilesize);
             _square.MovementHandler();
         }
@@ -155,6 +232,7 @@ namespace Tales_of_Everlight
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(_backgroundColor);
+
 
             if (_isSplashScreenVisible)
             {
@@ -172,7 +250,10 @@ namespace Tales_of_Everlight
             {
                 DrawGameElements();
                 DrawHudElements();
+
+                // _mainHero.Draw(_spriteBatch);
             }
+
 
             base.Draw(gameTime);
         }
@@ -181,13 +262,18 @@ namespace Tales_of_Everlight
         {
             _spriteBatch.Begin(transformMatrix: _camera.GetTransformation());
 
-            _mainHero.Draw(_spriteBatch, _mainHero.Position, _hitboxTexture);
+            // _mainHero.Draw(_spriteBatch, _mainHero.Position, _hitboxTexture);
+            //_mainHero.Draw(_spriteBatch);
+            _mainHero.Draw(_spriteBatch, new Vector2(_mainHero.Rect.X, _mainHero.Rect.Y)
+               // , _hitboxTexture
+                );
+            _mainHero.DrawBoundingBox(_spriteBatch, _hitboxTexture);
             _square.Draw(_spriteBatch, _square.Position, _hitboxTexture);
             _level1.Draw(_spriteBatch);
 
             foreach (var rect in intersections)
             {
-                DrawRectHollow(_spriteBatch, new Rectangle(rect.X * Tilesize, rect.Y * Tilesize, Tilesize, Tilesize), 4);
+              //  DrawRectHollow(_spriteBatch, new Rectangle(rect.X * Tilesize, rect.Y * Tilesize, Tilesize, Tilesize),4);
             }
 
             _spriteBatch.End();
@@ -201,8 +287,10 @@ namespace Tales_of_Everlight
             {
                 _spriteBatch.DrawString(_hudFont, $"Velocity: {_mainHero.Velocity}", new Vector2(10, 0), Color.White);
                 _spriteBatch.DrawString(_hudFont, $"isMoving: {_mainHero.IsMoving}", new Vector2(10, 30), Color.White);
-                _spriteBatch.DrawString(_hudFont, $"isJumping: {_mainHero.IsJumping}", new Vector2(10, 60), Color.White);
-                _spriteBatch.DrawString(_hudFont, $"Steps done: {_mainHero.StepsDone}", new Vector2(10, 90), Color.White);
+                _spriteBatch.DrawString(_hudFont, $"IsOnGround: {_mainHero.IsOnGround}", new Vector2(10, 60),
+                    Color.White);
+                _spriteBatch.DrawString(_hudFont, $"Steps done: {_mainHero.StepsDone}", new Vector2(10, 90),
+                    Color.White);
             }
 
             _spriteBatch.End();
@@ -211,9 +299,58 @@ namespace Tales_of_Everlight
         private void DrawRectHollow(SpriteBatch spriteBatch, Rectangle rect, int thickness)
         {
             spriteBatch.Draw(_rectangleTexture, new Rectangle(rect.X, rect.Y, rect.Width, thickness), Color.White);
-            spriteBatch.Draw(_rectangleTexture, new Rectangle(rect.X, rect.Bottom - thickness, rect.Width, thickness), Color.White);
+            spriteBatch.Draw(_rectangleTexture, new Rectangle(rect.X, rect.Bottom - thickness, rect.Width, thickness),
+                Color.White);
             spriteBatch.Draw(_rectangleTexture, new Rectangle(rect.X, rect.Y, thickness, rect.Height), Color.White);
-            spriteBatch.Draw(_rectangleTexture, new Rectangle(rect.Right - thickness, rect.Y, thickness, rect.Height), Color.White);
+            spriteBatch.Draw(_rectangleTexture, new Rectangle(rect.Right - thickness, rect.Y, thickness, rect.Height),
+                Color.White);
+        }
+
+
+        public List<Rectangle> GetIntersectingTilesHorizontal(Rectangle target)
+        {
+            List<Rectangle> intersections = new();
+
+            int widthInTiles = (target.Width - (target.Width % Tilesize)) / Tilesize;
+            int heightInTiles = (target.Height - (target.Height % Tilesize)) / Tilesize;
+
+            for (int x = 0; x <= widthInTiles; x++)
+            {
+                for (int y = 0; y <= heightInTiles; y++)
+                {
+                    intersections.Add(new Rectangle(
+                        (target.X + x * Tilesize) / Tilesize,
+                        (target.Y + y * (Tilesize - 1)) / Tilesize,
+                        Tilesize,
+                        Tilesize
+                    ));
+                }
+            }
+
+            return intersections;
+        }
+
+        public List<Rectangle> GetIntersectingTilesVertical(Rectangle target)
+        {
+            List<Rectangle> intersections = new();
+
+            int widthInTiles = (target.Width - (target.Width % Tilesize)) / Tilesize;
+            int heightInTiles = (target.Height - (target.Height % Tilesize)) / Tilesize;
+
+            for (int x = 0; x <= widthInTiles; x++)
+            {
+                for (int y = 0; y <= heightInTiles; y++)
+                {
+                    intersections.Add(new Rectangle(
+                        (target.X + x * (Tilesize - 1)) / Tilesize,
+                        (target.Y + y * Tilesize) / Tilesize,
+                        Tilesize,
+                        Tilesize
+                    ));
+                }
+            }
+
+            return intersections;
         }
     }
 }

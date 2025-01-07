@@ -6,7 +6,7 @@ namespace Tales_of_Everlight;
 
 public class MainHero : Actor
 {
-    public MainHero(Texture2D texture, Vector2 position, int rows, int columns) : base(texture, position, rows, columns)
+    public MainHero(Texture2D texture, Rectangle rect, Rectangle srect, int rows, int columns) : base(texture, rect, srect, rows, columns)
     {
     }
 
