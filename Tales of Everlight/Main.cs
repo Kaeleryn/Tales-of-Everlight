@@ -11,7 +11,6 @@ namespace Tales_of_Everlight
         private SpriteBatch _spriteBatch;
         private Camera _camera;
         private Level1 _level1;
-        private bool _isMainMenuVisible;
         private bool _isHudVisible;
         private Texture2D _mainHeroSprite;
         private Texture2D _squareSprite;
@@ -31,7 +30,8 @@ namespace Tales_of_Everlight
         private SplashScreen _splashScreen;
         private bool _isSplashScreenVisible;
         private Texture2D _splashTexture;
-        private MainMenu _mainMenu;
+        public MainMenu MainMenu { get; set; }
+        public PauseMenu PauseMenu { get; set; }
 
         public Main()
         {
@@ -80,27 +80,36 @@ namespace Tales_of_Everlight
             _isSplashScreenVisible = true;
 
             _level1.Initialize(Content);
-            _mainMenu = new MainMenu(_rectangleTexture, _hudFont);
+            
+            MainMenu = MainMenu.LoadContent(this, Content);
+            PauseMenu = PauseMenu.LoadContent(this, Content);
         }
 
         protected override void Update(GameTime gameTime)
         {
+            Vector2 currentResolution = new Vector2(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
+            Vector2 targetResolution = new Vector2(1920, 1080); // Example target resolution
+
             if (_isSplashScreenVisible)
             {
                 _splashScreen.Update(gameTime);
                 if (_splashScreen.IsFinished)
                 {
                     _isSplashScreenVisible = false;
-                    _mainMenu.IsVisible = true;
+                    MainMenu.IsVisible = true;
                 }
             }
             else
             {
                 HandleInput();
 
-                if (_mainMenu.IsVisible)
+                if (MainMenu.IsVisible)
                 {
-                    _mainMenu.Update(Keyboard.GetState(), _previousKeyState);
+                    MainMenu.Update(Mouse.GetState(), _camera, currentResolution, targetResolution);
+                }
+                else if (PauseMenu.IsVisible)
+                {
+                    PauseMenu.Update(Mouse.GetState(), _camera, currentResolution, targetResolution);
                 }
                 else
                 {
@@ -116,14 +125,13 @@ namespace Tales_of_Everlight
         {
             KeyboardState currentKeyState = Keyboard.GetState();
 
-            if (currentKeyState.IsKeyDown(Keys.Delete) && !_previousKeyState.IsKeyDown(Keys.Delete))
-                Exit();
-
             if (currentKeyState.IsKeyDown(Keys.I) && !_previousKeyState.IsKeyDown(Keys.I))
                 _isHudVisible = !_isHudVisible;
 
             if (currentKeyState.IsKeyDown(Keys.Escape) && !_previousKeyState.IsKeyDown(Keys.Escape))
-                _mainMenu.IsVisible = !_mainMenu.IsVisible;
+            {
+                PauseMenu.IsVisible = !PauseMenu.IsVisible;
+            }
 
             _previousKeyState = currentKeyState;
         }
@@ -132,7 +140,7 @@ namespace Tales_of_Everlight
         {
             Vector2 characterPosition = _mainHero.Position;
 
-            if (characterPosition.X >= (_graphics.PreferredBackBufferWidth / 2) && characterPosition.X <= 3000)
+            if (characterPosition.X >= (_graphics.PreferredBackBufferWidth / 2.0f) && characterPosition.X <= 3000)
             {
                 _camera.Position = new Vector2(characterPosition.X, _camera.Position.Y);
             }
@@ -155,9 +163,13 @@ namespace Tales_of_Everlight
             {
                 _splashScreen.Draw(_spriteBatch);
             }
-            else if (_mainMenu.IsVisible)
+            else if (MainMenu.IsVisible)
             {
-                _mainMenu.Draw(_spriteBatch);
+                MainMenu.Draw(_spriteBatch);
+            }
+            else if (PauseMenu.IsVisible)
+            {
+                PauseMenu.Draw(_spriteBatch);
             }
             else
             {
