@@ -22,12 +22,10 @@ namespace Tales_of_Everlight
         private Color _backgroundColor = new(145, 221, 207, 255);
         private MainHero _mainHero = new();
         private Square _square = new();
-        private KeyboardState _keyState;
         private KeyboardState _previousKeyState;
         private const int Tilesize = 64;
         private List<Rectangle> intersections;
-        private Dictionary<Vector2, int> foreground;
-        private Dictionary<Vector2, int> collisions;
+       
         private Texture2D _hitboxTexture;
         private SplashScreen _splashScreen;
         private bool _isSplashScreenVisible;
@@ -56,7 +54,7 @@ namespace Tales_of_Everlight
             _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
 
-            _mainHero.Position = new Vector2(100, 100);
+          
             _square.Position = new Vector2(1000, 100);
         }
 
@@ -68,10 +66,9 @@ namespace Tales_of_Everlight
             _mainHeroSprite = Content.Load<Texture2D>("animatedSprite");
             _squareSprite = Content.Load<Texture2D>("enemy1");
             //_mainHero = new MainHero(_mainHeroSprite, new Vector2(500, 1000), 1, 6);
-            _mainHero = new MainHero(_mainHeroSprite,
+            _mainHero = new MainHero(Content,
                  new Rectangle(0, 0, 64, 128),//rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static
-                new Rectangle(0, 0, 128, 128)
-                 , 1, 6);
+                new Rectangle(0, 0, 128, 128) );
            
             _square = new Square(_squareSprite, new Vector2(1000, 100), 5, 1);
 
@@ -102,7 +99,9 @@ namespace Tales_of_Everlight
 
             _mainHero.HandleMovement(Keyboard.GetState(), _previousKeyState, gameTime);
 
-            _previousKeyState = Keyboard.GetState();
+           
+            
+            
             #region Collision Handler
 
             // add player's velocity and grab the intersecting tiles
@@ -215,7 +214,7 @@ namespace Tales_of_Everlight
 
         private void UpdateCameraPosition()
         {
-            Vector2 characterPosition = _mainHero.Position;
+            Vector2 characterPosition = new Vector2(_mainHero.Rect.X, _mainHero.Rect.Y);
 
             if (characterPosition.X >= (_graphics.PreferredBackBufferWidth / 2.0f) && characterPosition.X <= 3000)
             {
@@ -262,7 +261,7 @@ namespace Tales_of_Everlight
         {
             _spriteBatch.Begin(transformMatrix: _camera.GetTransformation());
 
-            // _mainHero.Draw(_spriteBatch, _mainHero.Position, _hitboxTexture);
+            
             //_mainHero.Draw(_spriteBatch);
             _mainHero.Draw(_spriteBatch, new Vector2(_mainHero.Rect.X, _mainHero.Rect.Y)
                // , _hitboxTexture
