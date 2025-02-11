@@ -231,4 +231,3 @@ public abstract class Actor
             Color.Red);
     }
 }
-
