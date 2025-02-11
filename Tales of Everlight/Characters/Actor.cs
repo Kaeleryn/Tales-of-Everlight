@@ -62,6 +62,7 @@ public abstract class Actor
         set => _velocity = value;
     }
 
+
     private int Rows { get; set; } = 1;
     private int Columns { get; set; }
 
