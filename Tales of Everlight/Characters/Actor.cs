@@ -17,18 +17,16 @@ public enum AnimationState
 
 public abstract class Actor
 {
-    private bool _isFacingRight = true; // Indicates if the actor is facing right
-    private Texture2D _runningTexture; // Texture of the actor
-    private Texture2D _jumpingTexture; // Texture of the actor
-    private Texture2D _attackTexture; // Texture of the actor
+    private bool _isFacingRight = true; // Напрямок персонажа
+    private Texture2D _runningTexture; // Текстура бігу
+    private Texture2D _jumpingTexture; // Текстура стрибка
+    private Texture2D _attackTexture; // Текстура атаки
     private Texture2D _currentTexture;
-    
-    public AnimationState AnimationState { get; set; }  // Animation state of the actor
 
-    private Vector2 _velocity; // Velocity of the actor
-    private Rectangle _rect { get; set; } // Rectangle of the actor
-    
-    
+    public AnimationState AnimationState { get; set; } // Стан анімації
+
+    private Vector2 _velocity; // Швидкість
+    private Rectangle _rect { get; set; } // Головний прямокутник
 
     public Rectangle Rect
     {
@@ -36,7 +34,7 @@ public abstract class Actor
         set => _rect = value;
     }
 
-    private Rectangle _srect { get; set; } // Source rectangle of the actor
+    private Rectangle _srect { get; set; } // Прямокутник для вибору кадру
 
     public Rectangle Srect
     {
@@ -44,48 +42,41 @@ public abstract class Actor
         set => _srect = value;
     }
 
-    private const float Gravity = 0.65f; // Gravity constant
-    private const double FrameTime = 0.1; // Time in seconds between frames
+    private const float Gravity = 0.65f; // Гравітація
+    private const double FrameTime = 0.1; // Час між кадрами
 
-    // Bounding box of the actor
     private Rectangle _boundingBox;
 
     public Rectangle BoundingBox
     {
-        // get => new Rectangle((int)Position.X + 70, (int)Position.Y, _texture.Width / Columns - 160, _texture.Height / Rows);
         get => Rect;
         set => _boundingBox = Rect;
     }
 
-    public bool IsMoving { get; set; } = true; // Indicates if the actor is moving
-    public bool IsOnGround { get; set; } // Indicates if the actor is on the ground
-
+    public bool IsMoving { get; set; } = true;
+    public bool IsOnGround { get; set; }
 
     public Vector2 Velocity
     {
         get => _velocity;
         set => _velocity = value;
-    } // Velocity property
+    }
 
-    private int Rows { get; set; } = 1; // Number of rows in the texture
-    private int Columns { get; set; } // Number of columns in the texture
-    
-    
-    private int _currentFrame; // Current frame of the animation
-    private int _totalFrames; // Total frames in the animation
-    private int _stepsDone { get; set; } // Number of steps done in the animation
-    public int StepsDone => _stepsDone; // Number of steps done in the animation
-    private double _timeSinceLastFrame; // Time since the last frame update
+    private int Rows { get; set; } = 1;
+    private int Columns { get; set; }
 
+    private int _currentFrame;
+    private int _totalFrames;
+    private int _stepsDone { get; set; }
+    public int StepsDone => _stepsDone;
+    private double _timeSinceLastFrame;
+
+    private int _jumpCount = 0; // Додаємо лічильник стрибків
+    private const int MaxJumps = 2; // Два стрибки дозволені
 
     protected Actor(ContentManager content, Rectangle rect, Rectangle srect)
     {
-        
-        
-        
         _currentFrame = 0;
-        
-
         _runningTexture = content.Load<Texture2D>("animatedSprite");
         _jumpingTexture = content.Load<Texture2D>("animatedSpriteJumping");
 
@@ -94,14 +85,10 @@ public abstract class Actor
         _velocity = Vector2.Zero;
     }
 
-    // Default constructor
     protected Actor() => _velocity = Vector2.Zero;
-
 
     public void HandleMovement(KeyboardState keystate, KeyboardState previousState, GameTime gameTime)
     {
-        //от дивлюсі і наче не костиль, але може і костиль
-
         HandleVerticalMovement(keystate, previousState, gameTime);
         HandleHorisontalMovement(keystate, previousState, gameTime);
     }
@@ -109,37 +96,25 @@ public abstract class Actor
     public void HandleVerticalMovement(KeyboardState keystate, KeyboardState previousState, GameTime gameTime)
     {
         _velocity.Y += Gravity;
-
         _velocity.Y = Math.Min(20.0f, _velocity.Y);
 
-        if (IsOnGround && keystate.IsKeyDown(Keys.Space) && !previousState.IsKeyUp(Keys.Space))
+        if (IsOnGround)
+        {
+            _jumpCount = 0; // Якщо персонаж на землі, скидаємо лічильник стрибків
+        }
+
+        if (keystate.IsKeyDown(Keys.Space) && previousState.IsKeyUp(Keys.Space) && _jumpCount < MaxJumps)
         {
             _velocity.Y = -15;
             AnimationState = AnimationState.Jumping;
             IsOnGround = false;
-
+            _jumpCount++; // Збільшуємо кількість стрибків
         }
-
-        // try
-        // {
-        //     if(!IsOnGround)
-        //     {
-        //         UpdateFrame(gameTime);
-        //     }
-        // } catch (Exception e)
-        // {
-        //     Console.WriteLine("Саня, ти даун");
-        // }
-        
     }
-
 
     public void HandleHorisontalMovement(KeyboardState keystate, KeyboardState previousState, GameTime gameTime)
     {
-        // _velocity.X = 0.0f;
         Decelerate();
-      
-
 
         if (keystate.IsKeyDown(Keys.D))
         {
@@ -147,7 +122,7 @@ public abstract class Actor
             _isFacingRight = true;
             IsMoving = true;
             UpdateFrame(gameTime);
-            if(IsOnGround)AnimationState = AnimationState.Running;
+            if (IsOnGround) AnimationState = AnimationState.Running;
         }
         else if (keystate.IsKeyDown(Keys.A))
         {
@@ -155,8 +130,9 @@ public abstract class Actor
             _isFacingRight = false;
             IsMoving = true;
             UpdateFrame(gameTime);
-            if(IsOnGround)AnimationState = AnimationState.Running;
-        }else
+            if (IsOnGround) AnimationState = AnimationState.Running;
+        }
+        else
         {
             IsMoving = false;
         }
@@ -170,56 +146,38 @@ public abstract class Actor
             _velocity.X = 0;
     }
 
-
-    // Updates the animation frame
     private void UpdateFrame(GameTime gameTime)
     {
         _timeSinceLastFrame += gameTime.ElapsedGameTime.TotalSeconds;
-        
+
         if (_timeSinceLastFrame >= FrameTime)
         {
             _timeSinceLastFrame -= FrameTime;
 
             if (AnimationState == AnimationState.Jumping && !IsOnGround)
             {
-                // Increment the frame if not already at the last frame
                 if (_currentFrame < _totalFrames - 1)
                 {
-                   // _currentFrame++;
-                   _currentFrame = (_currentFrame + 1) % _totalFrames;
+                    _currentFrame = (_currentFrame + 1) % _totalFrames;
                 }
             }
             else
             {
-                // Default behavior for other animations
                 _currentFrame = (_currentFrame + 1) % _totalFrames;
 
-                // Optionally increment steps for running or attacking
                 if (AnimationState == AnimationState.Running && (_currentFrame == 0 || _currentFrame == 3))
                 {
                     _stepsDone++;
                 }
             }
-            
         }
     }
-
 
     public void Draw(SpriteBatch spriteBatch)
     {
         spriteBatch.Draw(_runningTexture, _rect, _srect, Color.White);
     }
 
-
-    // public void Draw(SpriteBatch spriteBatch, Vector2 location)
-    // {
-    //   // if(!IsOnGround) DrawJumping(spriteBatch, location);
-    //   // else if(IsMoving)DrawRunning(spriteBatch, location);
-    //    DrawJumping(spriteBatch, location);
-    // }
-
-
-    // Draws the actor
     public void Draw(SpriteBatch spriteBatch, Vector2 location)
     {
         switch (AnimationState)
@@ -234,11 +192,11 @@ public abstract class Actor
                 break;
             case AnimationState.Attacking:
                 _currentTexture = _attackTexture;
-                Columns = 5; // Example value
+                Columns = 5;
                 break;
         }
-        
-        if(IsOnGround && !IsMoving)
+
+        if (IsOnGround && !IsMoving)
         {
             _currentFrame = 0;
             _currentTexture = _runningTexture;
@@ -258,41 +216,19 @@ public abstract class Actor
         spriteBatch.Draw(_currentTexture, destinationRectangle, sourceRectangle, Color.White, 0f, Vector2.Zero, spriteEffects, 0f);
     }
 
-    
-    // public void DrawJumping(SpriteBatch spriteBatch, Vector2 location
-    //     //, Texture2D hitboxTexture
-    // )
-    // {
-    //     
-    //     _totalFrames = JumpingColumns * Rows;
-    //     int width = _runningTexture.Width / JumpingColumns;
-    //     int height = _runningTexture.Height / Rows;
-    //     int row = _currentFrame / JumpingColumns;
-    //     int column = _currentFrame % JumpingColumns;
-    //
-    //     Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
-    //     SpriteEffects spriteEffects = _isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
-    //     Rectangle destinationRectangle = new Rectangle((int)location.X - 80, (int)location.Y, width, height);
-    //
-    //     spriteBatch.Draw(_jumpingTexture, destinationRectangle, sourceRectangle, Color.White, 0f, Vector2.Zero, spriteEffects,
-    //         0f);
-    //     //DrawBoundingBox(spriteBatch, hitboxTexture);
-    // }
-
-
-    // Draws the bounding box of the actor
     public void DrawBoundingBox(SpriteBatch spriteBatch, Texture2D hitboxTexture)
     {
         Rectangle boundingBox = BoundingBox;
         spriteBatch.Draw(hitboxTexture, new Rectangle(boundingBox.X, boundingBox.Y, boundingBox.Width, 1),
-            Color.Red); // Top
+            Color.Red);
         spriteBatch.Draw(hitboxTexture, new Rectangle(boundingBox.X, boundingBox.Y, 1, boundingBox.Height),
-            Color.Red); // Left
+            Color.Red);
         spriteBatch.Draw(hitboxTexture,
             new Rectangle(boundingBox.X, boundingBox.Y + boundingBox.Height - 1, boundingBox.Width, 1),
-            Color.Red); // Bottom
+            Color.Red);
         spriteBatch.Draw(hitboxTexture,
             new Rectangle(boundingBox.X + boundingBox.Width - 1, boundingBox.Y, 1, boundingBox.Height),
-            Color.Red); // Right
+            Color.Red);
     }
 }
+
