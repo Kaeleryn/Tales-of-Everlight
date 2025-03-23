@@ -112,6 +112,45 @@ public abstract class Actor
         }
     }
 
+    public void HamdleAttack(MouseState mouseState, MouseState previousState, GameTime gameTime)
+    {
+        if(mouseState.LeftButton == ButtonState.Pressed && previousState.LeftButton == ButtonState.Released)
+        {
+            AnimationState = AnimationState.Attacking;
+
+            _currentFrame = 0;
+        }
+        
+        if (AnimationState == AnimationState.Attacking)
+        {
+            UpdateAttackFrame(gameTime);
+        }
+    }
+    
+    private void UpdateAttackFrame(GameTime gameTime)
+    {
+        _timeSinceLastFrame += gameTime.ElapsedGameTime.TotalSeconds;
+
+        if (_timeSinceLastFrame >= FrameTime)
+        {
+            _timeSinceLastFrame -= FrameTime;
+        
+            // Move to next frame in attack animation
+            if (_currentFrame < _totalFrames - 1)
+            {
+                _currentFrame++;
+            }
+            else
+            {
+                // Attack animation completed
+                _currentFrame = 0;
+                // Return to previous state when attack is done
+                AnimationState = IsOnGround ? AnimationState.Running : AnimationState.Jumping;
+            }
+        }
+    } 
+    
+
     public void HandleHorisontalMovement(KeyboardState keystate, KeyboardState previousState, GameTime gameTime)
     {
         Decelerate();
