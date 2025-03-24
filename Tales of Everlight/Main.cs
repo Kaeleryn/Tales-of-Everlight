@@ -23,6 +23,7 @@ namespace Tales_of_Everlight
         private MainHero _mainHero = new();
         private Square _square = new();
         private KeyboardState _previousKeyState;
+        private MouseState _previousMState;
         private const int Tilesize = 64;
         private List<Rectangle> intersections;
        
@@ -51,6 +52,7 @@ namespace Tales_of_Everlight
         {
             base.Initialize();
             _previousKeyState = Keyboard.GetState();
+            _previousMState = Mouse.GetState();
             _graphics.IsFullScreen = true;
             _graphics.ApplyChanges();
 
@@ -97,7 +99,7 @@ namespace Tales_of_Everlight
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            _mainHero.HandleMovement(Keyboard.GetState(), _previousKeyState, gameTime);
+            _mainHero.HandleMovement(Keyboard.GetState(), _previousKeyState, Mouse.GetState(),  _previousMState, gameTime);
 
            
             
@@ -210,6 +212,12 @@ namespace Tales_of_Everlight
             }
 
             _previousKeyState = currentKeyState;
+            
+            MouseState mouseState = Mouse.GetState();
+            _previousMState = mouseState;
+
+
+
         }
 
         private void UpdateCameraPosition()
