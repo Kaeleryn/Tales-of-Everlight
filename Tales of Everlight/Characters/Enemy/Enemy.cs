@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -6,24 +8,30 @@ namespace Tales_of_Everlight;
 
 public abstract class Enemy
 {
-    
-    
+    public static int Health { get; set; }
+    public bool Damaged { get; set; }
+    public bool IsDead { get; private set; }
+    private double _timeSinceLastFrame;
+
+    private float _deathAnimationTime = 0f;
+    private float _deathAnimationDuration = 1.0f; // Duration of the death animation in seconds
+    public double FrameTime = 0.1;
     private Texture2D Texture { get; set; }
     private Vector2 position;
     private Vector2 velocity;
-    
+
     private int Rows { get; set; }
     private int Columns { get; set; }
-    
+
     private int currentFrame;
     private int totalFrames;
-    
+
     private bool isFacingLeft = false;
     private bool isMoving = true;
     private bool isJumping = true;
-    
+
     private const float GRAVITY = 1.2f;
-    
+
     public bool IsJumping
     {
         get => isJumping;
@@ -47,29 +55,48 @@ public abstract class Enemy
         get => velocity;
         set => velocity = value;
     }
+
     public Rectangle BoundingBox
     {
         get
         {
-            int width = Texture.Width/Columns;
-            int height = Texture.Height/Rows;
-            return new Rectangle((int)position.X + 25, (int)position.Y, width-50, height-30);
+            int width = Texture.Width / Columns;
+            int height = Texture.Height / Rows;
+            return new Rectangle((int)position.X + 25, (int)position.Y, width - 50, height - 30);
         }
     }
-    
+
+    public void TakeDamage(int damage)
+    {
+        Console.WriteLine("TakeDamage method called");
+        Health -= damage;
+        Damaged = true;
+
+        if (Health <= 0)
+        {
+            Death();
+        }
+    }
+
+    public void Death()
+    {
+        IsDead = true;
+        // Handle enemy death logic here
+        Console.WriteLine("Enemy has died.");
+        // For example, you might want to remove the enemy from the game or play a death animation.
+    }
 
     protected Enemy(Texture2D texture, Vector2 position, int rows, int columns)
     {
-        
+        Health = 100;
         Texture = texture;
         Position = position;
-        
+
         Rows = rows;
         Columns = columns;
         currentFrame = 0;
         totalFrames = Rows * Columns;
         velocity = Vector2.Zero;
-        
     }
 
     protected Enemy()
@@ -78,8 +105,6 @@ public abstract class Enemy
     }
 
 
-    
-    
     private List<Rectangle> getIntersectingTilesHorizontal(Rectangle target, int TILESIZE)
     {
         List<Rectangle> intersections = new();
@@ -120,7 +145,6 @@ public abstract class Enemy
         return intersections;
     }
 
-    
 
     public void CollisionHandler(Dictionary<Vector2, int> collisions, int TILESIZE)
     {
@@ -188,9 +212,8 @@ public abstract class Enemy
         {
             isJumping = true;
         }
-        
     }
-    
+
     public void MovementHandler()
     {
         if (isMoving)
@@ -204,8 +227,41 @@ public abstract class Enemy
             position.Y += velocity.Y;
         }
     }
-    
-    
+
+    public void Update(GameTime gameTime)
+    {
+        if (IsDead)
+        {
+            _deathAnimationTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            UpdateFrame(gameTime);
+            if (_deathAnimationTime >= _deathAnimationDuration)
+            {
+                Main.RemoveEnemy(this);
+                Console.WriteLine("Enemy has been removed.");
+            }
+
+            return;
+        }
+
+        UpdateFrame(gameTime);
+    }
+
+    public void UpdateFrame(GameTime gametime)
+    {
+        _timeSinceLastFrame += gametime.ElapsedGameTime.TotalSeconds;
+        if (_timeSinceLastFrame >= FrameTime)
+        {
+            _timeSinceLastFrame -= FrameTime;
+
+            currentFrame++;
+            if (currentFrame >= totalFrames)
+            {
+                currentFrame = 0;
+            }
+        }
+    }
+
+
     public void Draw(SpriteBatch spriteBatch, Vector2 location, Texture2D hitboxTexture)
     {
         int width = Texture.Width / Columns;
@@ -219,27 +275,38 @@ public abstract class Enemy
         Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
 
 
-        spriteBatch.Draw(Texture, location, sourceRectangle, Color.White, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
+        if (IsDead)
+        {
+            float alpha = 1.0f - (_deathAnimationTime / _deathAnimationDuration);
+            Color deathColor = Color.White * alpha;
+            spriteBatch.Draw(Texture, location, sourceRectangle, deathColor, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
+        }
+        else if (Damaged)
+        {
+            spriteBatch.Draw(Texture, location, sourceRectangle, Color.Red, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
+            Damaged = false;
+        }
+        else
+        {
+            spriteBatch.Draw(Texture, location, sourceRectangle, Color.White, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
+        }
 
         Rectangle boundingBox = BoundingBox;
 
-        
-        // хітбокс
-        spriteBatch.Draw(hitboxTexture, new Rectangle(boundingBox.X, boundingBox.Y, boundingBox.Width, 1),
-            Color.Red); // Top
-        spriteBatch.Draw(hitboxTexture, new Rectangle(boundingBox.X, boundingBox.Y, 1, boundingBox.Height),
-            Color.Red); // Left
-        spriteBatch.Draw(hitboxTexture,
-            new Rectangle(boundingBox.X, boundingBox.Y + boundingBox.Height - 1, boundingBox.Width, 1),
-            Color.Red); // Bottom
-        spriteBatch.Draw(hitboxTexture,
-            new Rectangle(boundingBox.X + boundingBox.Width - 1, boundingBox.Y, 1, boundingBox.Height),
-            Color.Red); // Right
-        //хітбокс
-        
-        
-        
+        if (!IsDead)
+        {
+            // хітбокс
+            spriteBatch.Draw(hitboxTexture, new Rectangle(boundingBox.X, boundingBox.Y, boundingBox.Width, 1),
+                Color.Red); // Top
+            spriteBatch.Draw(hitboxTexture, new Rectangle(boundingBox.X, boundingBox.Y, 1, boundingBox.Height),
+                Color.Red); // Left
+            spriteBatch.Draw(hitboxTexture,
+                new Rectangle(boundingBox.X, boundingBox.Y + boundingBox.Height - 1, boundingBox.Width, 1),
+                Color.Red); // Bottom
+            spriteBatch.Draw(hitboxTexture,
+                new Rectangle(boundingBox.X + boundingBox.Width - 1, boundingBox.Y, 1, boundingBox.Height),
+                Color.Red); // Right
+            //хітбокс
+        }
     }
-    
-    
 }

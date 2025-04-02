@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Tales_of_Everlight.Damage;
 
 namespace Tales_of_Everlight
 {
@@ -20,19 +22,21 @@ namespace Tales_of_Everlight
         //private Texture2D _hudTexture;
         private SpriteFont _hudFont;
         private Color _backgroundColor = new(145, 221, 207, 255);
-        private MainHero _mainHero = new();
-        private Square _square = new();
+        public static MainHero _mainHero = new();
+        public Square _square = new();
         private KeyboardState _previousKeyState;
         private MouseState _previousMState;
         private const int Tilesize = 64;
         private List<Rectangle> intersections;
-       
+
         private Texture2D _hitboxTexture;
         private SplashScreen _splashScreen;
         private bool _isSplashScreenVisible;
         private Texture2D _splashTexture;
         public MainMenu MainMenu { get; set; }
         public PauseMenu PauseMenu { get; set; }
+
+        public static List<Enemy> EnemyList;
 
         public Main()
         {
@@ -46,6 +50,9 @@ namespace Tales_of_Everlight
                 _graphics.PreferredBackBufferHeight));
             intersections = new List<Rectangle>();
             _level1 = new Level1();
+
+            EnemyList = new();
+
         }
 
         protected override void Initialize()
@@ -53,10 +60,13 @@ namespace Tales_of_Everlight
             base.Initialize();
             _previousKeyState = Keyboard.GetState();
             _previousMState = Mouse.GetState();
-            _graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = false;
             _graphics.ApplyChanges();
 
-          
+
+
+
+
             _square.Position = new Vector2(1000, 100);
         }
 
@@ -69,10 +79,13 @@ namespace Tales_of_Everlight
             _squareSprite = Content.Load<Texture2D>("enemy1");
             //_mainHero = new MainHero(_mainHeroSprite, new Vector2(500, 1000), 1, 6);
             _mainHero = new MainHero(Content,
-                 new Rectangle(0, 0, 64, 128),//rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static
-                new Rectangle(0, 0, 128, 128) );
-           
+                new Rectangle(0, 0, 64,
+                    128), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static
+                new Rectangle(0, 0, 128, 128));
+
             _square = new Square(_squareSprite, new Vector2(1000, 100), 5, 1);
+
+            EnemyList.Add(_square);
 
             //_hudTexture = Content.Load<Texture2D>("hud+");
             _hudFont = Content.Load<SpriteFont>("hudFont");
@@ -99,22 +112,28 @@ namespace Tales_of_Everlight
                 Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            _mainHero.HandleMovement(Keyboard.GetState(), _previousKeyState, Mouse.GetState(),  _previousMState, gameTime);
+            _mainHero.HandleMovement(Keyboard.GetState(), _previousKeyState, Mouse.GetState(), _previousMState,
+                gameTime);
 
-           
-            
-            
+            //Console.WriteLine(2);
+            //Attack.Execute();
+
+
+
+
             #region Collision Handler
 
             // add player's velocity and grab the intersecting tiles
             _mainHero.Rect = _mainHero.Rect with { X = _mainHero.Rect.X + (int)_mainHero.Velocity.X };
             intersections = GetIntersectingTilesHorizontal(_mainHero.Rect);
 
-            foreach (var rect in intersections) {
+            foreach (var rect in intersections)
+            {
 
                 // handle collisions if the tile position exists in the tile map layer.
-                if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _val)) {
-                
+                if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _val))
+                {
+
                     // create temp rect to handle collisions (not necessary, you can optimize!)
                     Rectangle collision = new(
                         rect.X * Tilesize,
@@ -124,9 +143,12 @@ namespace Tales_of_Everlight
                     );
 
                     // handle collisions based on the direction the player is moving
-                    if (_mainHero.Velocity.X > 0.0f) {
+                    if (_mainHero.Velocity.X > 0.0f)
+                    {
                         _mainHero.Rect = _mainHero.Rect with { X = collision.Left - _mainHero.Rect.Width };
-                    } else if (_mainHero.Velocity.X < 0.0f) {
+                    }
+                    else if (_mainHero.Velocity.X < 0.0f)
+                    {
                         _mainHero.Rect = _mainHero.Rect with { X = collision.Right };
                     }
 
@@ -138,33 +160,40 @@ namespace Tales_of_Everlight
 
             _mainHero.Rect = _mainHero.Rect with { Y = _mainHero.Rect.Y + (int)_mainHero.Velocity.Y };
             intersections = GetIntersectingTilesVertical(_mainHero.Rect);
-            
+
             _mainHero.IsOnGround = false;
 
-            foreach (var rect in intersections) {
+            foreach (var rect in intersections)
+            {
 
-                if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _val)) {
+                if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _val))
+                {
 
-                    Rectangle collision = new (
+                    Rectangle collision = new(
                         rect.X * Tilesize,
                         rect.Y * Tilesize,
                         Tilesize,
                         Tilesize
                     );
 
-                    if (_mainHero.Velocity.Y > 0.0f) {
+                    if (_mainHero.Velocity.Y > 0.0f)
+                    {
                         _mainHero.Rect = _mainHero.Rect with { Y = collision.Top - _mainHero.Rect.Height };
                         _mainHero.IsOnGround = true;
                         _mainHero.Velocity = _mainHero.Velocity with { Y = 0.0f };
-                    } else if (_mainHero.Velocity.Y < 0.0f) {
-                        _mainHero.Rect = _mainHero.Rect with { Y = collision.Bottom };
-                       
                     }
-                
+                    else if (_mainHero.Velocity.Y < 0.0f)
+                    {
+                        _mainHero.Rect = _mainHero.Rect with { Y = collision.Bottom };
+
+                    }
+
                 }
             }
 
             #endregion
+
+            _square.Update(gameTime);
 
 
             if (_isSplashScreenVisible)
@@ -212,7 +241,7 @@ namespace Tales_of_Everlight
             }
 
             _previousKeyState = currentKeyState;
-            
+
             MouseState mouseState = Mouse.GetState();
             _previousMState = mouseState;
 
@@ -269,18 +298,18 @@ namespace Tales_of_Everlight
         {
             _spriteBatch.Begin(transformMatrix: _camera.GetTransformation());
 
-            
+
             //_mainHero.Draw(_spriteBatch);
             _mainHero.Draw(_spriteBatch, new Vector2(_mainHero.Rect.X, _mainHero.Rect.Y)
-               // , _hitboxTexture
-                );
+                // , _hitboxTexture
+            );
             _mainHero.DrawBoundingBox(_spriteBatch, _hitboxTexture);
             _square.Draw(_spriteBatch, _square.Position, _hitboxTexture);
             _level1.Draw(_spriteBatch);
 
             foreach (var rect in intersections)
             {
-              //  DrawRectHollow(_spriteBatch, new Rectangle(rect.X * Tilesize, rect.Y * Tilesize, Tilesize, Tilesize),4);
+                //  DrawRectHollow(_spriteBatch, new Rectangle(rect.X * Tilesize, rect.Y * Tilesize, Tilesize, Tilesize),4);
             }
 
             _spriteBatch.End();
@@ -359,5 +388,17 @@ namespace Tales_of_Everlight
 
             return intersections;
         }
+
+        public static void RemoveEnemy(Enemy enemy)
+        {
+            if (EnemyList.Contains(enemy))
+            {
+                EnemyList.Remove(enemy);
+                enemy = null;
+            }
+            
+        }
+        
     }
+
 }
