@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Tales_of_Everlight.Damage;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace Tales_of_Everlight;
@@ -22,6 +23,8 @@ public abstract class Actor
     private Texture2D _jumpingTexture; // Текстура стрибка
     private Texture2D _attackTexture; // Текстура атаки
     private Texture2D _currentTexture;
+    
+    public static int Health { get; set; } = 100; // Здоров'я персонажа
 
     public AnimationState AnimationState { get; set; } // Стан анімації
 
@@ -75,9 +78,9 @@ public abstract class Actor
     private const int MaxJumps = 2; // Два стрибки дозволені
 
 
-    public Rectangle sourceRectangle;
-    public Rectangle destinationRectangle;
-    public SpriteEffects spriteEffects;
+    public Rectangle SourceRectangle;
+    public Rectangle DestinationRectangle;
+    public SpriteEffects SpriteEffects;
 
     protected Actor(ContentManager content, Rectangle rect, Rectangle srect)
     {
@@ -122,6 +125,17 @@ public abstract class Actor
             AnimationState = AnimationState.Jumping;
             IsOnGround = false;
             _jumpCount++; // Збільшуємо кількість стрибків
+        }
+    }
+
+
+
+    public static void TakeDamage(int damage)
+    {
+        Health -= damage;
+        if (Health <= 0)
+        {
+            //смерть
         }
     }
 
@@ -256,11 +270,14 @@ public abstract class Actor
                 if (_currentFrame < _totalFrames - 1)
                 {
                     _currentFrame = (_currentFrame + 1) % _totalFrames;
+                    if (_currentFrame == 5) Attack.Execute(AttackerType.Player);
+
                 }
                 else
                 {
                     // Attack animation completed
                     _currentFrame = 0;
+                    ;
                     // Return to previous state when attack is done
                     AnimationState = IsOnGround ? AnimationState.Running : AnimationState.Jumping;
                 }
@@ -330,29 +347,29 @@ public abstract class Actor
 
         if (AnimationState != AnimationState.Attacking)
         {
-            sourceRectangle = new Rectangle(width * column, height * row, width, height);
-            destinationRectangle = new Rectangle((int)location.X - 80, (int)location.Y, width, height);
-            spriteEffects = _isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            SourceRectangle = new Rectangle(width * column, height * row, width, height);
+            DestinationRectangle = new Rectangle((int)location.X - 80, (int)location.Y, width, height);
+            SpriteEffects = _isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
         }
         else // Анімація атаки
         {
             if (_isFacingRight)
             {
-                sourceRectangle = new Rectangle(width * column, height * row, width, height);
-                destinationRectangle = new Rectangle((int)location.X - 20, (int)location.Y - 41, width, height);
-                spriteEffects = _isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+                SourceRectangle = new Rectangle(width * column, height * row, width, height);
+                DestinationRectangle = new Rectangle((int)location.X - 20, (int)location.Y - 41, width, height);
+                SpriteEffects = _isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             }
             else // Чесно, не моє поняття як це зробити без хардкода
             {
-                sourceRectangle = new Rectangle(width * column, height * row, width, height);
-                destinationRectangle = new Rectangle((int)location.X - 80, (int)location.Y - 41, width, height);
-                spriteEffects = _isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+                SourceRectangle = new Rectangle(width * column, height * row, width, height);
+                DestinationRectangle = new Rectangle((int)location.X - 80, (int)location.Y - 41, width, height);
+                SpriteEffects = _isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             }
         }
 
 
-        spriteBatch.Draw(_currentTexture, destinationRectangle, sourceRectangle, Color.White, 0f, Vector2.Zero,
-            spriteEffects, 0f);
+        spriteBatch.Draw(_currentTexture, DestinationRectangle, SourceRectangle, Color.White, 0f, Vector2.Zero,
+            SpriteEffects, 0f);
     }
 
     public void DrawBoundingBox(SpriteBatch spriteBatch, Texture2D hitboxTexture)
