@@ -52,7 +52,6 @@ namespace Tales_of_Everlight
             _level1 = new Level1();
 
             EnemyList = new();
-
         }
 
         protected override void Initialize()
@@ -62,9 +61,6 @@ namespace Tales_of_Everlight
             _previousMState = Mouse.GetState();
             _graphics.IsFullScreen = false;
             _graphics.ApplyChanges();
-
-
-
 
 
             _square.Position = new Vector2(1000, 100);
@@ -119,8 +115,6 @@ namespace Tales_of_Everlight
             //Attack.Execute();
 
 
-
-
             #region Collision Handler
 
             // add player's velocity and grab the intersecting tiles
@@ -129,11 +123,9 @@ namespace Tales_of_Everlight
 
             foreach (var rect in intersections)
             {
-
                 // handle collisions if the tile position exists in the tile map layer.
                 if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _val))
                 {
-
                     // create temp rect to handle collisions (not necessary, you can optimize!)
                     Rectangle collision = new(
                         rect.X * Tilesize,
@@ -151,9 +143,7 @@ namespace Tales_of_Everlight
                     {
                         _mainHero.Rect = _mainHero.Rect with { X = collision.Right };
                     }
-
                 }
-
             }
 
             // same as horizontal collisions
@@ -165,10 +155,8 @@ namespace Tales_of_Everlight
 
             foreach (var rect in intersections)
             {
-
                 if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _val))
                 {
-
                     Rectangle collision = new(
                         rect.X * Tilesize,
                         rect.Y * Tilesize,
@@ -185,9 +173,7 @@ namespace Tales_of_Everlight
                     else if (_mainHero.Velocity.Y < 0.0f)
                     {
                         _mainHero.Rect = _mainHero.Rect with { Y = collision.Bottom };
-
                     }
-
                 }
             }
 
@@ -244,18 +230,17 @@ namespace Tales_of_Everlight
 
             MouseState mouseState = Mouse.GetState();
             _previousMState = mouseState;
-
-
-
         }
 
         private void UpdateCameraPosition()
         {
-            Vector2 characterPosition = new Vector2(_mainHero.Rect.X, _mainHero.Rect.Y);
-
-            if (characterPosition.X >= (_graphics.PreferredBackBufferWidth / 2.0f) && characterPosition.X <= 3000)
+            if (_mainHero.Rect.X >= (_graphics.PreferredBackBufferWidth / 2.0f) && _mainHero.Rect.X <= _level1.Width - (_graphics.PreferredBackBufferWidth / 2.0f))
             {
-                _camera.Position = new Vector2(characterPosition.X, _camera.Position.Y);
+                _camera.Position = new Vector2(_mainHero.Rect.X, _mainHero.Rect.Y+100);
+            }
+            else
+            {
+                _camera.Position = _camera.Position with { Y = _mainHero.Rect.Y +100};
             }
         }
 
@@ -396,9 +381,6 @@ namespace Tales_of_Everlight
                 EnemyList.Remove(enemy);
                 enemy = null;
             }
-            
         }
-        
     }
-
 }

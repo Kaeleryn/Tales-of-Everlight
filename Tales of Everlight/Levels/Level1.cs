@@ -11,7 +11,10 @@ public class Level1
 
     private Dictionary<Vector2, int> foreground;
     private Dictionary<Vector2, int> collisions;
+    public readonly int Width = 9344;
+        
     
+
     public Dictionary<Vector2, int> Foreground => foreground;
     public Dictionary<Vector2, int> Collisions => collisions;
     
