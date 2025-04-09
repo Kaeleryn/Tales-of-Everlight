@@ -21,7 +21,7 @@ public static class Attack
         {
             foreach (var enemy in Main.EnemyList)
             {
-                if(!enemy.IsDead && Math.Abs(enemy.BoundingBox.X - Main._mainHero.Rect.X) < 150 && Math.Abs(enemy.BoundingBox.Y - Main._mainHero.Rect.Y) < 150)
+                if(!enemy.IsDead && Math.Abs(enemy.Rect.X - Main._mainHero.Rect.X) < 150 && Math.Abs(enemy.Rect.Y - Main._mainHero.Rect.Y) < 150)
                 {
                     enemy.TakeDamage(10);
                     enemy.Damaged= true;
