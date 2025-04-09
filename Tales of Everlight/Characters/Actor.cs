@@ -47,17 +47,12 @@ public abstract class Actor
 
     private const float Gravity = 0.65f; // Гравітація
     private const double FrameTime = 0.1; // Час між кадрами
-
-    private Rectangle _boundingBox;
-
-    public Rectangle BoundingBox
-    {
-        get => Rect;
-        set => _boundingBox = Rect;
-    }
+    
 
     public bool IsMoving { get; set; } = true;
     public bool IsOnGround { get; set; }
+
+    public bool IsAttacking { get; set; } = false;
 
     public Vector2 Velocity
     {
@@ -208,9 +203,10 @@ public abstract class Actor
 
     public void HandleAttackMovement(MouseState mousestate, MouseState previousMState, GameTime gameTime)
     {
-        if (mousestate.LeftButton == ButtonState.Pressed)
+        if (mousestate.LeftButton == ButtonState.Pressed && !IsAttacking && IsOnGround)
         {
             _velocity = Vector2.Zero; // Зупиняємо персонажа
+            IsAttacking = true;
             AnimationState = AnimationState.Attacking; // Змінюємо стан анімації
             _currentFrame = 0; // Скидаємо кадр анімації
         }
@@ -278,6 +274,7 @@ public abstract class Actor
                 {
                     // Attack animation completed
                     _currentFrame = 0;
+                    IsAttacking = false;
                     ;
                     // Return to previous state when attack is done
                     AnimationState = IsOnGround ? AnimationState.Running : AnimationState.Jumping;
@@ -375,7 +372,7 @@ public abstract class Actor
 
     public void DrawBoundingBox(SpriteBatch spriteBatch, Texture2D hitboxTexture)
     {
-        Rectangle boundingBox = BoundingBox;
+        Rectangle boundingBox = Rect;
         spriteBatch.Draw(hitboxTexture, new Rectangle(boundingBox.X, boundingBox.Y, boundingBox.Width, 1),
             Color.Red);
         spriteBatch.Draw(hitboxTexture, new Rectangle(boundingBox.X, boundingBox.Y, 1, boundingBox.Height),
