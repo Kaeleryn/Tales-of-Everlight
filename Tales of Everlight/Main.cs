@@ -15,7 +15,7 @@ namespace Tales_of_Everlight
         private Level1 _level1;
         private bool _isHudVisible;
         private Texture2D _mainHeroSprite;
-        private Texture2D _squareSprite;
+        private Texture2D _goblinSprite;
 
         private Texture2D _rectangleTexture;
 
@@ -23,7 +23,7 @@ namespace Tales_of_Everlight
         private SpriteFont _hudFont;
         private Color _backgroundColor = new(145, 221, 207, 255);
         public static MainHero _mainHero = new();
-        public Square _square = new();
+        public Goblin Goblin = new();
         private KeyboardState _previousKeyState;
         private MouseState _previousMState;
         private const int Tilesize = 64;
@@ -61,9 +61,6 @@ namespace Tales_of_Everlight
             _previousMState = Mouse.GetState();
             _graphics.IsFullScreen = false;
             _graphics.ApplyChanges();
-
-
-            
         }
 
         protected override void LoadContent()
@@ -72,18 +69,20 @@ namespace Tales_of_Everlight
 
             //_mainHeroSprite = Content.Load<Texture2D>("animatedSprite");
             _mainHeroSprite = Content.Load<Texture2D>("animatedSprite");
-            _squareSprite = Content.Load<Texture2D>("enemy1");
+            _goblinSprite = Content.Load<Texture2D>("enemy1");
             //_mainHero = new MainHero(_mainHeroSprite, new Vector2(500, 1000), 1, 6);
             _mainHero = new MainHero(Content,
-                new Rectangle(0, 0, 64, 128), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static
+                new Rectangle(0, 0, 64,
+                    128), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static
                 new Rectangle(0, 0, 128, 128));
 
-            //_square = new Square(_squareSprite, new Vector2(1000, 100), 5, 1);
-            _square = new Square(Content,
-                new Rectangle(1000, 100, 64, 64), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static);
+            //Goblin = new Goblin(_goblinSprite, new Vector2(1000, 100), 5, 1);
+            Goblin = new Goblin(Content,
+                new Rectangle(1000, 100, 64,
+                    64), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static);
                 new Rectangle(0, 0, 128, 128));
 
-            EnemyList.Add(_square);
+            EnemyList.Add(Goblin);
 
             //_hudTexture = Content.Load<Texture2D>("hud+");
             _hudFont = Content.Load<SpriteFont>("hudFont");
@@ -180,12 +179,11 @@ namespace Tales_of_Everlight
             }
 
             #endregion
-            
+
             #region Enemy Collision Handler
 
             foreach (var enemy in EnemyList)
             {
-                
                 enemy.Rect = enemy.Rect with { X = enemy.Rect.X + (int)enemy.Velocity.X };
                 intersections = GetIntersectingTilesHorizontal(enemy.Rect);
 
@@ -239,15 +237,15 @@ namespace Tales_of_Everlight
                         }
                     }
                 }
-                
-                
-                
             }
-            
+
             #endregion
 
-            _square.Update(gameTime);
-            _square.MovementHandler();
+            foreach (var enemy in EnemyList)
+            {
+                Goblin.Update(gameTime);
+                Goblin.MovementHandler();
+            }
 
 
             if (_isSplashScreenVisible)
@@ -274,7 +272,7 @@ namespace Tales_of_Everlight
                 else
                 {
                     UpdateCameraPosition();
-                   // UpdateGameElements(gameTime);
+                    // UpdateGameElements(gameTime);
                 }
             }
 
@@ -302,20 +300,21 @@ namespace Tales_of_Everlight
 
         private void UpdateCameraPosition()
         {
-            if (_mainHero.Rect.X >= (_graphics.PreferredBackBufferWidth / 2.0f) && _mainHero.Rect.X <= _level1.Width - (_graphics.PreferredBackBufferWidth / 2.0f))
+            if (_mainHero.Rect.X >= (_graphics.PreferredBackBufferWidth / 2.0f) &&
+                _mainHero.Rect.X <= _level1.Width - (_graphics.PreferredBackBufferWidth / 2.0f))
             {
-                _camera.Position = new Vector2(_mainHero.Rect.X, _mainHero.Rect.Y+100);
+                _camera.Position = new Vector2(_mainHero.Rect.X, _mainHero.Rect.Y + 100);
             }
             else
             {
-                _camera.Position = _camera.Position with { Y = _mainHero.Rect.Y +100};
+                _camera.Position = _camera.Position with { Y = _mainHero.Rect.Y + 100 };
             }
         }
 
         // private void UpdateGameElements(GameTime gameTime)
         // {
-        //     _square.CollisionHandler(_level1.Collisions, Tilesize);
-        //     _square.MovementHandler();
+        //     Goblin.CollisionHandler(_level1.Collisions, Tilesize);
+        //     Goblin.MovementHandler();
         // }
 
         protected override void Draw(GameTime gameTime)
@@ -357,8 +356,8 @@ namespace Tales_of_Everlight
                 // , _hitboxTexture
             );
             _mainHero.DrawBoundingBox(_spriteBatch, _hitboxTexture);
-            _square.Draw(_spriteBatch, new Vector2(_square.Rect.X, _square.Rect.Y), _hitboxTexture);
-            _square.DrawBoundingBox(_spriteBatch, _hitboxTexture);
+            Goblin.Draw(_spriteBatch, new Vector2(Goblin.Rect.X, Goblin.Rect.Y), _hitboxTexture);
+            Goblin.DrawBoundingBox(_spriteBatch, _hitboxTexture);
             _level1.Draw(_spriteBatch);
 
             foreach (var rect in intersections)

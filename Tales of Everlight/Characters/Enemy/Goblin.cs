@@ -4,13 +4,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Tales_of_Everlight;
 
-public class Square : Enemy
+public class Goblin : Enemy
 {
-    public Square(ContentManager content, Rectangle rect, Rectangle srect) : base(content, rect, srect)
+    public Goblin(ContentManager content, Rectangle rect, Rectangle srect) : base(content, rect, srect)
     {
     }
 
-    public Square()
+    public Goblin()
     {
     }
 }
