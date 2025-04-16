@@ -69,7 +69,7 @@ namespace Tales_of_Everlight
 
             //_mainHeroSprite = Content.Load<Texture2D>("animatedSprite");
             _mainHeroSprite = Content.Load<Texture2D>("animatedSprite");
-            _goblinSprite = Content.Load<Texture2D>("enemy1");
+            //_goblinSprite = Content.Load<Texture2D>("enemy1");
             //_mainHero = new MainHero(_mainHeroSprite, new Vector2(500, 1000), 1, 6);
             _mainHero = new MainHero(Content,
                 new Rectangle(0, 0, 64,
@@ -78,8 +78,7 @@ namespace Tales_of_Everlight
 
             //Goblin = new Goblin(_goblinSprite, new Vector2(1000, 100), 5, 1);
             Goblin = new Goblin(Content,
-                new Rectangle(1000, 100, 64,
-                    64), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static);
+                new Rectangle(1000, 100, 64,64), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static);
                 new Rectangle(0, 0, 128, 128));
 
             EnemyList.Add(Goblin);
