@@ -11,14 +11,18 @@ namespace Tales_of_Everlight;
 public abstract class Enemy
 {
     public static int Health { get; set; }
+    
+    public SpriteEffects SpriteEffects { get; set; }
     public bool Damaged { get; set; }
     public bool IsDead { get; private set; }
     private double _timeSinceLastFrame;
+    public Rectangle SourceRectangle { get; set; }
+    public Rectangle DestinationRectangle { get; set; }
 
-    private float _deathAnimationTime = 0f;
-    private float _deathAnimationDuration = 1.0f; // Duration of the death animation in seconds
+    public float _deathAnimationTime = 0f;
+    public float _deathAnimationDuration = 1.0f; // Duration of the death animation in seconds
     public double FrameTime = 0.1;
-    private Texture2D Texture { get; set; }
+    public Texture2D Texture { get; set; }
 
     private Rectangle _rect;
     private Rectangle _srect;
@@ -36,13 +40,13 @@ public abstract class Enemy
     }
 
     public bool IsOnGround { get; set; } = false;
-    private int Rows { get; set; }
-    private int Columns { get; set; }
+    protected int Rows { get; set; }
+    protected int Columns { get; set; }
 
-    private int _currentFrame;
-    private int _totalFrames;
+    public int _currentFrame;
+    public int _totalFrames;
 
-    private bool isFacingLeft = false;
+    public bool IsFacingRight = false;
     private bool isMoving = true;
     private bool isJumping = true;
 
@@ -86,7 +90,7 @@ public abstract class Enemy
 
 
         _currentFrame = 0;
-        Texture = content.Load<Texture2D>("enemy1");
+        
 
 
         _rect = rect;
@@ -141,13 +145,13 @@ public abstract class Enemy
         }
     }
 
-    public void AnimationHandler()
+    public virtual void AnimationHandler()
     {
         Columns = 1;
         Rows = 5;
     }
 
-    public void Draw(SpriteBatch spriteBatch, Vector2 location, Texture2D hitboxTexture)
+    public virtual void Draw(SpriteBatch spriteBatch, Vector2 location, Texture2D hitboxTexture)
     {
         AnimationHandler();
         _totalFrames = Columns * Rows;
@@ -157,25 +161,26 @@ public abstract class Enemy
         int column = _currentFrame % Columns;
 
 
-        Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
-        SpriteEffects spriteEffects = isFacingLeft ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-        Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
+        SourceRectangle = new Rectangle(width * column, height * row, width, height);
+        DestinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
+        SpriteEffects spriteEffects = IsFacingRight ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+        
 
 
         if (IsDead)
         {
             float alpha = 1.0f - (_deathAnimationTime / _deathAnimationDuration);
             Color deathColor = Color.White * alpha;
-            spriteBatch.Draw(Texture, location, sourceRectangle, deathColor, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
+            spriteBatch.Draw(Texture, location, SourceRectangle, deathColor, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
         }
         else if (Damaged)
         {
-            spriteBatch.Draw(Texture, location, sourceRectangle, Color.Red, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
+            spriteBatch.Draw(Texture, location, SourceRectangle, Color.Red, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
             Damaged = false;
         }
         else
         {
-            spriteBatch.Draw(Texture, location, sourceRectangle, Color.White, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
+            spriteBatch.Draw(Texture, location, SourceRectangle, Color.White, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
         }
     }
 
