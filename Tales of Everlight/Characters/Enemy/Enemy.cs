@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.Direct3D9;
 
 namespace Tales_of_Everlight;
 
@@ -17,14 +19,28 @@ public abstract class Enemy
     private float _deathAnimationDuration = 1.0f; // Duration of the death animation in seconds
     public double FrameTime = 0.1;
     private Texture2D Texture { get; set; }
-    private Vector2 position;
-    private Vector2 velocity;
 
+    private Rectangle _rect;
+    private Rectangle _srect;
+
+    public Rectangle Rect
+    {
+        get => _rect;
+        set => _rect = value;
+    }
+
+    public Rectangle Srect
+    {
+        get => _srect;
+        set => _srect = value;
+    }
+
+    public bool IsOnGround { get; set; } = false;
     private int Rows { get; set; }
     private int Columns { get; set; }
 
-    private int currentFrame;
-    private int totalFrames;
+    private int _currentFrame;
+    private int _totalFrames;
 
     private bool isFacingLeft = false;
     private bool isMoving = true;
@@ -43,29 +59,7 @@ public abstract class Enemy
         get => isMoving;
         set => isMoving = value;
     }
-
-    public Vector2 Position
-    {
-        get => position;
-        set => position = value;
-    }
-
-    public Vector2 Velocity
-    {
-        get => velocity;
-        set => velocity = value;
-    }
-
-    public Rectangle BoundingBox
-    {
-        get
-        {
-            int width = Texture.Width / Columns;
-            int height = Texture.Height / Rows;
-            return new Rectangle((int)position.X + 25, (int)position.Y, width - 50, height - 30);
-        }
-    }
-
+    public Vector2 Velocity { get; set; }
     public void TakeDamage(int damage)
     {
         Console.WriteLine("TakeDamage method called");
@@ -86,147 +80,33 @@ public abstract class Enemy
         // For example, you might want to remove the enemy from the game or play a death animation.
     }
 
-    protected Enemy(Texture2D texture, Vector2 position, int rows, int columns)
+    protected Enemy(ContentManager content, Rectangle rect, Rectangle srect)
     {
         Health = 100;
-        Texture = texture;
-        Position = position;
 
-        Rows = rows;
-        Columns = columns;
-        currentFrame = 0;
-        totalFrames = Rows * Columns;
-        velocity = Vector2.Zero;
+
+        _currentFrame = 0;
+        Texture = content.Load<Texture2D>("enemy1");
+
+
+        _rect = rect;
+        _srect = srect;
+        Velocity = Vector2.Zero;
     }
 
     protected Enemy()
     {
-        velocity = Vector2.Zero;
+        Velocity = Vector2.Zero;
     }
 
-
-    private List<Rectangle> getIntersectingTilesHorizontal(Rectangle target, int TILESIZE)
-    {
-        List<Rectangle> intersections = new();
-
-        int leftTile = target.Left / TILESIZE;
-        int rightTile = (target.Right - 1) / TILESIZE;
-        int topTile = target.Top / TILESIZE;
-        int bottomTile = (target.Bottom - 1) / TILESIZE;
-
-        for (int x = leftTile; x <= rightTile; x++)
-        {
-            for (int y = topTile; y <= bottomTile; y++)
-            {
-                intersections.Add(new Rectangle(x, y, TILESIZE, TILESIZE));
-            }
-        }
-
-        return intersections;
-    }
-
-    private List<Rectangle> getIntersectingTilesVertical(Rectangle target, int TILESIZE)
-    {
-        List<Rectangle> intersections = new();
-
-        int leftTile = target.Left / TILESIZE;
-        int rightTile = (target.Right - 1) / TILESIZE;
-        int topTile = target.Top / TILESIZE;
-        int bottomTile = (target.Bottom - 1) / TILESIZE;
-
-        for (int x = leftTile; x <= rightTile; x++)
-        {
-            for (int y = topTile; y <= bottomTile; y++)
-            {
-                intersections.Add(new Rectangle(x, y, TILESIZE, TILESIZE));
-            }
-        }
-
-        return intersections;
-    }
-
-
-    public void CollisionHandler(Dictionary<Vector2, int> collisions, int TILESIZE)
-    {
-        position += velocity;
-
-
-        // Vertical collision detection
-        var intersections = getIntersectingTilesVertical(BoundingBox, TILESIZE);
-        bool hasVerticalCollision = false;
-        foreach (var rect in intersections)
-        {
-            if (collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _val))
-            {
-                Rectangle collision = new Rectangle(
-                    rect.X * TILESIZE,
-                    rect.Y * TILESIZE,
-                    TILESIZE,
-                    TILESIZE
-                );
-
-                if (velocity.Y > 0.0f)
-                {
-                    position.Y = collision.Top - BoundingBox.Height;
-                    isJumping = false;
-                }
-                else if (velocity.Y < 0.0f)
-                {
-                    position.Y = collision.Bottom;
-                }
-
-                velocity.Y = 0;
-                hasVerticalCollision = true;
-            }
-        }
-
-        // Horizontal collision detection
-        intersections = getIntersectingTilesHorizontal(BoundingBox, TILESIZE);
-        foreach (var rect in intersections)
-        {
-            if (collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _val))
-            {
-                Rectangle collision = new Rectangle(
-                    rect.X * TILESIZE,
-                    rect.Y * TILESIZE,
-                    TILESIZE,
-                    TILESIZE
-                );
-
-                if (velocity.X > 0.0f)
-                {
-                    position.X = collision.Left - BoundingBox.Width - 70; // Adjust for bounding box offset
-                    isMoving = false;
-                }
-                else if (velocity.X < 0.0f)
-                {
-                    position.X = collision.Right - 70; // Adjust for bounding box offset
-                    isMoving = false;
-                }
-
-                velocity.X = 0;
-            }
-        }
-
-        if (!hasVerticalCollision)
-        {
-            isJumping = true;
-        }
-    }
 
     public void MovementHandler()
     {
-        if (isMoving)
-        {
-            position.X += velocity.X;
-        }
-
-        if (isJumping)
-        {
-            velocity.Y += GRAVITY;
-            position.Y += velocity.Y;
-        }
+        if (IsDead) return;
+        Velocity = Velocity with { Y = Velocity.Y + GRAVITY };
+        Velocity = Velocity with { Y = Math.Min(20.0f, Velocity.Y) };
     }
+
 
     public void Update(GameTime gameTime)
     {
@@ -253,21 +133,28 @@ public abstract class Enemy
         {
             _timeSinceLastFrame -= FrameTime;
 
-            currentFrame++;
-            if (currentFrame >= totalFrames)
+            _currentFrame++;
+            if (_currentFrame >= _totalFrames)
             {
-                currentFrame = 0;
+                _currentFrame = 0;
             }
         }
     }
 
+    public void AnimationHandler()
+    {
+        Columns = 1;
+        Rows = 5;
+    }
 
     public void Draw(SpriteBatch spriteBatch, Vector2 location, Texture2D hitboxTexture)
     {
+        AnimationHandler();
+        _totalFrames = Columns * Rows;
         int width = Texture.Width / Columns;
         int height = Texture.Height / Rows;
-        int row = currentFrame / Columns;
-        int column = currentFrame % Columns;
+        int row = _currentFrame / Columns;
+        int column = _currentFrame % Columns;
 
 
         Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
@@ -290,23 +177,21 @@ public abstract class Enemy
         {
             spriteBatch.Draw(Texture, location, sourceRectangle, Color.White, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
         }
+    }
 
-        Rectangle boundingBox = BoundingBox;
 
-        if (!IsDead)
-        {
-            // хітбокс
-            spriteBatch.Draw(hitboxTexture, new Rectangle(boundingBox.X, boundingBox.Y, boundingBox.Width, 1),
-                Color.Red); // Top
-            spriteBatch.Draw(hitboxTexture, new Rectangle(boundingBox.X, boundingBox.Y, 1, boundingBox.Height),
-                Color.Red); // Left
-            spriteBatch.Draw(hitboxTexture,
-                new Rectangle(boundingBox.X, boundingBox.Y + boundingBox.Height - 1, boundingBox.Width, 1),
-                Color.Red); // Bottom
-            spriteBatch.Draw(hitboxTexture,
-                new Rectangle(boundingBox.X + boundingBox.Width - 1, boundingBox.Y, 1, boundingBox.Height),
-                Color.Red); // Right
-            //хітбокс
-        }
+    public void DrawBoundingBox(SpriteBatch spriteBatch, Texture2D hitboxTexture)
+    {
+        Rectangle boundingBox = Rect;
+        spriteBatch.Draw(hitboxTexture, new Rectangle(boundingBox.X, boundingBox.Y, boundingBox.Width, 1),
+            Color.Red);
+        spriteBatch.Draw(hitboxTexture, new Rectangle(boundingBox.X, boundingBox.Y, 1, boundingBox.Height),
+            Color.Red);
+        spriteBatch.Draw(hitboxTexture,
+            new Rectangle(boundingBox.X, boundingBox.Y + boundingBox.Height - 1, boundingBox.Width, 1),
+            Color.Red);
+        spriteBatch.Draw(hitboxTexture,
+            new Rectangle(boundingBox.X + boundingBox.Width - 1, boundingBox.Y, 1, boundingBox.Height),
+            Color.Red);
     }
 }
