@@ -11,18 +11,32 @@ namespace Tales_of_Everlight;
 public abstract class Enemy
 {
     public static int Health { get; set; }
-    
+
+    public EnemyState State;
+    public EnemyAnimationState AnimationState;
+
+    public float StateTimer = 0f;
+
+    private const float MOVEMENT_DURATION = 2.0f;
+    private const float IDLE_DURATION = 1.0f;
+
+
     public SpriteEffects SpriteEffects { get; set; }
     public bool Damaged { get; set; }
-    public bool IsDead { get; private set; }
-    private double _timeSinceLastFrame;
+    public bool IsDead { get; set; }
+    public double _timeSinceLastFrame;
     public Rectangle SourceRectangle { get; set; }
     public Rectangle DestinationRectangle { get; set; }
 
     public float _deathAnimationTime = 0f;
     public float _deathAnimationDuration = 1.0f; // Duration of the death animation in seconds
     public double FrameTime = 0.1;
-    public Texture2D Texture { get; set; }
+    public Texture2D IdleTexture { get; set; }
+    public Texture2D CurrentTexture;
+    public Texture2D AttackTexture;
+    public bool IsAttacking = false;
+
+    public Texture2D MovingTexture { get; set; }
 
     private Rectangle _rect;
     private Rectangle _srect;
@@ -63,7 +77,9 @@ public abstract class Enemy
         get => isMoving;
         set => isMoving = value;
     }
+
     public Vector2 Velocity { get; set; }
+
     public void TakeDamage(int damage)
     {
         Console.WriteLine("TakeDamage method called");
@@ -90,7 +106,6 @@ public abstract class Enemy
 
 
         _currentFrame = 0;
-        
 
 
         _rect = rect;
@@ -111,8 +126,36 @@ public abstract class Enemy
         Velocity = Velocity with { Y = Math.Min(20.0f, Velocity.Y) };
     }
 
+    public virtual void MoveLeft()
+    {
+        Velocity = Velocity with { X = -5f };
+        IsFacingRight = false;
+    }
 
-    public void Update(GameTime gameTime)
+    public virtual void MoveRight()
+    {
+        Velocity = Velocity with { X = 5f };
+        IsFacingRight = true;
+    }
+
+    public virtual void BehaviorHandler(GameTime gameTime)
+    {
+        if (IsDead) return;
+        
+    }
+
+    public virtual void SearchEnemy()
+    {
+        
+    }
+    
+    public virtual void PerformAttack()
+    {
+        
+    }
+
+
+    public virtual void Update(GameTime gameTime)
     {
         if (IsDead)
         {
@@ -120,17 +163,19 @@ public abstract class Enemy
             UpdateFrame(gameTime);
             if (_deathAnimationTime >= _deathAnimationDuration)
             {
-                Main.RemoveEnemy(this);
+                //Main.RemoveEnemy(this);
                 Console.WriteLine("Enemy has been removed.");
             }
 
             return;
         }
 
+        BehaviorHandler(gameTime);
         UpdateFrame(gameTime);
+        
     }
 
-    public void UpdateFrame(GameTime gametime)
+    public virtual void UpdateFrame(GameTime gametime)
     {
         _timeSinceLastFrame += gametime.ElapsedGameTime.TotalSeconds;
         if (_timeSinceLastFrame >= FrameTime)
@@ -155,8 +200,8 @@ public abstract class Enemy
     {
         AnimationHandler();
         _totalFrames = Columns * Rows;
-        int width = Texture.Width / Columns;
-        int height = Texture.Height / Rows;
+        int width = CurrentTexture.Width / Columns;
+        int height = CurrentTexture.Height / Rows;
         int row = _currentFrame / Columns;
         int column = _currentFrame % Columns;
 
@@ -164,23 +209,25 @@ public abstract class Enemy
         SourceRectangle = new Rectangle(width * column, height * row, width, height);
         DestinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
         SpriteEffects spriteEffects = IsFacingRight ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-        
 
 
         if (IsDead)
         {
             float alpha = 1.0f - (_deathAnimationTime / _deathAnimationDuration);
             Color deathColor = Color.White * alpha;
-            spriteBatch.Draw(Texture, location, SourceRectangle, deathColor, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
+            spriteBatch.Draw(CurrentTexture, location, SourceRectangle, deathColor, 0f, Vector2.Zero, 1f, spriteEffects,
+                0f);
         }
         else if (Damaged)
         {
-            spriteBatch.Draw(Texture, location, SourceRectangle, Color.Red, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
+            spriteBatch.Draw(CurrentTexture, location, SourceRectangle, Color.Red, 0f, Vector2.Zero, 1f, spriteEffects,
+                0f);
             Damaged = false;
         }
         else
         {
-            spriteBatch.Draw(Texture, location, SourceRectangle, Color.White, 0f, Vector2.Zero, 1f, spriteEffects, 0f);
+            spriteBatch.Draw(CurrentTexture, location, SourceRectangle, Color.White, 0f, Vector2.Zero, 1f,
+                spriteEffects, 0f);
         }
     }
 

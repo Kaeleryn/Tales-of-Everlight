@@ -79,7 +79,7 @@ namespace Tales_of_Everlight
             //Goblin = new Goblin(_goblinSprite, new Vector2(1000, 100), 5, 1);
             Goblin = new Goblin(Content,
                 new Rectangle(1000, 100, 64,64), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static);
-                new Rectangle(0, 0, 128, 128));
+                new Rectangle(0, 0, 70, 70));
 
             EnemyList.Add(Goblin);
 

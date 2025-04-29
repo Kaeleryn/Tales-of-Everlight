@@ -35,4 +35,9 @@ public static class Attack
         }
     }
 
+    public static void ExecuteByEnemy()
+    {
+        Console.WriteLine("Execute method called by enemy");
+    }
+
 }
