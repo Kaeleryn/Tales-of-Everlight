@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.Design.Serialization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,15 +10,14 @@ namespace Tales_of_Everlight;
 
 public class Goblin : Enemy
 {
-    
     private const float MOVEMENT_DURATION = 2.0f;
     private const float IDLE_DURATION = 2.0f;
+
     public Goblin(ContentManager content, Rectangle rect, Rectangle srect) : base(content, rect, srect)
     {
         IdleTexture = content.Load<Texture2D>("GoblinIdle-Sheet");
         MovingTexture = content.Load<Texture2D>("GoblinWalk-Sheet");
         AttackTexture = content.Load<Texture2D>("GoblinAttack-Sheet");
-
     }
 
     public Goblin()
@@ -26,56 +26,56 @@ public class Goblin : Enemy
 
     public override void BehaviorHandler(GameTime gameTime)
     {
-
         if (IsDead) return;
-        
+
         StateTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
 
         switch (State)
         {
             case EnemyState.MovingRight:
                 MoveRight();
-                if(StateTimer>= MOVEMENT_DURATION)
+                if (StateTimer >= MOVEMENT_DURATION)
                 {
                     State = EnemyState.Idle;
                     AnimationState = EnemyAnimationState.Idle;
                     StateTimer = 0f;
                     Velocity = Vector2.Zero;
                 }
+
                 break;
-            
+
             case EnemyState.Idle:
                 Velocity = Vector2.Zero;
-                if(StateTimer >= IDLE_DURATION)
+                if (StateTimer >= IDLE_DURATION)
                 {
                     State = IsFacingRight ? EnemyState.MovingLeft : EnemyState.MovingRight;
                     AnimationState = EnemyAnimationState.Move;
                     StateTimer = 0f;
                 }
+
                 break;
-            
+
             case EnemyState.MovingLeft:
                 MoveLeft();
-                if(StateTimer >= MOVEMENT_DURATION)
+                if (StateTimer >= MOVEMENT_DURATION)
                 {
                     State = EnemyState.Idle;
                     AnimationState = EnemyAnimationState.Idle;
                     StateTimer = 0f;
                     Velocity = Vector2.Zero;
                 }
+
                 break;
         }
-
     }
 
-    
 
     // public override void AnimationHandler()
     // {
     //     Columns = 8;
     //     Rows = 1;
     // }
-    
+
     public override void AnimationHandler()
     {
         switch (AnimationState)
@@ -97,21 +97,68 @@ public class Goblin : Enemy
                 break;
         }
     }
-    
+
+    public override void PerformAttack()
+    {
+        Velocity = Vector2.Zero;
+        AnimationState = EnemyAnimationState.Attack;
+        IsFacingRight = _mainHero.Rect.X >= Rect.X;
+        IsAttacking = true;
+    }
+
+
+    public override void SearchEnemy()
+    {
+        if (Math.Abs(_mainHero.Rect.X - Rect.X) < 100)
+        {
+            //PerformAttack();  
+            Console.WriteLine("Enemy found");
+
+            PerformAttack();
+        }
+    }
+
     public override void UpdateFrame(GameTime gametime)
     {
         _timeSinceLastFrame += gametime.ElapsedGameTime.TotalSeconds;
         if (_timeSinceLastFrame >= FrameTime)
         {
-            _currentFrame++;
-            if (_currentFrame >= _totalFrames)
-            {
-                _currentFrame = 0;
-            }
             _timeSinceLastFrame -= FrameTime;
+
+
+            if (AnimationState == EnemyAnimationState.Attack)
+            {
+                if (_currentFrame < _totalFrames - 1)
+                {
+                    _currentFrame++;
+                    if (_currentFrame == 3)
+                    {
+                        if (Math.Abs(_mainHero.Rect.X - Rect.X) < 64)
+                            Console.WriteLine("Ennemy attacked");
+                        Attack.ExecuteByEnemy(10);
+                    }
+                }
+                else
+                {
+                    _currentFrame = 0;
+                    IsAttacking = false;
+                    State = EnemyState.Idle;
+                    AnimationState = EnemyAnimationState.Idle;
+                    StateTimer = 0f;
+                    BehaviorHandler(gametime);
+                }
+            }
+            else
+            {
+                _currentFrame++;
+                if (_currentFrame >= _totalFrames)
+                {
+                    _currentFrame = 0;
+                }
+            }
         }
     }
-    
+
     public override void Update(GameTime gameTime)
     {
         if (IsDead)
@@ -127,20 +174,23 @@ public class Goblin : Enemy
             return;
         }
 
-        BehaviorHandler(gameTime);
-       
+
+        if (!IsAttacking)
+        {
+            BehaviorHandler(gameTime);
+            SearchEnemy();
+        }
+
         UpdateFrame(gameTime);
-        
     }
-    
-   
+
 
     public override void MoveRight()
     {
         Velocity = Velocity with { X = 3f };
         IsFacingRight = true;
     }
-    
+
     public override void MoveLeft()
     {
         Velocity = Velocity with { X = -3f };
@@ -163,12 +213,12 @@ public class Goblin : Enemy
         Vector2 drawPosition;
         if (IsFacingRight)
         {
-            drawPosition = new Vector2(location.X, location.Y-5);
+            drawPosition = new Vector2(location.X, location.Y - 5);
             SpriteEffects = SpriteEffects.None;
         }
         else
         {
-            drawPosition = new Vector2(location.X-30, location.Y-5);
+            drawPosition = new Vector2(location.X - 30, location.Y - 5);
             SpriteEffects = SpriteEffects.FlipHorizontally;
         }
 
@@ -177,18 +227,21 @@ public class Goblin : Enemy
         {
             float alpha = 1.0f - (_deathAnimationTime / _deathAnimationDuration);
             Color deathColor = Color.White * alpha;
-            spriteBatch.Draw(CurrentTexture, drawPosition, SourceRectangle, deathColor, 0f, Vector2.Zero, 1f, SpriteEffects,
+            spriteBatch.Draw(CurrentTexture, drawPosition, SourceRectangle, deathColor, 0f, Vector2.Zero, 1f,
+                SpriteEffects,
                 0f);
         }
         else if (Damaged)
         {
-            spriteBatch.Draw(CurrentTexture, drawPosition, SourceRectangle, Color.Red, 0f, Vector2.Zero, 1f, SpriteEffects,
+            spriteBatch.Draw(CurrentTexture, drawPosition, SourceRectangle, Color.Red, 0f, Vector2.Zero, 1f,
+                SpriteEffects,
                 0f);
             Damaged = false;
         }
         else
         {
-            spriteBatch.Draw(CurrentTexture, drawPosition, SourceRectangle, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects,
+            spriteBatch.Draw(CurrentTexture, drawPosition, SourceRectangle, Color.White, 0f, Vector2.Zero, 1f,
+                SpriteEffects,
                 0f);
         }
 
