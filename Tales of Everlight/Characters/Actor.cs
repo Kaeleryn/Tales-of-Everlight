@@ -63,7 +63,7 @@ public abstract class Actor
     private int Rows { get; set; } = 1;
     private int Columns { get; set; }
 
-    private int _currentFrame;
+    public int _currentFrame;
     private int _totalFrames;
     private int _stepsDone { get; set; }
     public int StepsDone => _stepsDone;
@@ -112,6 +112,12 @@ public abstract class Actor
         if (IsOnGround)
         {
             _jumpCount = 0; // Якщо персонаж на землі, скидаємо лічильник стрибків
+
+            if (AnimationState == AnimationState.Jumping)
+            {
+                AnimationState = AnimationState.Running;
+                _currentFrame = 0;
+            }
         }
 
         if (keystate.IsKeyDown(Keys.Space) && previousState.IsKeyUp(Keys.Space) && _jumpCount < MaxJumps)
@@ -252,7 +258,7 @@ public abstract class Actor
     // }
 
 
-    private void UpdateFrame(GameTime gameTime)
+    public void UpdateFrame(GameTime gameTime)
     {
         _timeSinceLastFrame += gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -300,6 +306,7 @@ public abstract class Actor
 
     private void AnimationHandler()
     {
+        
         switch (AnimationState)
         {
             case AnimationState.Running:

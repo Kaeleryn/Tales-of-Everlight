@@ -11,7 +11,7 @@ public class Level1
 
     private Dictionary<Vector2, int> foreground;
     private Dictionary<Vector2, int> collisions;
-    public readonly int Width = 9344;
+    public readonly int Width = 10624;
         
     
 
@@ -21,6 +21,9 @@ public class Level1
     
     private Texture2D textureAtlas_foreground;
     private Texture2D textureAtlas_collisions;
+
+    public Texture2D Background { get; set; }
+    
     
     
     
@@ -43,12 +46,26 @@ public class Level1
 
         textureAtlas_foreground = content.Load<Texture2D>("tileset_ground");
         textureAtlas_collisions = content.Load<Texture2D>("tileset_collisions");
+        // Background1L = content.Load<Texture2D>("background_layer_1");
+        // Background2L = content.Load<Texture2D>("background_layer_2");
+        // Background3L = content.Load<Texture2D>("background_layer_3");
+        
+        Background = content.Load<Texture2D>("background_sky");
         
     }
     
 
     public void Draw(SpriteBatch spriteBatch)
     {
+        // spriteBatch.Draw(Background1L, new Vector2(0, 0), Color.White);
+        // spriteBatch.Draw(Background2L, new Vector2(0, 0), Color.White);
+        // spriteBatch.Draw(Background3L, new Vector2(0, 0), Color.White); 992
+         // spriteBatch.Draw(Background, new Vector2(0, -260), Color.White);
+        for(int i = 0; i < 10880; i+=992)
+        {
+            spriteBatch.Draw(Background, new Vector2(i, -560), Color.White);
+        }
+        
         
         foreach (var item in foreground)
         {
