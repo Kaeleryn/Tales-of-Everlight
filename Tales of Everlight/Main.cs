@@ -23,7 +23,17 @@ namespace Tales_of_Everlight
         private SpriteFont _hudFont;
         private Color _backgroundColor = new(145, 221, 207, 255);
         public static MainHero _mainHero = new();
+        
+        
+        
         public Goblin Goblin = new();
+        public Sceleton Sceleton = new();
+        public Mushroom Mushroom = new();
+        public Worm Worm = new();
+        
+        
+        
+        
         private KeyboardState _previousKeyState;
         private MouseState _previousMState;
         private const int Tilesize = 64;
@@ -78,10 +88,22 @@ namespace Tales_of_Everlight
 
             //Goblin = new Goblin(_goblinSprite, new Vector2(1000, 100), 5, 1);
             Goblin = new Goblin(Content,
-                new Rectangle(1000, 100, 64,64), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static);
+                new Rectangle(1000, 100, 64, 64), 
+                //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static);
                 new Rectangle(0, 0, 70, 70));
-
+            Sceleton = new Sceleton(Content,
+                new Rectangle(1000, 100, 64, 128), 
+                new Rectangle(0, 0, 128, 128));
+            Mushroom = new Mushroom(Content,
+                new Rectangle(1000, 100, 64, 128),
+                new Rectangle(0, 0, 128, 128));
+            Worm = new Worm(Content,
+                new Rectangle(1000, 100, 64, 64),
+                new Rectangle(0, 0, 128, 128));
             EnemyList.Add(Goblin);
+            EnemyList.Add(Sceleton);
+            EnemyList.Add(Mushroom);
+            EnemyList.Add(Worm);
 
             //_hudTexture = Content.Load<Texture2D>("hud+");
             _hudFont = Content.Load<SpriteFont>("hudFont");
@@ -169,10 +191,14 @@ namespace Tales_of_Everlight
                         _mainHero.Rect = _mainHero.Rect with { Y = collision.Top - _mainHero.Rect.Height };
                         _mainHero.IsOnGround = true;
                         _mainHero.Velocity = _mainHero.Velocity with { Y = 0.0f };
+                        _mainHero.AnimationState = AnimationState.Running;
+
+                        //_mainHero._currentFrame = 0;
                     }
                     else if (_mainHero.Velocity.Y < 0.0f)
                     {
                         _mainHero.Rect = _mainHero.Rect with { Y = collision.Bottom };
+                        _mainHero.Velocity = _mainHero.Velocity with { Y = 0.0f };
                     }
                 }
             }
@@ -242,8 +268,8 @@ namespace Tales_of_Everlight
 
             foreach (var enemy in EnemyList)
             {
-                Goblin.Update(gameTime);
-                Goblin.MovementHandler();
+                enemy.Update(gameTime);
+                enemy.MovementHandler();
             }
 
 
@@ -351,13 +377,19 @@ namespace Tales_of_Everlight
 
 
             //_mainHero.Draw(_spriteBatch);
+
+            _level1.Draw(_spriteBatch);
             _mainHero.Draw(_spriteBatch, new Vector2(_mainHero.Rect.X, _mainHero.Rect.Y)
                 // , _hitboxTexture
             );
             _mainHero.DrawBoundingBox(_spriteBatch, _hitboxTexture);
-            Goblin.Draw(_spriteBatch, new Vector2(Goblin.Rect.X, Goblin.Rect.Y), _hitboxTexture);
-            Goblin.DrawBoundingBox(_spriteBatch, _hitboxTexture);
-            _level1.Draw(_spriteBatch);
+
+            foreach (var enemy in EnemyList)
+            {
+                enemy.Draw(_spriteBatch, new Vector2(enemy.Rect.X, enemy.Rect.Y), _hitboxTexture);
+                enemy.DrawBoundingBox(_spriteBatch, _hitboxTexture);
+            }
+
 
             foreach (var rect in intersections)
             {

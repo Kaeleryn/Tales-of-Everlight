@@ -24,7 +24,7 @@ public static class Attack
             {
                 if(!enemy.IsDead && Math.Abs(enemy.Rect.X - _mainHero.Rect.X) < 150 && Math.Abs(enemy.Rect.Y - _mainHero.Rect.Y) < 150)
                 {
-                    enemy.TakeDamage(10);
+                    enemy.TakeDamage(20);
                     enemy.Damaged= true;
                     Console.WriteLine("Execute method called");
                     // if (enemy.Health <= 0)
