@@ -10,11 +10,13 @@ namespace Tales_of_Everlight;
 
 public class Goblin : Enemy
 {
+   
     private const float MOVEMENT_DURATION = 2.0f;
     private const float IDLE_DURATION = 2.0f;
 
     public Goblin(ContentManager content, Rectangle rect, Rectangle srect) : base(content, rect, srect)
     {
+        Health = 50;
         IdleTexture = content.Load<Texture2D>("GoblinIdle-Sheet");
         MovingTexture = content.Load<Texture2D>("GoblinWalk-Sheet");
         AttackTexture = content.Load<Texture2D>("GoblinAttack-Sheet");
@@ -22,6 +24,7 @@ public class Goblin : Enemy
 
     public Goblin()
     {
+        Health = 50;
     }
 
     public override void BehaviorHandler(GameTime gameTime)
@@ -131,11 +134,11 @@ public class Goblin : Enemy
                 if (_currentFrame < _totalFrames - 1)
                 {
                     _currentFrame++;
-                    if (_currentFrame == 3)
+                    if (_currentFrame == 7)
                     {
                         if (Math.Abs(_mainHero.Rect.X - Rect.X) < 64)
                             Console.WriteLine("Ennemy attacked");
-                        Attack.ExecuteByEnemy(10);
+                        Attack.ExecuteByEnemy(15);
                     }
                 }
                 else
