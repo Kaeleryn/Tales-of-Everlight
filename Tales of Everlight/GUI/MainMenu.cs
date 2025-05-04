@@ -1,71 +1,103 @@
-using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using FontStashSharp;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Tales_of_Everlight;
+using Myra;
+using Myra.Graphics2D;
+using Myra.Graphics2D.Brushes;
+using Myra.Graphics2D.UI;
 
-public class MainMenu
+namespace Tales_of_Everlight
 {
-    private List<Button> _buttons;
-    private SpriteFont _font;
-    private Texture2D _backgroundTexture;
-    private Game _game;
+    public class MainMenu
+{
+    private readonly Game _game;
+    private Desktop _desktop;
+    private MenuItem _startGameItem;
 
-    public bool IsVisible { get; set; }
-
-    public MainMenu(Game game, Texture2D backgroundTexture, SpriteFont font)
+    public MainMenu(Game game)
     {
         _game = game;
-        _backgroundTexture = backgroundTexture;
-        _font = font;
-        _buttons = new List<Button>();
-
-        Button startButton = new Button(_font, "Start Game", new Vector2(400, 300), Color.White, Color.Yellow);
-        startButton.Click += StartButton_Click;
-        _buttons.Add(startButton);
-
-        Button exitButton = new Button(_font, "Exit", new Vector2(400, 400), Color.White, Color.Yellow);
-        exitButton.Click += ExitButton_Click;
-        _buttons.Add(exitButton);
+        MyraEnvironment.Game = _game;
     }
 
-    private void StartButton_Click()
+    public Desktop InitializeMenu()
     {
-        IsVisible = false;
-        ((Main)_game).PauseMenu.IsVisible = false;
-    }
-
-    private void ExitButton_Click()
-    {
-        _game.Exit();
-    }
-
-    public void Update(MouseState mouseState, Camera camera, Vector2 currentResolution, Vector2 targetResolution)
-    {
-        foreach (var button in _buttons)
+        var panel = new Panel
         {
-            button.Update(mouseState, camera, currentResolution, targetResolution);
+            Background = new SolidBrush("#33135CFF")
+        };
+
+        var fontSystem = new FontSystem();
+        fontSystem.AddFont(File.ReadAllBytes("Content/KnightWarrior.otf"));
+        var customFont = fontSystem.GetFont(80);
+        var titleFont = fontSystem.GetFont(160);
+
+        var text = new Label
+        {
+            Text = "Tales of Everlight",
+            HorizontalAlignment = HorizontalAlignment.Center,
+            TextColor = new Color(255, 211, 0),
+            Font = titleFont,
+        };
+
+        panel.Widgets.Add(text);
+
+        var mainMenu = new VerticalMenu
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center,
+            LabelColor = new Color(256, 256, 256),
+            Background = new SolidBrush("#00000000"),
+            SelectionHoverBackground = new SolidBrush("#652EC7FF"),
+            SelectionBackground = new SolidBrush("#DE38C8FF"),
+            LabelHorizontalAlignment = HorizontalAlignment.Center,
+            Border = new SolidBrush("#00000000"),
+            LabelFont = customFont,
+        };
+
+        panel.Widgets.Add(mainMenu);
+
+        _startGameItem = new MenuItem();
+        UpdateStartGameText(); // Set the initial text
+
+        var exitItem = new MenuItem
+        {
+            Text = "Exit",
+        };
+
+        _startGameItem.Selected += (s, a) =>
+        {
+            ((Main)_game).CurrentGameState = GameState.Playing;
+            DelayedUpdateStartGameText(10);
+        };
+
+        exitItem.Selected += (s, a) =>
+        {
+            _game.Exit();
+        };
+
+        mainMenu.Items.Add(_startGameItem);
+        mainMenu.Items.Add(exitItem);
+
+        _desktop = new Desktop { Root = panel };
+        return _desktop;
+    }
+    public async void DelayedUpdateStartGameText(int delayMilliseconds)
+    {
+        await Task.Delay(delayMilliseconds);
+        UpdateStartGameText();
+    }
+    public void UpdateStartGameText()
+    {
+        if (((Main)_game).CurrentGameState == GameState.MainMenu)
+        {
+            _startGameItem.Text = "Start Game";
+        }
+        else if (((Main)_game).CurrentGameState == GameState.Playing)
+        {
+            _startGameItem.Text = "Resume Game";
         }
     }
-
-    public void Draw(SpriteBatch spriteBatch)
-    {
-        spriteBatch.Begin();
-        spriteBatch.Draw(_backgroundTexture, Vector2.Zero, Color.White);
-
-        foreach (var button in _buttons)
-        {
-            button.Draw(spriteBatch);
-        }
-
-        spriteBatch.End();
-    }
-
-    public static MainMenu LoadContent(Game game, ContentManager content)
-    {
-        Texture2D backgroundTexture = content.Load<Texture2D>("menuBackGround");
-        SpriteFont font = content.Load<SpriteFont>("menuButtonFont");
-        return new MainMenu(game, backgroundTexture, font);
-    }
+}
 }
