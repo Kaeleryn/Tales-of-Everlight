@@ -6,9 +6,10 @@ using Myra;
 using Myra.Graphics2D;
 using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
+using Tales_of_Everlight;
 
-namespace Tales_of_Everlight
-{
+
+
     public class MainMenu
 {
     private readonly Game _game;
@@ -99,5 +100,4 @@ namespace Tales_of_Everlight
             _startGameItem.Text = "Resume Game";
         }
     }
-}
 }
