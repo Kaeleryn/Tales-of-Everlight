@@ -13,7 +13,8 @@ public enum AnimationState
 {
     Running,
     Jumping,
-    Attacking
+    Attacking,
+    Death
 }
 
 public abstract class Actor
@@ -23,7 +24,20 @@ public abstract class Actor
     private Texture2D _jumpingTexture; // Текстура стрибка
     private Texture2D _attackTexture; // Текстура атаки
     private Texture2D _currentTexture;
-    
+    private Texture2D _deathTexture;
+
+    private float _invincibilityTimer = 0f; // Тривалість неуразливості
+
+    private const float INVINCIBILITY_DURATION = 1.0f;
+
+
+    private float _deathAnimationTimer = 0f;
+    private const float DEATH_ANIMATION_DURATION = 1.5f;
+
+    private bool _isInvincible = false; // Чи персонаж неуразливий
+    private bool _isDead = false; // Чи персонаж мертвий
+    private bool _isDying = false;
+
     public static int Health { get; set; } = 100; // Здоров'я персонажа
 
     public AnimationState AnimationState { get; set; } // Стан анімації
@@ -46,8 +60,8 @@ public abstract class Actor
     }
 
     private const float Gravity = 0.65f; // Гравітація
-    private const double FrameTime = 0.1; // Час між кадрами
-    
+    private const float FrameTime = 0.1f; // Час між кадрами
+
 
     public bool IsMoving { get; set; } = true;
     public bool IsOnGround { get; set; }
@@ -83,10 +97,19 @@ public abstract class Actor
         _runningTexture = content.Load<Texture2D>("animatedSprite");
         _jumpingTexture = content.Load<Texture2D>("animatedSpriteJumping");
         _attackTexture = content.Load<Texture2D>("animatedSpriteAttacking");
+        _deathTexture = content.Load<Texture2D>("animatedSpriteDeath");
 
         _rect = rect;
         _srect = srect;
         _velocity = Vector2.Zero;
+    }
+
+    public void StartDying()
+    {
+        _isDying = true;
+        AnimationState = AnimationState.Death;
+        Velocity = Vector2.Zero;
+        _currentFrame = 0;
     }
 
     protected Actor() => _velocity = Vector2.Zero;
@@ -94,6 +117,29 @@ public abstract class Actor
     public void HandleMovement(KeyboardState keystate, KeyboardState previousState, MouseState mouseState,
         MouseState previousMState, GameTime gameTime)
     {
+        if (keystate.IsKeyDown(Keys.Left))
+        {
+            StartDying();
+        }
+        
+        if (_isInvincible)
+        {
+            _invincibilityTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (_invincibilityTimer >= INVINCIBILITY_DURATION)
+            {
+                _isInvincible = false;
+                _invincibilityTimer = 0f;
+            }
+        }
+
+        if (_isDead || _isDying)
+        {
+            UpdateFrame(gameTime);
+            return;
+        }
+
+        
+
         if (AnimationState != AnimationState.Attacking)
         {
             HandleVerticalMovement(keystate, previousState, gameTime);
@@ -130,14 +176,24 @@ public abstract class Actor
     }
 
 
-
     public void TakeDamage(int damage)
     {
+        if (_isInvincible || _isDead || _isDying) return;
         Health -= damage;
-        if (Health <= 0)
+
+        StartInvincibility();
+
+
+        if (Health <= 0 && !_isDead && !_isDying)
         {
-            //смерть
+            StartDying();
         }
+    }
+
+    public void StartInvincibility()
+    {
+        _isInvincible = true;
+        _invincibilityTimer = 0f;
     }
 
     // public void HandleAttack(MouseState mouseState, MouseState previousState, GameTime gameTime)
@@ -266,21 +322,38 @@ public abstract class Actor
         {
             _timeSinceLastFrame -= FrameTime;
 
-            if (AnimationState == AnimationState.Attacking)
+            if (AnimationState == AnimationState.Death)
+            {
+                // Handle death animation
+                if (_currentFrame < _totalFrames - 1)
+                {
+                    _currentFrame = (_currentFrame + 1) % _totalFrames;
+                    // Track total death animation time
+                    _deathAnimationTimer += FrameTime;
+                }
+                else
+                {
+                    // Death animation complete
+                    _isDead = true;
+
+                    // Keep on last frame
+                    _currentFrame = _totalFrames - 1;
+                }
+            }
+            else if (AnimationState == AnimationState.Attacking)
             {
                 // Move to next frame in attack animation
                 if (_currentFrame < _totalFrames - 1)
                 {
                     _currentFrame = (_currentFrame + 1) % _totalFrames;
                     if (_currentFrame == 5) Attack.Execute(AttackerType.Player);
-
                 }
                 else
                 {
                     // Attack animation completed
                     _currentFrame = 0;
                     IsAttacking = false;
-                    ;
+
                     // Return to previous state when attack is done
                     AnimationState = IsOnGround ? AnimationState.Running : AnimationState.Jumping;
                 }
@@ -306,7 +379,6 @@ public abstract class Actor
 
     private void AnimationHandler()
     {
-        
         switch (AnimationState)
         {
             case AnimationState.Running:
@@ -324,9 +396,14 @@ public abstract class Actor
                 Columns = 1;
                 Rows = 8;
                 break;
+            case AnimationState.Death:
+                _currentTexture = _deathTexture;
+                Columns = 1;
+                Rows = 10;
+                break;
         }
 
-        if (IsOnGround && !IsMoving)
+        if (IsOnGround && !IsMoving && !_isDead && !_isDying)
         {
             _currentFrame = 0;
             _currentTexture = _runningTexture;
@@ -343,13 +420,39 @@ public abstract class Actor
     {
         AnimationHandler();
 
+        Color drawColor = Color.White;
+        if (_isInvincible)
+        {
+            // Flash on and off every 0.1 seconds
+            if ((int)(_invincibilityTimer * 10) % 2 == 0)
+            {
+                drawColor = Color.Red;
+            }
+        }
+
         _totalFrames = Columns * Rows;
         int width = _currentTexture.Width / Columns;
         int height = _currentTexture.Height / Rows;
         int row = _currentFrame / Columns;
         int column = _currentFrame % Columns;
 
-        if (AnimationState != AnimationState.Attacking)
+
+        if (AnimationState == AnimationState.Death)
+        {
+            if (_isFacingRight)
+            {
+                SourceRectangle = new Rectangle(width * column, height * row, width, height);
+                DestinationRectangle = new Rectangle((int)location.X  , (int)location.Y, width, height);
+                SpriteEffects = _isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            }
+            else
+            {
+                SourceRectangle = new Rectangle(width * column, height * row, width, height);
+                DestinationRectangle = new Rectangle((int)location.X - 80, (int)location.Y, width, height);
+                SpriteEffects = _isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
+            }
+        }
+        else if (AnimationState != AnimationState.Attacking)
         {
             SourceRectangle = new Rectangle(width * column, height * row, width, height);
             DestinationRectangle = new Rectangle((int)location.X - 80, (int)location.Y, width, height);
@@ -372,7 +475,7 @@ public abstract class Actor
         }
 
 
-        spriteBatch.Draw(_currentTexture, DestinationRectangle, SourceRectangle, Color.White, 0f, Vector2.Zero,
+        spriteBatch.Draw(_currentTexture, DestinationRectangle, SourceRectangle, drawColor, 0f, Vector2.Zero,
             SpriteEffects, 0f);
     }
 
