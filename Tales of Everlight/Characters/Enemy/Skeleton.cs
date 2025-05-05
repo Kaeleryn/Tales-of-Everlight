@@ -111,7 +111,7 @@ public class Sceleton : Enemy
 
     public override void SearchEnemy()
     {
-        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 100)
+        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 110 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<64)
         {
             //PerformAttack();  
             Console.WriteLine("Enemy found");
@@ -133,9 +133,9 @@ public class Sceleton : Enemy
                 if (_currentFrame < _totalFrames - 1)
                 {
                     _currentFrame++;
-                    if (_currentFrame == 3)
+                    if (_currentFrame == 7)
                     {
-                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 64)
+                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 64 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<64)
                             Console.WriteLine("Ennemy attacked");
                         Attack.ExecuteByEnemy(10);
                     }

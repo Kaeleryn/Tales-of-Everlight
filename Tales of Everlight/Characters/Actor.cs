@@ -34,10 +34,17 @@ public abstract class Actor
     private const float DEATH_ANIMATION_DURATION = 1.5f;
 
     private bool _isInvincible = false; // Чи персонаж неуразливий
-    private bool _isDead = false; // Чи персонаж мертвий
-    private bool _isDying = false;
+    public bool IsDead = false; // Чи персонаж мертвий
+    public bool IsDying = false;
 
+    // public static int Health { get; set; } = 100; // Здоров'я персонажа
     public static int Health { get; set; } = 100; // Здоров'я персонажа
+    public static int MaxHealth { get; set; } = 100; // Максимальне здоров'я персонажа
+    
+    public static int Damage { get; set; } = 20;
+    public static int StandardDamage { get; set; } = 20;
+    public static float Speed { get; set; } = 8.5f;
+    public static float StandardSpeed { get; set; } = 1.2f;
 
     public AnimationState AnimationState { get; set; } // Стан анімації
 
@@ -97,7 +104,7 @@ public abstract class Actor
         _jumpingTexture = content.Load<Texture2D>("animatedSpriteJumping");
         _attackTexture = content.Load<Texture2D>("animatedSpriteAttacking");
         _deathTexture = content.Load<Texture2D>("animatedSpriteDeath");
-
+        
         _rect = rect;
         _srect = srect;
         _velocity = Vector2.Zero;
@@ -105,7 +112,7 @@ public abstract class Actor
 
     public void StartDying()
     {
-        _isDying = true;
+        IsDying = true;
         AnimationState = AnimationState.Death;
         Velocity = Vector2.Zero;
         _currentFrame = 0;
@@ -131,8 +138,10 @@ public abstract class Actor
             }
         }
 
-        if (_isDead || _isDying)
+        if (IsDead || IsDying)
         {
+            _velocity.Y += Gravity;
+            _velocity.Y = Math.Min(20.0f, _velocity.Y);
             UpdateFrame(gameTime);
             return;
         }
@@ -177,13 +186,13 @@ public abstract class Actor
 
     public void TakeDamage(int damage)
     {
-        if (_isInvincible || _isDead || _isDying) return;
+        if (_isInvincible || IsDead || IsDying) return;
         Health -= damage;
 
         StartInvincibility();
 
 
-        if (Health <= 0 && !_isDead && !_isDying)
+        if (Health <= 0 && !IsDead && !IsDying)
         {
             StartDying();
         }
@@ -240,7 +249,7 @@ public abstract class Actor
 
         if (keystate.IsKeyDown(Keys.D))
         {
-            _velocity.X = 10;
+            _velocity.X = Speed;
             _isFacingRight = true;
             IsMoving = true;
             UpdateFrame(gameTime);
@@ -248,7 +257,7 @@ public abstract class Actor
         }
         else if (keystate.IsKeyDown(Keys.A))
         {
-            _velocity.X = -10;
+            _velocity.X = -Speed;
             _isFacingRight = false;
             IsMoving = true;
             UpdateFrame(gameTime);
@@ -333,7 +342,7 @@ public abstract class Actor
                 else
                 {
                     // Death animation complete
-                    _isDead = true;
+                    IsDead = true;
 
                     // Keep on last frame
                     _currentFrame = _totalFrames - 1;
@@ -402,7 +411,7 @@ public abstract class Actor
                 break;
         }
 
-        if (IsOnGround && !IsMoving && !_isDead && !_isDying)
+        if (IsOnGround && !IsMoving && !IsDead && !IsDying)
         {
             _currentFrame = 0;
             _currentTexture = _runningTexture;

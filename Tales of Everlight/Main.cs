@@ -328,14 +328,14 @@ namespace Tales_of_Everlight
                     128), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static
                 new Rectangle(0, 0, 128, 128));
 
-            //Goblin = new Goblin(_goblinSprite, new Vector2(1000, 100), 5, 1);
-            _goblin = new Goblin(Content,
-                new Rectangle(1000, 100, 64, 64),
-                //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static);
-                new Rectangle(0, 0, 70, 70));
-            _skeleton = new Sceleton(Content,
-                new Rectangle(1000, 100, 64, 128),
-                new Rectangle(0, 0, 128, 128));
+            // Goblin = new Goblin(_goblinSprite, new Vector2(1000, 100), 5, 1);
+             _goblin = new Goblin(Content,
+                 new Rectangle(1000, 100, 64, 64),
+                 //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static);
+                 new Rectangle(0, 0, 70, 70));
+             _skeleton = new Sceleton(Content,
+                 new Rectangle(1000, 100, 64, 128),
+                 new Rectangle(0, 0, 128, 128));
             _mushroom = new Mushroom(Content,
                 new Rectangle(1000, 100, 64, 128),
                 new Rectangle(0, 0, 128, 128));
@@ -438,7 +438,7 @@ namespace Tales_of_Everlight
                             MainHero.Rect = MainHero.Rect with { Y = collision.Top - MainHero.Rect.Height };
                             MainHero.IsOnGround = true;
                             MainHero.Velocity = MainHero.Velocity with { Y = 0.0f };
-                            MainHero.AnimationState = AnimationState.Running;
+                            if(!MainHero.IsDead || !MainHero.IsDying)MainHero.AnimationState = AnimationState.Running;
 
                             //_mainHero._currentFrame = 0;
                         }

@@ -111,7 +111,7 @@ public class Mushroom : Enemy
 
     public override void SearchEnemy()
     {
-        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 100)
+        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 90 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<64)
         {
             //PerformAttack();  
             Console.WriteLine("Enemy found");
@@ -135,7 +135,7 @@ public class Mushroom : Enemy
                     _currentFrame++;
                     if (_currentFrame == 7)
                     {
-                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 64)
+                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 64 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<64)
                             Console.WriteLine("Ennemy attacked");
                         Attack.ExecuteByEnemy(10);
                     }
@@ -213,16 +213,35 @@ public class Mushroom : Enemy
 
         // Set destination position based on facing direction
         Vector2 drawPosition;
-        if (IsFacingRight)
+        if (AnimationState == EnemyAnimationState.Attack)
         {
-            drawPosition = new Vector2(location.X-220, location.Y );
-            SpriteEffects = SpriteEffects.None;
+            if (IsFacingRight)
+            {
+                drawPosition = new Vector2(location.X-180, location.Y );
+                SpriteEffects = SpriteEffects.None;
+            }
+            else
+            {
+                drawPosition = new Vector2(location.X-200 , location.Y );
+                SpriteEffects = SpriteEffects.FlipHorizontally;
+            }
+            
         }
         else
         {
-            drawPosition = new Vector2(location.X-220 , location.Y );
-            SpriteEffects = SpriteEffects.FlipHorizontally;
+            if (IsFacingRight)
+            {
+                drawPosition = new Vector2(location.X-220, location.Y );
+                SpriteEffects = SpriteEffects.None;
+            }
+            else
+            {
+                drawPosition = new Vector2(location.X-220 , location.Y );
+                SpriteEffects = SpriteEffects.FlipHorizontally;
+            }
+            
         }
+         
 
         // Draw with the appropriate color based on state
         if (IsDead)

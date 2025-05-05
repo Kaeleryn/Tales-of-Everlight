@@ -112,7 +112,7 @@ public class Goblin : Enemy
 
     public override void SearchEnemy()
     {
-        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 100)
+        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 90 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<64)
         {
             //PerformAttack();  
             Console.WriteLine("Enemy found");
@@ -136,7 +136,7 @@ public class Goblin : Enemy
                     _currentFrame++;
                     if (_currentFrame == 7)
                     {
-                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 64)
+                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 50&& Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<30)
                             Console.WriteLine("Ennemy attacked");
                         Attack.ExecuteByEnemy(15);
                     }

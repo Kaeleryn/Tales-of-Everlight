@@ -64,7 +64,7 @@ public abstract class Enemy
     private bool isMoving = true;
     private bool isJumping = true;
 
-    private const float GRAVITY = 1.2f;
+    private const float GRAVITY = 0.65f;
 
     public bool IsJumping
     {
@@ -123,6 +123,7 @@ public abstract class Enemy
     {
         if (IsDead) return;
         Velocity = Velocity with { Y = Velocity.Y + GRAVITY };
+        
         Velocity = Velocity with { Y = Math.Min(20.0f, Velocity.Y) };
     }
 

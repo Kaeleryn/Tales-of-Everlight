@@ -112,7 +112,7 @@ public class Worm : Enemy
 
     public override void SearchEnemy()
     {
-        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 100)
+        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 120 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<64)
         {
             //PerformAttack();  
             Console.WriteLine("Enemy found");
@@ -136,7 +136,7 @@ public class Worm : Enemy
                     _currentFrame++;
                     if (_currentFrame == 12)
                     {
-                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 64)
+                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 45 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<45)
                             Console.WriteLine("Ennemy attacked");
                         Attack.ExecuteByEnemy(40);
                     }

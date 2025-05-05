@@ -1,5 +1,7 @@
 using System;
+using Tales_of_Everlight.Characters;
 using static Tales_of_Everlight.Main;
+using MainHero = Tales_of_Everlight.Characters.MainHero;
 
 namespace Tales_of_Everlight.Damage;
 
@@ -23,7 +25,7 @@ public static class Attack
             {
                 if(!enemy.IsDead && Math.Abs(enemy.Rect.X - Main.MainHero.Rect.X) < 150 && Math.Abs(enemy.Rect.Y - Main.MainHero.Rect.Y) < 150)
                 {
-                    enemy.TakeDamage(20);
+                    enemy.TakeDamage(MainHero.Damage);
                     enemy.Damaged= true;
                     Console.WriteLine("Execute method called");
                     // if (enemy.Health <= 0)
