@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -72,7 +73,7 @@ namespace Tales_of_Everlight
             base.Initialize();
             _previousKeyState = Keyboard.GetState();
             _previousMState = Mouse.GetState();
-            _graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = false;
             _graphics.ApplyChanges();
         }
 
@@ -208,6 +209,30 @@ namespace Tales_of_Everlight
                             _mainHero.Rect = _mainHero.Rect with { Y = collision.Bottom };
                             _mainHero.Velocity = _mainHero.Velocity with { Y = 0.0f };
                         }
+                    }
+                }
+
+                #endregion
+                
+                
+                #region Main Hero Spike Damage Handler
+
+                // add player's velocity and grab the intersecting tiles
+                
+                // same as horizontal collisions
+
+               
+                intersections = GetIntersectingTilesVertical(_mainHero.Rect);
+
+                
+
+                foreach (var rect in intersections)
+                {
+                    if (_level1.Spikes.TryGetValue(new Vector2(rect.X, rect.Y), out int _val))
+                    {
+                        _mainHero.TakeDamage(10);
+
+                        
                     }
                 }
 
