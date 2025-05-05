@@ -1,24 +1,26 @@
 ﻿using System.Collections.Generic;
+using Gum.DataTypes;
+using Gum.Managers;
+using Gum.Wireframe;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Myra.Graphics2D.UI;
+using MonoGameGum;
+using MonoGameGum.Forms.Controls;
+using MonoGameGum.GueDeriving;
 
 namespace Tales_of_Everlight
 {
-    public enum GameState
-    {
-        MainMenu,
-        Playing,
-        Paused
-    }
-
     public class Main : Game
     {
-        public GameState CurrentGameState { get; set; } = GameState.MainMenu;
+        GumService Gum => GumService.Default;
+        Panel mainPanel;
+        bool isGame = false;
+        bool isPaused = false;
 
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
         private Camera _camera;
         private Level1 _level1;
         private bool _isHudVisible;
@@ -48,8 +50,6 @@ namespace Tales_of_Everlight
 
         public static List<Enemy> EnemyList;
 
-        private Desktop _desktop;
-        private MainMenu _mainMenu;
 
         public Main()
         {
@@ -69,11 +69,208 @@ namespace Tales_of_Everlight
 
         protected override void Initialize()
         {
+            Gum.Initialize(this);
+            InitMainMenu();
+
             base.Initialize();
             _previousKeyState = Keyboard.GetState();
             _previousMState = Mouse.GetState();
-            _graphics.IsFullScreen = true;
+            _graphics.IsFullScreen = false;
             _graphics.ApplyChanges();
+        }
+
+        private void InitMainMenu()
+        {
+            Gum.Root.Children.Clear();
+
+            mainPanel = new Panel();
+            mainPanel.Visual.AddToRoot();
+            mainPanel.Dock(Dock.Fill);
+
+            var titleLabel = new Label();
+            titleLabel.Text = "Tales of Everlight";
+            titleLabel.Anchor(Anchor.Top);
+            mainPanel.AddChild(titleLabel);
+
+            var buttonPanel = new StackPanel();
+            buttonPanel.Spacing = 3;
+            buttonPanel.Anchor(Anchor.Center);
+
+            var startButton = new Button();
+            startButton.Text = "Start Game";
+            startButton.Visual.Width = 200;
+            startButton.Click += InitGame;
+            buttonPanel.AddChild(startButton);
+
+            var optionsButton = new Button();
+            optionsButton.Text = "Options";
+            optionsButton.Visual.Width = 200;
+            optionsButton.Click += InitOptions;
+            buttonPanel.AddChild(optionsButton);
+
+            var exitButton = new Button();
+            exitButton.Text = "Exit";
+            exitButton.Visual.Width = 200;
+            exitButton.Click += InitExit;
+            buttonPanel.AddChild(exitButton);
+
+            mainPanel.AddChild(buttonPanel);
+        }
+
+        private void InitGame(object sender, System.EventArgs e)
+        {
+            Gum.Root.Children.Clear();
+
+            // Reset game states
+            isGame = true;
+            isPaused = false;
+
+            // Reset camera position
+            _camera.Position = Vector2.Zero;
+
+            // Reset main hero
+            _mainHero = new MainHero(Content,
+                new Rectangle(0, 0, 64, 128),
+                new Rectangle(0, 0, 128, 128));
+
+            // Reset enemies
+            EnemyList.Clear();
+            Goblin = new Goblin(Content, new Rectangle(1000, 100, 64, 64), new Rectangle(0, 0, 70, 70));
+            Sceleton = new Sceleton(Content, new Rectangle(1000, 100, 64, 128), new Rectangle(0, 0, 128, 128));
+            Mushroom = new Mushroom(Content, new Rectangle(1000, 100, 64, 128), new Rectangle(0, 0, 128, 128));
+            Worm = new Worm(Content, new Rectangle(1000, 100, 64, 64), new Rectangle(0, 0, 128, 128));
+            EnemyList.Add(Goblin);
+            EnemyList.Add(Sceleton);
+            EnemyList.Add(Mushroom);
+            EnemyList.Add(Worm);
+
+            // Reinitialize level
+            _level1 = new Level1();
+            _level1.Initialize(Content);
+
+            // Reset other states if needed
+            intersections.Clear();
+            _isHudVisible = false;
+        }
+
+        private void InitOptions(object sender, System.EventArgs e)
+        {
+            Gum.Root.Children.Clear();
+
+            var optionsPanel = new Panel();
+            optionsPanel.Visual.AddToRoot();
+            optionsPanel.Dock(Dock.Fill);
+
+            var label = new Label();
+            label.Text = "Options";
+            label.Anchor(Anchor.Top);
+            optionsPanel.AddChild(label);
+
+            var optionsControls = new StackPanel();
+            optionsControls.Anchor(Anchor.Center); // Center the optionsControls within the optionsPanel
+            optionsControls.Spacing = 3;
+            optionsPanel.AddChild(optionsControls);
+
+            var fullscreenCheck = new CheckBox();
+            fullscreenCheck.IsChecked = false;
+            fullscreenCheck.Text = "Fullscreen";
+            fullscreenCheck.Checked += (sender, args) => System.Diagnostics.Debug.WriteLine(
+                $"Checkbox checked? {(sender as CheckBox).IsChecked}");
+            fullscreenCheck.Unchecked += (sender, args) => System.Diagnostics.Debug.WriteLine(
+                $"Checkbox checked? {(sender as CheckBox).IsChecked}");
+            optionsControls.AddChild(fullscreenCheck);
+
+            var twoColumn = new StackPanel();
+            twoColumn.Visual.ChildrenLayout = ChildrenLayout.LeftToRightStack;
+            twoColumn.Visual.WidthUnits = DimensionUnitType.RelativeToChildren;
+            optionsControls.AddChild(twoColumn);
+
+            var spLabels = new StackPanel();
+            spLabels.Spacing = 3;
+            twoColumn.AddChild(spLabels);
+
+            var volumeLabel = new Label();
+            volumeLabel.Text = "Volume";
+            spLabels.AddChild(volumeLabel);
+
+            var musicLabel = new Label();
+            musicLabel.Text = "Music";
+            spLabels.AddChild(musicLabel);
+
+            var spOptions = new StackPanel();
+            spOptions.Spacing = 3;
+            twoColumn.AddChild(spOptions);
+
+            var volumeSlider = new Slider();
+            volumeSlider.Value = 75;
+            volumeSlider.ValueChanged += (sender, args) => System.Diagnostics.Debug.WriteLine(
+                $"Volume Slider Value is {(sender as Slider).Value}");
+            spOptions.AddChild(volumeSlider);
+
+            var musicSlider = new Slider();
+            musicSlider.Value = 50;
+            musicSlider.ValueChanged += (sender, args) => System.Diagnostics.Debug.WriteLine(
+                $"Music Slider Value is {(sender as Slider).Value}");
+            spOptions.AddChild(musicSlider);
+
+            var backButton = new Button();
+            backButton.Text = "Back to Main Menu";
+            backButton.Visual.Width = 200;
+            backButton.Click += (s, args) =>
+            {
+                Gum.Root.Children.Clear();
+                mainPanel.AddToRoot();
+            };
+            optionsControls.AddChild(backButton);
+        }
+
+        private void InitExit(object sender, System.EventArgs e)
+        {
+            Exit();
+        }
+
+        private void InitPause()
+        {
+            Gum.Root.Children.Clear();
+
+            if (isPaused)
+            {
+                var gamePanel = new Panel();
+                gamePanel.Visual.AddToRoot();
+                gamePanel.Dock(Dock.Fill);
+
+                // Label Panel (Top)
+                var label = new Label();
+                label.Text = "Pause";
+                label.Anchor(Anchor.Top);
+                gamePanel.AddChild(label);
+
+                // Button Panel (Center)
+                var buttonPanel = new StackPanel();
+                buttonPanel.Spacing = 3;
+                buttonPanel.Anchor(Anchor.Center);
+                
+                var resumeButton = new Button();
+                resumeButton.Text = "Resume";
+                resumeButton.Visual.Width = 200;
+                resumeButton.Click += (s, args) =>
+                {
+                    Gum.Root.Children.Clear();
+                    isPaused = !isPaused;
+                };
+                buttonPanel.AddChild(resumeButton);
+                
+                var backButton = new Button();
+                backButton.Text = "Back to Main Menu";
+                backButton.Visual.Width = 200;
+                backButton.Click += (s, args) =>
+                {
+                    Gum.Root.Children.Clear();
+                    mainPanel.AddToRoot();
+                };
+                buttonPanel.AddChild(backButton);
+                gamePanel.AddChild(buttonPanel);
+            }
         }
 
         protected override void LoadContent()
@@ -119,9 +316,6 @@ namespace Tales_of_Everlight
 
 
             _level1.Initialize(Content);
-
-            _mainMenu = new MainMenu(this);
-            _desktop = _mainMenu.InitializeMenu();
         }
 
         protected override void Update(GameTime gameTime)
@@ -130,20 +324,18 @@ namespace Tales_of_Everlight
                 Keyboard.GetState().IsKeyDown(Keys.Delete))
                 Exit();
 
-
-            if (CurrentGameState == GameState.MainMenu)
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape) && !_previousKeyState.IsKeyDown(Keys.Escape))
             {
-                
+                isPaused = !isPaused;
+                InitPause();
             }
-            else if (CurrentGameState == GameState.Playing)
+            //Console.WriteLine(2);
+            //Attack.Execute();
+
+            if (isGame && !isPaused)
             {
                 _mainHero.HandleMovement(Keyboard.GetState(), _previousKeyState, Mouse.GetState(), _previousMState,
                     gameTime);
-
-
-                //Console.WriteLine(2);
-                //Attack.Execute();
-
 
                 #region Main Hero Collision Handler
 
@@ -285,9 +477,13 @@ namespace Tales_of_Everlight
 
                 UpdateCameraPosition();
                 // UpdateGameElements(gameTime);
-
-                base.Update(gameTime);
             }
+
+
+            Gum.Update(gameTime);
+
+            _previousKeyState = Keyboard.GetState();
+            base.Update(gameTime);
         }
 
         private void HandleInput()
@@ -296,11 +492,6 @@ namespace Tales_of_Everlight
 
             if (currentKeyState.IsKeyDown(Keys.I) && !_previousKeyState.IsKeyDown(Keys.I))
                 _isHudVisible = !_isHudVisible;
-
-            if (currentKeyState.IsKeyDown(Keys.Escape) && !_previousKeyState.IsKeyDown(Keys.Escape))
-            {
-                CurrentGameState = GameState.Paused;
-            }
 
             _previousKeyState = currentKeyState;
 
@@ -331,22 +522,13 @@ namespace Tales_of_Everlight
         {
             GraphicsDevice.Clear(_backgroundColor);
 
-            if (CurrentGameState == GameState.MainMenu)
-            {
-                GraphicsDevice.Clear(Color.Black);
-                _desktop.Render();
-            }
-            else if (CurrentGameState == GameState.Playing)
+            if (isGame)
             {
                 DrawGameElements();
                 DrawHudElements();
             }
-            else if (CurrentGameState == GameState.Paused)
-            {
-                GraphicsDevice.Clear(Color.Black);
-                _desktop.Render();
-            }
 
+            Gum.Draw();
             base.Draw(gameTime);
         }
 
