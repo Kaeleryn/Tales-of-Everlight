@@ -104,14 +104,14 @@ public class Mushroom : Enemy
     {
         Velocity = Vector2.Zero;
         AnimationState = EnemyAnimationState.Attack;
-        IsFacingRight = _mainHero.Rect.X >= Rect.X;
+        IsFacingRight = Main.MainHero.Rect.X >= Rect.X;
         IsAttacking = true;
     }
 
 
     public override void SearchEnemy()
     {
-        if (Math.Abs(_mainHero.Rect.X - Rect.X) < 100)
+        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 100)
         {
             //PerformAttack();  
             Console.WriteLine("Enemy found");
@@ -135,7 +135,7 @@ public class Mushroom : Enemy
                     _currentFrame++;
                     if (_currentFrame == 7)
                     {
-                        if (Math.Abs(_mainHero.Rect.X - Rect.X) < 64)
+                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 64)
                             Console.WriteLine("Ennemy attacked");
                         Attack.ExecuteByEnemy(10);
                     }

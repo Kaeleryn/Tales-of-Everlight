@@ -1,5 +1,4 @@
 using System;
-using Microsoft.Xna.Framework;
 using static Tales_of_Everlight.Main;
 
 namespace Tales_of_Everlight.Damage;
@@ -22,7 +21,7 @@ public static class Attack
         {
             foreach (var enemy in EnemyList)
             {
-                if(!enemy.IsDead && Math.Abs(enemy.Rect.X - _mainHero.Rect.X) < 150 && Math.Abs(enemy.Rect.Y - _mainHero.Rect.Y) < 150)
+                if(!enemy.IsDead && Math.Abs(enemy.Rect.X - Main.MainHero.Rect.X) < 150 && Math.Abs(enemy.Rect.Y - Main.MainHero.Rect.Y) < 150)
                 {
                     enemy.TakeDamage(20);
                     enemy.Damaged= true;
@@ -38,7 +37,7 @@ public static class Attack
 
     public static void ExecuteByEnemy(int damage)
     {
-        _mainHero.TakeDamage(damage);
+        Main.MainHero.TakeDamage(damage);
     }
 
 }

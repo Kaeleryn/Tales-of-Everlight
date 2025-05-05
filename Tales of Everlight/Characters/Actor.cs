@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using Tales_of_Everlight.Damage;
 using Vector2 = Microsoft.Xna.Framework.Vector2;
 
-namespace Tales_of_Everlight;
+namespace Tales_of_Everlight.Characters;
 
 public enum AnimationState
 {
@@ -20,13 +19,13 @@ public enum AnimationState
 public abstract class Actor
 {
     private bool _isFacingRight = true; // Напрямок персонажа
-    private Texture2D _runningTexture; // Текстура бігу
-    private Texture2D _jumpingTexture; // Текстура стрибка
-    private Texture2D _attackTexture; // Текстура атаки
+    private readonly Texture2D _runningTexture; // Текстура бігу
+    private readonly Texture2D _jumpingTexture; // Текстура стрибка
+    private readonly Texture2D _attackTexture; // Текстура атаки
     private Texture2D _currentTexture;
-    private Texture2D _deathTexture;
+    private readonly Texture2D _deathTexture;
 
-    private float _invincibilityTimer = 0f; // Тривалість неуразливості
+    private float _invincibilityTimer; // Тривалість неуразливості
 
     private const float INVINCIBILITY_DURATION = 1.0f;
 

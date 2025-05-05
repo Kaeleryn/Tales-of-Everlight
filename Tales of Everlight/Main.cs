@@ -1,53 +1,54 @@
-
 using System;
 using System.Collections.Generic;
 using Gum.DataTypes;
 using Gum.Managers;
 using Gum.Wireframe;
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameGum;
 using MonoGameGum.Forms.Controls;
-using MonoGameGum.GueDeriving;
+using Tales_of_Everlight.Characters;
 
 namespace Tales_of_Everlight
 {
     public class Main : Game
     {
-        GumService Gum => GumService.Default;
-        Panel mainPanel;
-        bool isGame = false;
-        bool isPaused = false;
+        private GumService Gum => GumService.Default;
+        private Panel _mainPanel;
+        private bool _isGame;
+        private bool _isPaused;
+        private bool _isDialog;
 
-        private GraphicsDeviceManager _graphics;
+        // private Texture2D _menuBackgroundTexture;
+
+        private readonly GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        private Camera _camera;
+        private readonly Camera _camera;
         private Level1 _level1;
         private bool _isHudVisible;
         private Texture2D _mainHeroSprite;
-        private Texture2D _goblinSprite;
+        //private Texture2D _goblinSprite;
 
         private Texture2D _rectangleTexture;
 
         //private Texture2D _hudTexture;
         private SpriteFont _hudFont;
-        private Color _backgroundColor = new(145, 221, 207, 255);
-        public static MainHero _mainHero = new();
+        private readonly Color _backgroundColor = new(145, 221, 207, 255);
+        public static MainHero MainHero = new();
 
 
-        public Goblin Goblin = new();
-        public Sceleton Sceleton = new();
-        public Mushroom Mushroom = new();
-        public Worm Worm = new();
+        private Goblin _goblin = new();
+        private Sceleton _skeleton = new();
+        private Mushroom _mushroom = new();
+        private Worm _worm = new();
 
 
         private KeyboardState _previousKeyState;
         private MouseState _previousMState;
         private const int Tilesize = 64;
-        private List<Rectangle> intersections;
+        private List<Rectangle> _intersections;
 
         private Texture2D _hitboxTexture;
 
@@ -64,7 +65,7 @@ namespace Tales_of_Everlight
 
             _camera = new Camera(new Rectangle(0, 0, _graphics.PreferredBackBufferWidth,
                 _graphics.PreferredBackBufferHeight));
-            intersections = new List<Rectangle>();
+            _intersections = new List<Rectangle>();
             _level1 = new Level1();
 
             EnemyList = new();
@@ -86,14 +87,14 @@ namespace Tales_of_Everlight
         {
             Gum.Root.Children.Clear();
 
-            mainPanel = new Panel();
-            mainPanel.Visual.AddToRoot();
-            mainPanel.Dock(Dock.Fill);
+            _mainPanel = new Panel();
+            _mainPanel.Visual.AddToRoot();
+            _mainPanel.Dock(Dock.Fill);
 
             var titleLabel = new Label();
             titleLabel.Text = "Tales of Everlight";
             titleLabel.Anchor(Anchor.Top);
-            mainPanel.AddChild(titleLabel);
+            _mainPanel.AddChild(titleLabel);
 
             var buttonPanel = new StackPanel();
             buttonPanel.Spacing = 3;
@@ -117,46 +118,82 @@ namespace Tales_of_Everlight
             exitButton.Click += InitExit;
             buttonPanel.AddChild(exitButton);
 
-            mainPanel.AddChild(buttonPanel);
+            _mainPanel.AddChild(buttonPanel);
         }
 
-        private void InitGame(object sender, System.EventArgs e)
+        private void ShowDialog()
+        {
+            Gum.Root.Children.Clear();
+            _isDialog = true;
+
+            var gamePanel = new Panel();
+            gamePanel.Visual.AddToRoot();
+            gamePanel.Dock(Dock.Fill);
+
+            // Label Panel (Top)
+            var label = new Label();
+            label.Text = "MAMU IBAV";
+            label.Anchor(Anchor.Top);
+            gamePanel.AddChild(label);
+
+            // Button Panel (Center)
+            var buttonPanel = new StackPanel();
+            buttonPanel.Spacing = 3;
+            buttonPanel.Anchor(Anchor.Center);
+
+            var resumeButton = new Button();
+            resumeButton.Text = "OK";
+            resumeButton.Visual.Width = 200;
+            resumeButton.Click += (_, _) =>
+            {
+                Gum.Root.Children.Clear();
+                _isDialog = false;
+            };
+            buttonPanel.AddChild(resumeButton);
+
+            gamePanel.AddChild(buttonPanel);
+        }
+
+        private void InitGame(object sender, EventArgs e)
         {
             Gum.Root.Children.Clear();
 
             // Reset game states
-            isGame = true;
-            isPaused = false;
+            _isGame = true;
+            _isPaused = false;
 
             // Reset camera position
             _camera.Position = Vector2.Zero;
 
             // Reset main hero
-            _mainHero = new MainHero(Content,
+            MainHero = new MainHero(Content,
                 new Rectangle(0, 0, 64, 128),
                 new Rectangle(0, 0, 128, 128));
 
             // Reset enemies
             EnemyList.Clear();
-            Goblin = new Goblin(Content, new Rectangle(1000, 100, 64, 64), new Rectangle(0, 0, 70, 70));
-            Sceleton = new Sceleton(Content, new Rectangle(1000, 100, 64, 128), new Rectangle(0, 0, 128, 128));
-            Mushroom = new Mushroom(Content, new Rectangle(1000, 100, 64, 128), new Rectangle(0, 0, 128, 128));
-            Worm = new Worm(Content, new Rectangle(1000, 100, 64, 64), new Rectangle(0, 0, 128, 128));
-            EnemyList.Add(Goblin);
-            EnemyList.Add(Sceleton);
-            EnemyList.Add(Mushroom);
-            EnemyList.Add(Worm);
+            _goblin = new Goblin(Content, new Rectangle(1000, 100, 64, 64), new Rectangle(0, 0, 70, 70));
+            _skeleton = new Sceleton(Content, new Rectangle(1000, 100, 64, 128), new Rectangle(0, 0, 128, 128));
+            _mushroom = new Mushroom(Content, new Rectangle(1000, 100, 64, 128), new Rectangle(0, 0, 128, 128));
+            _worm = new Worm(Content, new Rectangle(1000, 100, 64, 64), new Rectangle(0, 0, 128, 128));
+            EnemyList.Add(_goblin);
+            EnemyList.Add(_skeleton);
+            EnemyList.Add(_mushroom);
+            EnemyList.Add(_worm);
 
             // Reinitialize level
             _level1 = new Level1();
             _level1.Initialize(Content);
 
             // Reset other states if needed
-            intersections.Clear();
+            _intersections.Clear();
             _isHudVisible = false;
+
+
+            ShowDialog();
         }
 
-        private void InitOptions(object sender, System.EventArgs e)
+        private void InitOptions(object sender, EventArgs e)
         {
             Gum.Root.Children.Clear();
 
@@ -177,9 +214,9 @@ namespace Tales_of_Everlight
             var fullscreenCheck = new CheckBox();
             fullscreenCheck.IsChecked = false;
             fullscreenCheck.Text = "Fullscreen";
-            fullscreenCheck.Checked += (sender, args) => System.Diagnostics.Debug.WriteLine(
+            fullscreenCheck.Checked += (sender, _) => System.Diagnostics.Debug.WriteLine(
                 $"Checkbox checked? {(sender as CheckBox).IsChecked}");
-            fullscreenCheck.Unchecked += (sender, args) => System.Diagnostics.Debug.WriteLine(
+            fullscreenCheck.Unchecked += (sender, _) => System.Diagnostics.Debug.WriteLine(
                 $"Checkbox checked? {(sender as CheckBox).IsChecked}");
             optionsControls.AddChild(fullscreenCheck);
 
@@ -206,28 +243,28 @@ namespace Tales_of_Everlight
 
             var volumeSlider = new Slider();
             volumeSlider.Value = 75;
-            volumeSlider.ValueChanged += (sender, args) => System.Diagnostics.Debug.WriteLine(
+            volumeSlider.ValueChanged += (sender, _) => System.Diagnostics.Debug.WriteLine(
                 $"Volume Slider Value is {(sender as Slider).Value}");
             spOptions.AddChild(volumeSlider);
 
             var musicSlider = new Slider();
             musicSlider.Value = 50;
-            musicSlider.ValueChanged += (sender, args) => System.Diagnostics.Debug.WriteLine(
+            musicSlider.ValueChanged += (sender, _) => System.Diagnostics.Debug.WriteLine(
                 $"Music Slider Value is {(sender as Slider).Value}");
             spOptions.AddChild(musicSlider);
 
             var backButton = new Button();
             backButton.Text = "Back to Main Menu";
             backButton.Visual.Width = 200;
-            backButton.Click += (s, args) =>
+            backButton.Click += (_, _) =>
             {
                 Gum.Root.Children.Clear();
-                mainPanel.AddToRoot();
+                _mainPanel.AddToRoot();
             };
             optionsControls.AddChild(backButton);
         }
 
-        private void InitExit(object sender, System.EventArgs e)
+        private void InitExit(object sender, EventArgs e)
         {
             Exit();
         }
@@ -236,7 +273,7 @@ namespace Tales_of_Everlight
         {
             Gum.Root.Children.Clear();
 
-            if (isPaused)
+            if (_isPaused)
             {
                 var gamePanel = new Panel();
                 gamePanel.Visual.AddToRoot();
@@ -252,24 +289,25 @@ namespace Tales_of_Everlight
                 var buttonPanel = new StackPanel();
                 buttonPanel.Spacing = 3;
                 buttonPanel.Anchor(Anchor.Center);
-                
+
                 var resumeButton = new Button();
                 resumeButton.Text = "Resume";
                 resumeButton.Visual.Width = 200;
-                resumeButton.Click += (s, args) =>
+                resumeButton.Click += (_, _) =>
                 {
                     Gum.Root.Children.Clear();
-                    isPaused = !isPaused;
+                    _isPaused = !_isPaused;
                 };
                 buttonPanel.AddChild(resumeButton);
-                
+
                 var backButton = new Button();
                 backButton.Text = "Back to Main Menu";
                 backButton.Visual.Width = 200;
-                backButton.Click += (s, args) =>
+                backButton.Click += (_, _) =>
                 {
                     Gum.Root.Children.Clear();
-                    mainPanel.AddToRoot();
+                    _mainPanel.AddToRoot();
+                    _isGame = false; // Ensure the game state is reset
                 };
                 buttonPanel.AddChild(backButton);
                 gamePanel.AddChild(buttonPanel);
@@ -278,35 +316,36 @@ namespace Tales_of_Everlight
 
         protected override void LoadContent()
         {
+            //_menuBackgroundTexture = Content.Load<Texture2D>("menu_background");
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             //_mainHeroSprite = Content.Load<Texture2D>("animatedSprite");
             _mainHeroSprite = Content.Load<Texture2D>("animatedSprite");
             //_goblinSprite = Content.Load<Texture2D>("enemy1");
             //_mainHero = new MainHero(_mainHeroSprite, new Vector2(500, 1000), 1, 6);
-            _mainHero = new MainHero(Content,
+            MainHero = new MainHero(Content,
                 new Rectangle(0, 0, 64,
                     128), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static
                 new Rectangle(0, 0, 128, 128));
 
             //Goblin = new Goblin(_goblinSprite, new Vector2(1000, 100), 5, 1);
-            Goblin = new Goblin(Content,
+            _goblin = new Goblin(Content,
                 new Rectangle(1000, 100, 64, 64),
                 //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static);
                 new Rectangle(0, 0, 70, 70));
-            Sceleton = new Sceleton(Content,
+            _skeleton = new Sceleton(Content,
                 new Rectangle(1000, 100, 64, 128),
                 new Rectangle(0, 0, 128, 128));
-            Mushroom = new Mushroom(Content,
+            _mushroom = new Mushroom(Content,
                 new Rectangle(1000, 100, 64, 128),
                 new Rectangle(0, 0, 128, 128));
-            Worm = new Worm(Content,
+            _worm = new Worm(Content,
                 new Rectangle(1000, 100, 64, 64),
                 new Rectangle(0, 0, 128, 128));
-            EnemyList.Add(Goblin);
-            EnemyList.Add(Sceleton);
-            EnemyList.Add(Mushroom);
-            EnemyList.Add(Worm);
+            EnemyList.Add(_goblin);
+            EnemyList.Add(_skeleton);
+            EnemyList.Add(_mushroom);
+            EnemyList.Add(_worm);
 
             //_hudTexture = Content.Load<Texture2D>("hud+");
             _hudFont = Content.Load<SpriteFont>("hudFont");
@@ -327,29 +366,34 @@ namespace Tales_of_Everlight
                 Keyboard.GetState().IsKeyDown(Keys.Delete))
                 Exit();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape) && !_previousKeyState.IsKeyDown(Keys.Escape))
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape) && !_previousKeyState.IsKeyDown(Keys.Escape) && _isGame)
             {
-                isPaused = !isPaused;
+                _isPaused = !_isPaused;
                 InitPause();
             }
+
+            // if (isPaused && !isGame)
+            // {
+            //     _backgroundColor = new Color(100, 150, 200); // Ensure background color is set for the main menu
+            // }
             //Console.WriteLine(2);
             //Attack.Execute();
 
-            if (isGame && !isPaused)
+            if (_isGame && !_isPaused && !_isDialog)
             {
-                _mainHero.HandleMovement(Keyboard.GetState(), _previousKeyState, Mouse.GetState(), _previousMState,
+                MainHero.HandleMovement(Keyboard.GetState(), _previousKeyState, Mouse.GetState(), _previousMState,
                     gameTime);
 
                 #region Main Hero Collision Handler
 
                 // add player's velocity and grab the intersecting tiles
-                _mainHero.Rect = _mainHero.Rect with { X = _mainHero.Rect.X + (int)_mainHero.Velocity.X };
-                intersections = GetIntersectingTilesHorizontal(_mainHero.Rect);
+                MainHero.Rect = MainHero.Rect with { X = MainHero.Rect.X + (int)MainHero.Velocity.X };
+                _intersections = GetIntersectingTilesHorizontal(MainHero.Rect);
 
-                foreach (var rect in intersections)
+                foreach (var rect in _intersections)
                 {
                     // handle collisions if the tile position exists in the tile map layer.
-                    if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _val))
+                    if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
                     {
                         // create temp rect to handle collisions (not necessary, you can optimize!)
                         Rectangle collision = new(
@@ -360,27 +404,27 @@ namespace Tales_of_Everlight
                         );
 
                         // handle collisions based on the direction the player is moving
-                        if (_mainHero.Velocity.X > 0.0f)
+                        if (MainHero.Velocity.X > 0.0f)
                         {
-                            _mainHero.Rect = _mainHero.Rect with { X = collision.Left - _mainHero.Rect.Width };
+                            MainHero.Rect = MainHero.Rect with { X = collision.Left - MainHero.Rect.Width };
                         }
-                        else if (_mainHero.Velocity.X < 0.0f)
+                        else if (MainHero.Velocity.X < 0.0f)
                         {
-                            _mainHero.Rect = _mainHero.Rect with { X = collision.Right };
+                            MainHero.Rect = MainHero.Rect with { X = collision.Right };
                         }
                     }
                 }
 
                 // same as horizontal collisions
 
-                _mainHero.Rect = _mainHero.Rect with { Y = _mainHero.Rect.Y + (int)_mainHero.Velocity.Y };
-                intersections = GetIntersectingTilesVertical(_mainHero.Rect);
+                MainHero.Rect = MainHero.Rect with { Y = MainHero.Rect.Y + (int)MainHero.Velocity.Y };
+                _intersections = GetIntersectingTilesVertical(MainHero.Rect);
 
-                _mainHero.IsOnGround = false;
+                MainHero.IsOnGround = false;
 
-                foreach (var rect in intersections)
+                foreach (var rect in _intersections)
                 {
-                    if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _val))
+                    if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
                     {
                         Rectangle collision = new(
                             rect.X * Tilesize,
@@ -389,44 +433,41 @@ namespace Tales_of_Everlight
                             Tilesize
                         );
 
-                        if (_mainHero.Velocity.Y > 0.0f)
+                        if (MainHero.Velocity.Y > 0.0f)
                         {
-                            _mainHero.Rect = _mainHero.Rect with { Y = collision.Top - _mainHero.Rect.Height };
-                            _mainHero.IsOnGround = true;
-                            _mainHero.Velocity = _mainHero.Velocity with { Y = 0.0f };
-                            _mainHero.AnimationState = AnimationState.Running;
+                            MainHero.Rect = MainHero.Rect with { Y = collision.Top - MainHero.Rect.Height };
+                            MainHero.IsOnGround = true;
+                            MainHero.Velocity = MainHero.Velocity with { Y = 0.0f };
+                            MainHero.AnimationState = AnimationState.Running;
 
                             //_mainHero._currentFrame = 0;
                         }
-                        else if (_mainHero.Velocity.Y < 0.0f)
+                        else if (MainHero.Velocity.Y < 0.0f)
                         {
-                            _mainHero.Rect = _mainHero.Rect with { Y = collision.Bottom };
-                            _mainHero.Velocity = _mainHero.Velocity with { Y = 0.0f };
+                            MainHero.Rect = MainHero.Rect with { Y = collision.Bottom };
+                            MainHero.Velocity = MainHero.Velocity with { Y = 0.0f };
                         }
                     }
                 }
 
                 #endregion
-                
-                
+
+
                 #region Main Hero Spike Damage Handler
 
                 // add player's velocity and grab the intersecting tiles
-                
+
                 // same as horizontal collisions
 
-               
-                intersections = GetIntersectingTilesVertical(_mainHero.Rect);
 
-                
+                _intersections = GetIntersectingTilesVertical(MainHero.Rect);
 
-                foreach (var rect in intersections)
+
+                foreach (var rect in _intersections)
                 {
-                    if (_level1.Spikes.TryGetValue(new Vector2(rect.X, rect.Y), out int _val))
+                    if (_level1.Spikes.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
                     {
-                        _mainHero.TakeDamage(10);
-
-                        
+                        MainHero.TakeDamage(10);
                     }
                 }
 
@@ -437,11 +478,11 @@ namespace Tales_of_Everlight
                 foreach (var enemy in EnemyList)
                 {
                     enemy.Rect = enemy.Rect with { X = enemy.Rect.X + (int)enemy.Velocity.X };
-                    intersections = GetIntersectingTilesHorizontal(enemy.Rect);
+                    _intersections = GetIntersectingTilesHorizontal(enemy.Rect);
 
-                    foreach (var rect in intersections)
+                    foreach (var rect in _intersections)
                     {
-                        if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _val))
+                        if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
                         {
                             Rectangle collision = new(
                                 rect.X * Tilesize,
@@ -462,13 +503,13 @@ namespace Tales_of_Everlight
                     }
 
                     enemy.Rect = enemy.Rect with { Y = enemy.Rect.Y + (int)enemy.Velocity.Y };
-                    intersections = GetIntersectingTilesVertical(enemy.Rect);
+                    _intersections = GetIntersectingTilesVertical(enemy.Rect);
 
                     enemy.IsOnGround = false;
 
-                    foreach (var rect in intersections)
+                    foreach (var rect in _intersections)
                     {
-                        if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _val))
+                        if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
                         {
                             Rectangle collision = new(
                                 rect.X * Tilesize,
@@ -528,15 +569,21 @@ namespace Tales_of_Everlight
 
         private void UpdateCameraPosition()
         {
-            if (_mainHero.Rect.X >= (_graphics.PreferredBackBufferWidth / 2.0f) &&
-                _mainHero.Rect.X <= _level1.Width - (_graphics.PreferredBackBufferWidth / 2.0f))
+            float cameraX = _camera.Position.X;
+            float cameraY = MainHero.Rect.Y + 100;
+
+            // Ensure the camera stays within level boundaries
+            if (MainHero.Rect.X >= (_graphics.PreferredBackBufferWidth / 2.0f) &&
+                MainHero.Rect.X <= _level1.Width - (_graphics.PreferredBackBufferWidth / 2.0f))
             {
-                _camera.Position = new Vector2(_mainHero.Rect.X, _mainHero.Rect.Y + 100);
+                cameraX = MainHero.Rect.X;
             }
-            else
-            {
-                _camera.Position = _camera.Position with { Y = _mainHero.Rect.Y + 100 };
-            }
+
+            // Clamp the camera position to the level boundaries
+            cameraX = Math.Clamp(cameraX, _graphics.PreferredBackBufferWidth / 2.0f,
+                _level1.Width - (_graphics.PreferredBackBufferWidth / 2.0f));
+
+            _camera.Position = new Vector2(cameraX, cameraY);
         }
 
         // private void UpdateGameElements(GameTime gameTime)
@@ -547,10 +594,19 @@ namespace Tales_of_Everlight
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(_backgroundColor);
+            // GraphicsDevice.Clear(_backgroundColor);
 
-            if (isGame)
+            if (!_isGame || _isPaused || _isDialog)
             {
+                GraphicsDevice.Clear(Color.CornflowerBlue); // Replace with your desired color
+
+                //_spriteBatch.Begin();
+                //_spriteBatch.Draw(_menuBackgroundTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
+                //_spriteBatch.End();
+            }
+            else
+            {
+                GraphicsDevice.Clear(_backgroundColor);
                 DrawGameElements();
                 DrawHudElements();
             }
@@ -567,21 +623,15 @@ namespace Tales_of_Everlight
             //_mainHero.Draw(_spriteBatch);
 
             _level1.Draw(_spriteBatch);
-            _mainHero.Draw(_spriteBatch, new Vector2(_mainHero.Rect.X, _mainHero.Rect.Y)
+            MainHero.Draw(_spriteBatch, new Vector2(MainHero.Rect.X, MainHero.Rect.Y)
                 // , _hitboxTexture
             );
-            _mainHero.DrawBoundingBox(_spriteBatch, _hitboxTexture);
+            MainHero.DrawBoundingBox(_spriteBatch, _hitboxTexture);
 
             foreach (var enemy in EnemyList)
             {
                 enemy.Draw(_spriteBatch, new Vector2(enemy.Rect.X, enemy.Rect.Y), _hitboxTexture);
                 enemy.DrawBoundingBox(_spriteBatch, _hitboxTexture);
-            }
-
-
-            foreach (var rect in intersections)
-            {
-                //  DrawRectHollow(_spriteBatch, new Rectangle(rect.X * Tilesize, rect.Y * Tilesize, Tilesize, Tilesize),4);
             }
 
             _spriteBatch.End();
@@ -593,29 +643,18 @@ namespace Tales_of_Everlight
 
             if (_isHudVisible)
             {
-                _spriteBatch.DrawString(_hudFont, $"Velocity: {_mainHero.Velocity}", new Vector2(10, 0), Color.White);
-                _spriteBatch.DrawString(_hudFont, $"isMoving: {_mainHero.IsMoving}", new Vector2(10, 30), Color.White);
-                _spriteBatch.DrawString(_hudFont, $"IsOnGround: {_mainHero.IsOnGround}", new Vector2(10, 60),
+                _spriteBatch.DrawString(_hudFont, $"Velocity: {MainHero.Velocity}", new Vector2(10, 0), Color.White);
+                _spriteBatch.DrawString(_hudFont, $"isMoving: {MainHero.IsMoving}", new Vector2(10, 30), Color.White);
+                _spriteBatch.DrawString(_hudFont, $"IsOnGround: {MainHero.IsOnGround}", new Vector2(10, 60),
                     Color.White);
-                _spriteBatch.DrawString(_hudFont, $"Steps done: {_mainHero.StepsDone}", new Vector2(10, 90),
+                _spriteBatch.DrawString(_hudFont, $"Steps done: {MainHero.StepsDone}", new Vector2(10, 90),
                     Color.White);
             }
 
             _spriteBatch.End();
         }
 
-        private void DrawRectHollow(SpriteBatch spriteBatch, Rectangle rect, int thickness)
-        {
-            spriteBatch.Draw(_rectangleTexture, new Rectangle(rect.X, rect.Y, rect.Width, thickness), Color.White);
-            spriteBatch.Draw(_rectangleTexture, new Rectangle(rect.X, rect.Bottom - thickness, rect.Width, thickness),
-                Color.White);
-            spriteBatch.Draw(_rectangleTexture, new Rectangle(rect.X, rect.Y, thickness, rect.Height), Color.White);
-            spriteBatch.Draw(_rectangleTexture, new Rectangle(rect.Right - thickness, rect.Y, thickness, rect.Height),
-                Color.White);
-        }
-
-
-        public List<Rectangle> GetIntersectingTilesHorizontal(Rectangle target)
+        private List<Rectangle> GetIntersectingTilesHorizontal(Rectangle target)
         {
             List<Rectangle> intersections = new();
 
@@ -638,7 +677,7 @@ namespace Tales_of_Everlight
             return intersections;
         }
 
-        public List<Rectangle> GetIntersectingTilesVertical(Rectangle target)
+        private List<Rectangle> GetIntersectingTilesVertical(Rectangle target)
         {
             List<Rectangle> intersections = new();
 
@@ -659,15 +698,6 @@ namespace Tales_of_Everlight
             }
 
             return intersections;
-        }
-
-        public static void RemoveEnemy(Enemy enemy)
-        {
-            if (EnemyList.Contains(enemy))
-            {
-                EnemyList.Remove(enemy);
-                enemy = null;
-            }
         }
     }
 }

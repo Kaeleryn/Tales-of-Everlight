@@ -1,9 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
-namespace Tales_of_Everlight;
+namespace Tales_of_Everlight.Characters;
 
 public class MainHero : Actor
 {
