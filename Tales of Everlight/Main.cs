@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameGum;
 using MonoGameGum.Forms.Controls;
+using SharpDX.Direct2D1.Effects;
 using Tales_of_Everlight.Characters;
 
 namespace Tales_of_Everlight
@@ -19,6 +20,7 @@ namespace Tales_of_Everlight
         private bool _isGame;
         private bool _isPaused;
         private bool _isDialog;
+        public List<Buff> BuffList;
 
         // private Texture2D _menuBackgroundTexture;
 
@@ -156,7 +158,7 @@ namespace Tales_of_Everlight
 
         private void InitGame(object sender, EventArgs e)
         {
-            Gum.Root.Children.Clear();
+            Gum.Root.Children.Clear(); 
 
             // Reset game states
             _isGame = true;
@@ -164,10 +166,12 @@ namespace Tales_of_Everlight
 
             // Reset camera position
             _camera.Position = Vector2.Zero;
+            BuffList = new List<Buff>();
 
             // Reset main hero
             MainHero = new MainHero(Content,
-                new Rectangle(0, 0, 64, 128),
+                new Rectangle(2000, 25*Tilesize, 64,
+                    128), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static
                 new Rectangle(0, 0, 128, 128));
 
             // Reset enemies
@@ -176,6 +180,9 @@ namespace Tales_of_Everlight
             _skeleton = new Sceleton(Content, new Rectangle(1000, 100, 64, 128), new Rectangle(0, 0, 128, 128));
             _mushroom = new Mushroom(Content, new Rectangle(1000, 100, 64, 128), new Rectangle(0, 0, 128, 128));
             _worm = new Worm(Content, new Rectangle(1000, 100, 64, 64), new Rectangle(0, 0, 128, 128));
+
+            Buff healBuff = new Buff(BuffType.IncreaseSpeed, new Vector2(7*Tilesize, 28*Tilesize), 5f, Content);
+            BuffList.Add(healBuff);
             EnemyList.Add(_goblin);
             EnemyList.Add(_skeleton);
             EnemyList.Add(_mushroom);
@@ -319,28 +326,27 @@ namespace Tales_of_Everlight
             //_menuBackgroundTexture = Content.Load<Texture2D>("menu_background");
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //_mainHeroSprite = Content.Load<Texture2D>("animatedSprite");
-            _mainHeroSprite = Content.Load<Texture2D>("animatedSprite");
-            //_goblinSprite = Content.Load<Texture2D>("enemy1");
-            //_mainHero = new MainHero(_mainHeroSprite, new Vector2(500, 1000), 1, 6);
+           
+            
+            
             MainHero = new MainHero(Content,
-                new Rectangle(0, 0, 64,
+                new Rectangle(2000, 25*Tilesize, 64,
                     128), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static
                 new Rectangle(0, 0, 128, 128));
 
-            // Goblin = new Goblin(_goblinSprite, new Vector2(1000, 100), 5, 1);
-             _goblin = new Goblin(Content,
-                 new Rectangle(1000, 100, 64, 64),
-                 //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static);
-                 new Rectangle(0, 0, 70, 70));
-             _skeleton = new Sceleton(Content,
-                 new Rectangle(1000, 100, 64, 128),
-                 new Rectangle(0, 0, 128, 128));
+          
+            _goblin = new Goblin(Content,
+                new Rectangle(3000, 100, 64, 64),
+                //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static);
+                new Rectangle(0, 0, 70, 70));
+            _skeleton = new Sceleton(Content,
+                new Rectangle(3000, 100, 64, 128),
+                new Rectangle(0, 0, 128, 128));
             _mushroom = new Mushroom(Content,
-                new Rectangle(1000, 100, 64, 128),
+                new Rectangle(3000, 100, 64, 128),
                 new Rectangle(0, 0, 128, 128));
             _worm = new Worm(Content,
-                new Rectangle(1000, 100, 64, 64),
+                new Rectangle(3000, 100, 64, 64),
                 new Rectangle(0, 0, 128, 128));
             EnemyList.Add(_goblin);
             EnemyList.Add(_skeleton);
@@ -438,7 +444,7 @@ namespace Tales_of_Everlight
                             MainHero.Rect = MainHero.Rect with { Y = collision.Top - MainHero.Rect.Height };
                             MainHero.IsOnGround = true;
                             MainHero.Velocity = MainHero.Velocity with { Y = 0.0f };
-                            if(!MainHero.IsDead || !MainHero.IsDying)MainHero.AnimationState = AnimationState.Running;
+                            if(!MainHero.IsDead && !MainHero.IsDying)MainHero.AnimationState = AnimationState.Running;
 
                             //_mainHero._currentFrame = 0;
                         }
@@ -540,9 +546,22 @@ namespace Tales_of_Everlight
                     enemy.MovementHandler();
                 }
 
+                foreach (var buff in BuffList)
+                {
+                    Rectangle buffRect = new Rectangle((int)buff.Position.X, (int)buff.Position.Y, 
+                        buff.Texture.Width, buff.Texture.Height);
+                    
+                    buff.Update(gameTime);
+
+                    if (MainHero.Rect.Intersects(buffRect) && !buff.IsActive)
+                    {
+                        buff.IsActive = true;
+                        buff.ApplyEffect();
+                    }
+                    
+                }
 
                 HandleInput();
-
                 UpdateCameraPosition();
                 // UpdateGameElements(gameTime);
             }
@@ -632,6 +651,13 @@ namespace Tales_of_Everlight
             {
                 enemy.Draw(_spriteBatch, new Vector2(enemy.Rect.X, enemy.Rect.Y), _hitboxTexture);
                 enemy.DrawBoundingBox(_spriteBatch, _hitboxTexture);
+            }
+            
+            foreach (var buff in BuffList)
+            {
+                buff.Draw(_spriteBatch, buff.Position);
+             
+               
             }
 
             _spriteBatch.End();

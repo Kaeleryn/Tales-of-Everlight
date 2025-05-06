@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 
@@ -14,40 +15,54 @@ public class Buff
 {
     
     public BuffType Type;
-    public string Name { get; set; }
+   
     public Texture2D Texture { get; set; }
-    public const float DURATION  = 30f;
+    public Vector2 Position { get; set; }
+    public const float DURATION  = 3f;
     public float TimeLeft { get; set; } = DURATION;
     
     public bool IsActive { get; set; }
     public float Amount { get; set; }
 
 
-    public Buff(BuffType type, string name, Texture2D texture, float amount)
+    public Buff(BuffType type, Vector2 position, float amount, ContentManager content)
     {
         Type = type;
-        Name = name;
-        Texture = texture;
+        Position = position;
         Amount = amount;
         
+        switch (type)
+        {
+            case BuffType.Heal:
+                Texture = content.Load<Texture2D>("buff_health");
+                break;
+            case BuffType.IncreaseDamage:
+                Texture = content.Load<Texture2D>("buff_damage");
+                break;
+            case BuffType.IncreaseSpeed:
+                Texture = content.Load<Texture2D>("buff_speed");
+                break;
+        }
         
     }
-    
-    
-    private void ApplyEffect()
+
+
+    public void ApplyEffect()
     {
         switch (Type)
         {
             case BuffType.Heal:
                 Heal((int)Amount);
                 // Healing is instant, so we can deactivate the buff immediately
-                IsActive = false;
+                IsActive = true;
                 break;
             case BuffType.IncreaseDamage:
                 MainHero.Damage += (int)Amount;
+                IsActive = true;
                 break;
             case BuffType.IncreaseSpeed:
                 MainHero.Speed += Amount;
+                IsActive = true;
                 break;
         }
     }
@@ -58,10 +73,10 @@ public class Buff
         switch (Type)
         {
             case BuffType.IncreaseDamage:
-                MainHero.Damage -= (int)Amount;
+                MainHero.Damage = MainHero.StandardDamage;
                 break;
             case BuffType.IncreaseSpeed:
-                MainHero.Speed -= Amount;
+                MainHero.Speed = MainHero.StandardSpeed;
                 break;
             // Heal doesn't need to be reversed as it's an instant effect
         }
@@ -74,7 +89,7 @@ public class Buff
             
         // If it's a healing buff, it's already been applied and deactivated
         if (Type == BuffType.Heal)
-            return;
+            RemoveEffect();
             
         // Decrease the timer
         TimeLeft -= (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -83,7 +98,7 @@ public class Buff
         if (TimeLeft <= 0)
         {
             RemoveEffect();
-            IsActive = false;
+            
         }
     }
     

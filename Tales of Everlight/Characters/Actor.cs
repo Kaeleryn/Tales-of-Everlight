@@ -19,11 +19,11 @@ public enum AnimationState
 public abstract class Actor
 {
     private bool _isFacingRight = true; // Напрямок персонажа
-    private readonly Texture2D _runningTexture; // Текстура бігу
-    private readonly Texture2D _jumpingTexture; // Текстура стрибка
-    private readonly Texture2D _attackTexture; // Текстура атаки
+    private  Texture2D _runningTexture; // Текстура бігу
+    private  Texture2D _jumpingTexture; // Текстура стрибка
+    private  Texture2D _attackTexture; // Текстура атаки
     private Texture2D _currentTexture;
-    private readonly Texture2D _deathTexture;
+    private  Texture2D _deathTexture;
 
     private float _invincibilityTimer; // Тривалість неуразливості
 
@@ -44,7 +44,7 @@ public abstract class Actor
     public static int Damage { get; set; } = 20;
     public static int StandardDamage { get; set; } = 20;
     public static float Speed { get; set; } = 8.5f;
-    public static float StandardSpeed { get; set; } = 1.2f;
+    public static float StandardSpeed { get; set; } = 8.5f;
 
     public AnimationState AnimationState { get; set; } // Стан анімації
 
@@ -114,6 +114,7 @@ public abstract class Actor
     {
         IsDying = true;
         AnimationState = AnimationState.Death;
+        Console.WriteLine("Started Dying");
         Velocity = Vector2.Zero;
         _currentFrame = 0;
     }
@@ -140,6 +141,7 @@ public abstract class Actor
 
         if (IsDead || IsDying)
         {
+            AnimationState = AnimationState.Death;
             _velocity.Y += Gravity;
             _velocity.Y = Math.Min(20.0f, _velocity.Y);
             UpdateFrame(gameTime);
@@ -203,46 +205,7 @@ public abstract class Actor
         _isInvincible = true;
         _invincibilityTimer = 0f;
     }
-
-    // public void HandleAttack(MouseState mouseState, MouseState previousState, GameTime gameTime)
-    // {
-    //     if (mouseState.LeftButton == ButtonState.Pressed && previousState.LeftButton == ButtonState.Released)
-    //     {
-    //         AnimationState = AnimationState.Attacking;
-    //
-    //         _currentFrame = 0;
-    //     }
-    //
-    //     if (AnimationState == AnimationState.Attacking)
-    //     {
-    //         UpdateAttackFrame(gameTime);
-    //     }
-    // }
-    //
-    // private void UpdateAttackFrame(GameTime gameTime)
-    // {
-    //     _timeSinceLastFrame += gameTime.ElapsedGameTime.TotalSeconds;
-    //
-    //     if (_timeSinceLastFrame >= FrameTime)
-    //     {
-    //         _timeSinceLastFrame -= FrameTime;
-    //
-    //         // Move to next frame in attack animation
-    //         if (_currentFrame < _totalFrames - 1)
-    //         {
-    //             _currentFrame++;
-    //         }
-    //         else
-    //         {
-    //             // Attack animation completed
-    //             _currentFrame = 0;
-    //             // Return to previous state when attack is done
-    //             AnimationState = IsOnGround ? AnimationState.Running : AnimationState.Jumping;
-    //         }
-    //     }
-    // }
-
-
+    
     public void HandleHorisontalMovement(KeyboardState keystate, KeyboardState previousState, GameTime gameTime)
     {
         Decelerate();
@@ -338,14 +301,17 @@ public abstract class Actor
                     _currentFrame = (_currentFrame + 1) % _totalFrames;
                     // Track total death animation time
                     _deathAnimationTimer += FrameTime;
+                    Console.WriteLine("Death animation frame: " + _currentFrame);
                 }
                 else
                 {
                     // Death animation complete
+                    IsDying = true;
                     IsDead = true;
 
                     // Keep on last frame
                     _currentFrame = _totalFrames - 1;
+                    Console.WriteLine("died");
                 }
             }
             else if (AnimationState == AnimationState.Attacking)

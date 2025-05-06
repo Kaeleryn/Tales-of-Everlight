@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Tales_of_Everlight.Characters;
 
 namespace Tales_of_Everlight;
 
@@ -12,7 +13,7 @@ public class Level1
     private Dictionary<Vector2, int> foreground;
     private Dictionary<Vector2, int> collisions;
     private Dictionary<Vector2, int> spikes;
-    public readonly int Width = 10624;
+    public readonly int Width = 271*64;
         
     
 
@@ -25,7 +26,8 @@ public class Level1
     private Texture2D textureAtlas_collisions;
     private Texture2D textureAtlas_spikes;
 
-    public Texture2D Background { get; set; }
+    public Texture2D BackgroundHigh { get; set; }
+    public Texture2D BackgroundLow { get; set; }
     
     
     public Level1()
@@ -48,7 +50,8 @@ public class Level1
         textureAtlas_spikes = content.Load<Texture2D>("tileset_spikes");
         
         
-        Background = content.Load<Texture2D>("background_sky");
+        BackgroundHigh = content.Load<Texture2D>("Level1_background_high");
+        BackgroundLow = content.Load<Texture2D>("Level1_background_low");
         
     }
 
@@ -56,9 +59,46 @@ public class Level1
     public void Draw(SpriteBatch spriteBatch)
     {
 
-        for (int i = 0; i < 10880; i += 992)
+        float parallaxFactor = 0.03f; // Very subtle horizontal movement
+        float offsetX = Main.MainHero.Rect.X * parallaxFactor;
+    
+        // Calculate blend factor based on player's Y position
+        float transitionHeight = 34 * 64; // 34 * Tilesize
+        float blendRange = 10 * 64; // Transition range (10 tiles)
+        float blendFactor = 0f;
+    
+        // Calculate how far the player is into the transition zone
+        if (Main.MainHero.Rect.Y > transitionHeight - blendRange && Main.MainHero.Rect.Y < transitionHeight + blendRange)
         {
-            spriteBatch.Draw(Background, new Vector2(i, -560), Color.White);
+            blendFactor = (Main.MainHero.Rect.Y - (transitionHeight - blendRange)) / (2 * blendRange);
+            blendFactor = MathHelper.Clamp(blendFactor, 0f, 1f);
+        }
+        else if (Main.MainHero.Rect.Y >= transitionHeight + blendRange)
+        {
+            blendFactor = 1f; // Fully transitioned to BackgroundLow
+        }
+    
+        for (int i = 0; i < Width; i += BackgroundHigh.Width)
+        {
+            // Position for background
+            Vector2 position = new Vector2(
+                i - offsetX % BackgroundHigh.Width,
+                Main.MainHero.Rect.Y - BackgroundHigh.Height/2
+            );
+        
+            // Draw BackgroundHigh with decreasing opacity
+            spriteBatch.Draw(
+                BackgroundHigh, 
+                position, 
+                Color.White * (1f - blendFactor)
+            );
+        
+            // Draw BackgroundLow with increasing opacity
+            spriteBatch.Draw(
+                BackgroundLow, 
+                position, 
+                Color.White * blendFactor
+            );
         }
 
 
@@ -141,11 +181,6 @@ public class Level1
             );
         }
     }
-
-
-
-
-
     public Dictionary<Vector2, int> LoadMap(string filepath)
     {
         Dictionary<Vector2, int> result = new();
