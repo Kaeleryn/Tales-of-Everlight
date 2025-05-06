@@ -63,7 +63,7 @@ public class Level1
         float offsetX = Main.MainHero.Rect.X * parallaxFactor;
     
         // Calculate blend factor based on player's Y position
-        float transitionHeight = 34 * 64; // 34 * Tilesize
+        float transitionHeight = 40 * 64; // 34 * Tilesize
         float blendRange = 10 * 64; // Transition range (10 tiles)
         float blendFactor = 0f;
     
