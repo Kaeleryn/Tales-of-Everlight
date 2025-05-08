@@ -10,7 +10,7 @@ namespace Tales_of_Everlight;
 
 public abstract class Enemy
 {
-    public static int Health { get; set; }
+    protected  int Health { get; set; }
 
     public EnemyState State;
     public EnemyAnimationState AnimationState;
@@ -80,7 +80,7 @@ public abstract class Enemy
 
     public Vector2 Velocity { get; set; }
 
-    public void TakeDamage(int damage)
+    public virtual void TakeDamage(int damage)
     {
         Console.WriteLine("TakeDamage method called");
         Health -= damage;
@@ -165,7 +165,7 @@ public abstract class Enemy
             if (_deathAnimationTime >= _deathAnimationDuration)
             {
                 //Main.RemoveEnemy(this);
-                Console.WriteLine("Enemy has been removed.");
+               // Console.WriteLine("Enemy has been removed.");
             }
 
             return;

@@ -26,6 +26,20 @@ public class Worm : Enemy
     {
         Health = 40;
     }
+    
+    
+    public override void TakeDamage(int amount)
+    {
+        Health -= amount;
+        Console.WriteLine($"{GetType().Name} took {amount} damage. Health remaining: {Health}");
+        Damaged = true;
+    
+        if (Health <= 0)
+        {
+            Health = 0;
+            IsDead = true;
+        }
+    }
 
     public override void BehaviorHandler(GameTime gameTime)
     {
@@ -112,7 +126,7 @@ public class Worm : Enemy
 
     public override void SearchEnemy()
     {
-        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 120 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<64)
+        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 120 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<100)
         {
             //PerformAttack();  
             Console.WriteLine("Enemy found");
@@ -136,9 +150,11 @@ public class Worm : Enemy
                     _currentFrame++;
                     if (_currentFrame == 12)
                     {
-                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 45 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<45)
+                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 64 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<100)
+                        {
                             Console.WriteLine("Ennemy attacked");
-                        Attack.ExecuteByEnemy(40);
+                            Attack.ExecuteByEnemy(40);
+                        }
                     }
                 }
                 else
@@ -171,7 +187,6 @@ public class Worm : Enemy
             if (_deathAnimationTime >= _deathAnimationDuration)
             {
                 //Main.RemoveEnemy(this);
-                Console.WriteLine("Enemy has been removed.");
             }
 
             return;

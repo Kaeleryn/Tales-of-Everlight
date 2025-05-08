@@ -18,7 +18,7 @@ public class Buff
    
     public Texture2D Texture { get; set; }
     public Vector2 Position { get; set; }
-    public const float DURATION  = 3f;
+    public const float DURATION  = 15f;
     public float TimeLeft { get; set; } = DURATION;
     
     public bool IsActive { get; set; }

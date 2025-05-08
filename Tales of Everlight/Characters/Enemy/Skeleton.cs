@@ -25,6 +25,19 @@ public class Sceleton : Enemy
     {
         Health = 80;
     }
+    
+    public override void TakeDamage(int amount)
+    {
+        Health -= amount;
+        Console.WriteLine($"{GetType().Name} took {amount} damage. Health remaining: {Health}");
+        Damaged = true;
+    
+        if (Health <= 0)
+        {
+            Health = 0;
+            IsDead = true;
+        }
+    }
 
     public override void BehaviorHandler(GameTime gameTime)
     {
@@ -135,9 +148,11 @@ public class Sceleton : Enemy
                     _currentFrame++;
                     if (_currentFrame == 7)
                     {
-                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 64 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<64)
+                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 110 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<80)
+                        {
                             Console.WriteLine("Ennemy attacked");
-                        Attack.ExecuteByEnemy(10);
+                            Attack.ExecuteByEnemy(10);
+                        }
                     }
                 }
                 else
@@ -170,7 +185,7 @@ public class Sceleton : Enemy
             if (_deathAnimationTime >= _deathAnimationDuration)
             {
                 //Main.RemoveEnemy(this);
-                Console.WriteLine("Enemy has been removed.");
+                ;
             }
 
             return;

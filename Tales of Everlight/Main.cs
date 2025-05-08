@@ -28,7 +28,7 @@ namespace Tales_of_Everlight
         private SpriteBatch _spriteBatch;
 
         private readonly Camera _camera;
-        private Level1 _level1;
+        private Level1 _level1 = new Level1();
         private bool _isHudVisible;
         private Texture2D _mainHeroSprite;
         //private Texture2D _goblinSprite;
@@ -55,6 +55,7 @@ namespace Tales_of_Everlight
         private Texture2D _hitboxTexture;
 
         public static List<Enemy> EnemyList;
+        public static List<Buff> BuffsList;
 
 
         public Main()
@@ -175,18 +176,23 @@ namespace Tales_of_Everlight
                 new Rectangle(0, 0, 128, 128));
 
             // Reset enemies
+            BuffList.Clear();
             EnemyList.Clear();
-            _goblin = new Goblin(Content, new Rectangle(1000, 100, 64, 64), new Rectangle(0, 0, 70, 70));
-            _skeleton = new Sceleton(Content, new Rectangle(1000, 100, 64, 128), new Rectangle(0, 0, 128, 128));
-            _mushroom = new Mushroom(Content, new Rectangle(1000, 100, 64, 128), new Rectangle(0, 0, 128, 128));
-            _worm = new Worm(Content, new Rectangle(1000, 100, 64, 64), new Rectangle(0, 0, 128, 128));
+            _level1.SpawnBuffs(Content);
+            _level1.SpawnEnemies(Content);
+            EnemyList = _level1.Enemies;
+            BuffList = _level1.Buffs;
+            // _goblin = new Goblin(Content, new Rectangle(1000, 100, 64, 64), new Rectangle(0, 0, 70, 70));
+            // _skeleton = new Sceleton(Content, new Rectangle(1000, 100, 64, 128), new Rectangle(0, 0, 128, 128));
+            // _mushroom = new Mushroom(Content, new Rectangle(1000, 100, 64, 128), new Rectangle(0, 0, 128, 128));
+            // _worm = new Worm(Content, new Rectangle(1000, 100, 64, 64), new Rectangle(0, 0, 128, 128));
 
-            Buff healBuff = new Buff(BuffType.IncreaseSpeed, new Vector2(7*Tilesize, 28*Tilesize), 5f, Content);
-            BuffList.Add(healBuff);
-            EnemyList.Add(_goblin);
-            EnemyList.Add(_skeleton);
-            EnemyList.Add(_mushroom);
-            EnemyList.Add(_worm);
+            //Buff healBuff = new Buff(BuffType.IncreaseSpeed, new Vector2(7*Tilesize, 28*Tilesize), 5f, Content);
+            //BuffList.Add(healBuff);
+            // EnemyList.Add(_goblin);
+            // EnemyList.Add(_skeleton);
+            // EnemyList.Add(_mushroom);
+            // EnemyList.Add(_worm);
 
             // Reinitialize level
             _level1 = new Level1();
@@ -442,6 +448,11 @@ namespace Tales_of_Everlight
                         if (MainHero.Velocity.Y > 0.0f)
                         {
                             MainHero.Rect = MainHero.Rect with { Y = collision.Top - MainHero.Rect.Height };
+                            if (!MainHero.IsLanded)
+                            {
+                                MainHero.IsLanded = true;
+                                MainHero._currentFrame = 0;
+                            }
                             MainHero.IsOnGround = true;
                             MainHero.Velocity = MainHero.Velocity with { Y = 0.0f };
                             if(!MainHero.IsDead && !MainHero.IsDying)MainHero.AnimationState = AnimationState.Running;
