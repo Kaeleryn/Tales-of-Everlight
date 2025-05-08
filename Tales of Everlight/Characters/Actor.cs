@@ -100,6 +100,7 @@ public abstract class Actor
 
     protected Actor(ContentManager content, Rectangle rect, Rectangle srect)
     {
+        Health = MaxHealth;
         _currentFrame = 0;
         _runningTexture = content.Load<Texture2D>("animatedSprite");
         _jumpingTexture = content.Load<Texture2D>("animatedSpriteJumping");

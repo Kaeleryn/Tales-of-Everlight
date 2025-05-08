@@ -19,6 +19,7 @@ public abstract class Enemy
 
     private const float MOVEMENT_DURATION = 2.0f;
     private const float IDLE_DURATION = 1.0f;
+    protected float DamagedTimer = 0f;
 
 
     public SpriteEffects SpriteEffects { get; set; }

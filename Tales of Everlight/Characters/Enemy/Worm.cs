@@ -197,6 +197,17 @@ public class Worm : Enemy
 
             return;
         }
+        
+        if (Damaged)
+        {
+            DamagedTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if(DamagedTimer >= 0.5f)
+            {
+                Damaged = false;
+                DamagedTimer = 0f;
+            }
+            
+        }
 
 
         if (!IsAttacking)
@@ -264,7 +275,7 @@ public class Worm : Enemy
             spriteBatch.Draw(CurrentTexture, drawPosition, SourceRectangle, Color.Red, 0f, Vector2.Zero, 1f,
                 SpriteEffects,
                 0f);
-            Damaged = false;
+            
         }
         else
         {
