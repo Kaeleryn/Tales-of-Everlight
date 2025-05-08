@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <XnaContent xmlns:Graphics="Microsoft.Xna.Framework.Content.Pipeline.Graphics">
     <Asset Type="Graphics:FontDescription">
-        <FontName>OCR A Extended</FontName>
+        <FontName>KNIGHT WARRIOR</FontName>
         <Size>14</Size>
         <Spacing>2</Spacing>
         <UseKerning>true</UseKerning>

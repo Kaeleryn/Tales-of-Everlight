@@ -1,68 +1,78 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Gum.DataTypes;
 using Gum.Managers;
 using Gum.Wireframe;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGameGum;
 using MonoGameGum.Forms.Controls;
+using MonoGameGum.Forms.DefaultVisuals;
+using MonoGameGum.GueDeriving;
 using SharpDX.Direct2D1.Effects;
 using Tales_of_Everlight.Characters;
+using Tales_of_Everlight.Screens;
 
 namespace Tales_of_Everlight
 {
     public class Main : Game
     {
-        private GumService Gum => GumService.Default;
+        private static GumService Gum => GumService.Default;
         private Panel _mainPanel;
-        private bool _isGame;
-        private bool _isPaused;
-        private bool _isDialog;
-        public List<Buff> BuffList;
-        private bool _gameOverScreenShown;
+        public static bool isGame;
+        public static bool isPaused;
+        public static bool isDialog;
+        public static List<Buff> BuffList;
+        private static bool _gameOverScreenShown;
         // private Texture2D _menuBackgroundTexture;
 
         private readonly GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        private static SpriteBatch _spriteBatch;
 
-        private readonly Camera _camera;
-        private Level1 _level1 = new Level1();
-        private bool _isHudVisible;
-        private Texture2D _mainHeroSprite;
+        private static Camera _camera;
+        private static Level1 _level1 = new Level1();
+        private static bool _isHudVisible;
+        private static Texture2D _mainHeroSprite;
         //private Texture2D _goblinSprite;
 
 
         //private Texture2D _hudTexture;
-        private Texture2D _healthIcon;
-        private Texture2D _rectangleTexture;
-        private SpriteFont _hudFont;
-        private readonly Color _backgroundColor = new(145, 221, 207, 255);
+        private static Texture2D _healthIcon;
+        private static Texture2D _rectangleTexture;
+        private static SpriteFont _hudFont;
+        private static readonly Color _backgroundColor = new(145, 221, 207, 255);
         public static MainHero MainHero = new();
 
 
-        private Goblin _goblin = new();
-        private Sceleton _skeleton = new();
-        private Mushroom _mushroom = new();
-        private Worm _worm = new();
+        private static Goblin _goblin = new();
+        private static Sceleton _skeleton = new();
+        private static Mushroom _mushroom = new();
+        private static Worm _worm = new();
 
 
-        private KeyboardState _previousKeyState;
-        private MouseState _previousMState;
+        private static KeyboardState _previousKeyState;
+        private static MouseState _previousMState;
         private const int Tilesize = 64;
-        private List<Rectangle> _intersections;
+        private static List<Rectangle> _intersections;
 
-        private Texture2D _hitboxTexture;
+        private static Texture2D _hitboxTexture;
 
         public static List<Enemy> EnemyList;
         public static List<Buff> BuffsList;
 
+        private static ContentManager content;
 
+        public static Main Instance { get; private set; }
         public Main()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            
+            Instance = this;
+            
             IsMouseVisible = true;
             _graphics.PreferredBackBufferHeight = 720;
             _graphics.PreferredBackBufferWidth = 1280;
@@ -77,8 +87,13 @@ namespace Tales_of_Everlight
 
         protected override void Initialize()
         {
-            Gum.Initialize(this);
-            InitMainMenu();
+            Gum.Initialize(this, "GumProject/GumProject.gumx");
+            
+            content = Main.Instance.Content;
+            
+            var screen = new MainMenu();
+            screen.AddToRoot();
+            //InitMainMenu();
 
             base.Initialize();
             _previousKeyState = Keyboard.GetState();
@@ -86,86 +101,22 @@ namespace Tales_of_Everlight
             _graphics.IsFullScreen = false;
             _graphics.ApplyChanges();
         }
-
-        private void InitMainMenu()
-        {
-            Gum.Root.Children.Clear();
-
-            _mainPanel = new Panel();
-            _mainPanel.Visual.AddToRoot();
-            _mainPanel.Dock(Dock.Fill);
-
-            var titleLabel = new Label();
-            titleLabel.Text = "Tales of Everlight";
-            titleLabel.Anchor(Anchor.Top);
-            _mainPanel.AddChild(titleLabel);
-
-            var buttonPanel = new StackPanel();
-            buttonPanel.Spacing = 3;
-            buttonPanel.Anchor(Anchor.Center);
-
-            var startButton = new Button();
-            startButton.Text = "Start Game";
-            startButton.Visual.Width = 200;
-            startButton.Click += InitGame;
-            buttonPanel.AddChild(startButton);
-
-            var exitButton = new Button();
-            exitButton.Text = "Exit";
-            exitButton.Visual.Width = 200;
-            exitButton.Click += InitExit;
-            buttonPanel.AddChild(exitButton);
-
-            _mainPanel.AddChild(buttonPanel);
-        }
-
-        private void ShowDialog()
-        {
-            Gum.Root.Children.Clear();
-            _isDialog = true;
-
-            var gamePanel = new Panel();
-            gamePanel.Visual.AddToRoot();
-            gamePanel.Dock(Dock.Fill);
-
-            // Label Panel (Top)
-            var label = new Label();
-            label.Text = "MAMU IBAV";
-            label.Anchor(Anchor.Top);
-            gamePanel.AddChild(label);
-
-            // Button Panel (Center)
-            var buttonPanel = new StackPanel();
-            buttonPanel.Spacing = 3;
-            buttonPanel.Anchor(Anchor.Center);
-
-            var resumeButton = new Button();
-            resumeButton.Text = "OK";
-            resumeButton.Visual.Width = 200;
-            resumeButton.Click += (_, _) =>
-            {
-                Gum.Root.Children.Clear();
-                _isDialog = false;
-            };
-            buttonPanel.AddChild(resumeButton);
-
-            gamePanel.AddChild(buttonPanel);
-        }
-
-        private void InitGame(object sender, EventArgs e)
+        
+        public static void InitGame(object sender, EventArgs e)
         {
             Gum.Root.Children.Clear(); 
-
+            
             // Reset game states
-            _isGame = true;
-            _isPaused = false;
+            isGame = true;
+            isDialog = false;
+            isPaused = false;
             _gameOverScreenShown = false; 
             // Reset camera position
             _camera.Position = Vector2.Zero;
             BuffList = new List<Buff>();
-
+            
             // Reset main hero
-            MainHero = new MainHero(Content,
+            MainHero = new MainHero(content,
                 new Rectangle(2000, 25*Tilesize, 64,
                     128), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static
                 new Rectangle(0, 0, 128, 128));
@@ -173,8 +124,8 @@ namespace Tales_of_Everlight
             // Reset enemies
             BuffList.Clear();
             EnemyList.Clear();
-            _level1.SpawnBuffs(Content);
-            _level1.SpawnEnemies(Content);
+            _level1.SpawnBuffs(content);
+            _level1.SpawnEnemies(content);
             EnemyList = _level1.Enemies;
             BuffList = _level1.Buffs;
             // _goblin = new Goblin(Content, new Rectangle(1000, 100, 64, 64), new Rectangle(0, 0, 70, 70));
@@ -191,107 +142,19 @@ namespace Tales_of_Everlight
 
             // Reinitialize level
             _level1 = new Level1();
-            _level1.Initialize(Content);
+            _level1.Initialize(content);
 
             // Reset other states if needed
             _intersections.Clear();
             _isHudVisible = false;
-
-
-            ShowDialog();
-        }
-
-        private void InitExit(object sender, EventArgs e)
-        {
-            Exit();
-        }
-
-        private void InitPause()
-        {
-            Gum.Root.Children.Clear();
-
-            if (_isPaused)
-            {
-                var gamePanel = new Panel();
-                gamePanel.Visual.AddToRoot();
-                gamePanel.Dock(Dock.Fill);
-
-                // Label Panel (Top)
-                var label = new Label();
-                label.Text = "Pause";
-                label.Anchor(Anchor.Top);
-                gamePanel.AddChild(label);
-
-                // Button Panel (Center)
-                var buttonPanel = new StackPanel();
-                buttonPanel.Spacing = 3;
-                buttonPanel.Anchor(Anchor.Center);
-
-                var resumeButton = new Button();
-                resumeButton.Text = "Resume";
-                resumeButton.Visual.Width = 200;
-                resumeButton.Click += (_, _) =>
-                {
-                    Gum.Root.Children.Clear();
-                    _isPaused = !_isPaused;
-                };
-                buttonPanel.AddChild(resumeButton);
-
-                var backButton = new Button();
-                backButton.Text = "Back to Main Menu";
-                backButton.Visual.Width = 200;
-                backButton.Click += (_, _) =>
-                {
-                    Gum.Root.Children.Clear();
-                    _mainPanel.AddToRoot();
-                    _isGame = false; // Ensure the game state is reset
-                };
-                buttonPanel.AddChild(backButton);
-                gamePanel.AddChild(buttonPanel);
-            }
-        }
-        private void ShowGameOverScreen()
-        {
             
-            Gum.Root.Children.Clear();
-
-            var gameOverPanel = new Panel();
-            gameOverPanel.Visual.AddToRoot();
-            gameOverPanel.Dock(Dock.Fill);
-
-            var gameOverLabel = new Label();
-            gameOverLabel.Text = "Game Over";
-            gameOverLabel.Anchor(Anchor.Top);
-            gameOverLabel.Visual.FontSize = 48;
-            gameOverPanel.AddChild(gameOverLabel);
-
-            var buttonPanel = new StackPanel();
-            buttonPanel.Spacing = 3;
-            buttonPanel.Anchor(Anchor.Center);
-
-            var newGameButton = new Button();
-            newGameButton.Text = "New Game";
-            newGameButton.Visual.Width = 200;
-            // Fix: Use the correct event signature with sender and EventArgs
-            newGameButton.Click += (sender, e) => InitGame(sender, e);
-            buttonPanel.AddChild(newGameButton);
-
-            var exitButton = new Button();
-            exitButton.Text = "Exit";
-            exitButton.Visual.Width = 200;
-            // Fix: Use the correct event signature with sender and EventArgs
-            exitButton.Click += (sender, e) => InitExit(sender, e);
-            buttonPanel.AddChild(exitButton);
-
-            gameOverPanel.AddChild(buttonPanel);
+            //ShowDialog();
         }
+        
         protected override void LoadContent()
         {
             //_menuBackgroundTexture = Content.Load<Texture2D>("menu_background");
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-           
-            
             
             MainHero = new MainHero(Content,
                 new Rectangle(2000, 25*Tilesize, 64,
@@ -330,22 +193,42 @@ namespace Tales_of_Everlight
             _level1.Initialize(Content);
         }
 
+        private async void GameOver()
+        {
+            await Task.Delay(2000);
+            GumService.Default.Root.Children.Clear();
+            var gameOverScreen = new GameOverScreen();
+            gameOverScreen.AddToRoot();
+            _gameOverScreenShown = true;
+        }
+
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed ||
                 Keyboard.GetState().IsKeyDown(Keys.Delete))
                 Exit();
 
-            if (Keyboard.GetState().IsKeyDown(Keys.Escape) && !_previousKeyState.IsKeyDown(Keys.Escape) && _isGame)
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape) && !_previousKeyState.IsKeyDown(Keys.Escape) && isGame)
             {
-                _isPaused = !_isPaused;
-                InitPause();
+                if (!isPaused && !isDialog)
+                {
+                    isPaused = true;
+                    var pauseScreen = new PauseScreen();
+                    pauseScreen.AddToRoot();
+                }
+                else
+                {
+                    if (!isDialog)
+                    {
+                        isPaused = false;
+                        Gum.Root.Children.Clear();
+                    }
+                }
             }
             
-            if (_isGame && !_isPaused && !_isDialog && MainHero.IsDead && !_gameOverScreenShown)
+            if (isGame && !isPaused && !isDialog && MainHero.IsDead && !_gameOverScreenShown)
             {
-                ShowGameOverScreen();
-                _gameOverScreenShown = true;
+                GameOver();
             }
             // if (isPaused && !isGame)
             // {
@@ -354,7 +237,7 @@ namespace Tales_of_Everlight
             //Console.WriteLine(2);
             //Attack.Execute();
 
-            if (_isGame && !_isPaused && !_isDialog && !MainHero.IsDead)
+            if (isGame && !isPaused && !isDialog)
             {
                 MainHero.HandleMovement(Keyboard.GetState(), _previousKeyState, Mouse.GetState(), _previousMState,
                     gameTime);
@@ -431,7 +314,6 @@ namespace Tales_of_Everlight
                 }
 
                 #endregion
-
 
                 #region Main Hero Spike Damage Handler
 
@@ -591,15 +473,7 @@ namespace Tales_of_Everlight
         {
             // GraphicsDevice.Clear(_backgroundColor);
 
-            if (!_isGame || _isPaused || _isDialog)
-            {
-                GraphicsDevice.Clear(Color.CornflowerBlue); // Replace with your desired color
-
-                //_spriteBatch.Begin();
-                //_spriteBatch.Draw(_menuBackgroundTexture, new Rectangle(0, 0, _graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight), Color.White);
-                //_spriteBatch.End();
-            }
-            else
+            if (isGame)
             {
                 GraphicsDevice.Clear(_backgroundColor);
                 DrawGameElements();
