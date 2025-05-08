@@ -12,6 +12,7 @@
         <ApplicationIcon>Icon.ico</ApplicationIcon>
     </PropertyGroup>
     <ItemGroup>
+        <PackageReference Include="Gum.MonoGame" Version="2025.5.1.1" />
         <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.1.303"/>
         <PackageReference Include="MonoGame.Content.Builder.Task" Version="3.8.1.303"/>
         <PackageReference Include="Myra" Version="1.5.9" />

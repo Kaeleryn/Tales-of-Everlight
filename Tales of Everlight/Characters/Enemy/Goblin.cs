@@ -13,6 +13,8 @@ public class Goblin : Enemy
    
     private const float MOVEMENT_DURATION = 2.0f;
     private const float IDLE_DURATION = 2.0f;
+    private const float ATTACK_COOLDOWN = 1f;
+    private float AttackTimer = 0f;
 
     public Goblin(ContentManager content, Rectangle rect, Rectangle srect) : base(content, rect, srect)
     {
@@ -165,6 +167,8 @@ public class Goblin : Enemy
                     State = EnemyState.Idle;
                     AnimationState = EnemyAnimationState.Idle;
                     StateTimer = 0f;
+                    AttackTimer = 0f;
+                   // IsFacingRight = Main.MainHero.Rect.X <= Rect.X;
                     BehaviorHandler(gametime);
                 }
             }
@@ -181,6 +185,8 @@ public class Goblin : Enemy
 
     public override void Update(GameTime gameTime)
     {
+        
+        AttackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
         if (IsDead)
         {
             _deathAnimationTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -188,7 +194,6 @@ public class Goblin : Enemy
             if (_deathAnimationTime >= _deathAnimationDuration)
             {
                 //Main.RemoveEnemy(this);
-               
             }
 
             return;
@@ -198,7 +203,11 @@ public class Goblin : Enemy
         if (!IsAttacking)
         {
             BehaviorHandler(gameTime);
-            SearchEnemy();
+            if(AttackTimer >= ATTACK_COOLDOWN)
+            {
+                SearchEnemy();
+            }
+            
         }
 
         UpdateFrame(gameTime);

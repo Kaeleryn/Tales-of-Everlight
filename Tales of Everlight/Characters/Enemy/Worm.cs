@@ -13,6 +13,8 @@ public class Worm : Enemy
     
     private const float MOVEMENT_DURATION = 2f;
     private const float IDLE_DURATION = 2f;
+    private const float ATTACK_COOLDOWN = 1.0f;
+    private float AttackTimer = 0f;
 
     public Worm(ContentManager content, Rectangle rect, Rectangle srect) : base(content, rect, srect)
     {
@@ -164,6 +166,8 @@ public class Worm : Enemy
                     State = EnemyState.Idle;
                     AnimationState = EnemyAnimationState.Idle;
                     StateTimer = 0f;
+                    AttackTimer = 0f;
+                    // IsFacingRight = Main.MainHero.Rect.X <= Rect.X;
                     BehaviorHandler(gametime);
                 }
             }
@@ -180,6 +184,8 @@ public class Worm : Enemy
 
     public override void Update(GameTime gameTime)
     {
+        
+        AttackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
         if (IsDead)
         {
             _deathAnimationTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -196,7 +202,11 @@ public class Worm : Enemy
         if (!IsAttacking)
         {
             BehaviorHandler(gameTime);
-            SearchEnemy();
+            if(AttackTimer >= ATTACK_COOLDOWN)
+            {
+                SearchEnemy();
+            }
+            
         }
 
         UpdateFrame(gameTime);

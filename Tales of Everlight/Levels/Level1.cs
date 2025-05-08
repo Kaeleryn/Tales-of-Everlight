@@ -66,12 +66,17 @@ public class Level1
     public void SpawnEnemies(ContentManager content)
     {
         Enemies.Clear(); 
-        PurpleWarrior purpleWarrior = new PurpleWarrior(
+        PurpleWarrior purpleWarrior1 = new PurpleWarrior(
             content,
-            new Rectangle(1000, 1000, 128, 128),
+            new Rectangle(234*Tilesize, 28*Tilesize, 128, 128),
+            new Rectangle(0, 0, 128, 128)
+        );PurpleWarrior purpleWarrior2 = new PurpleWarrior(
+            content,
+            new Rectangle(229*Tilesize, 60*Tilesize, 128, 128),
             new Rectangle(0, 0, 128, 128)
         );
-        Enemies.Add(purpleWarrior);
+        Enemies.Add(purpleWarrior1);
+        Enemies.Add(purpleWarrior2);
 
         foreach (var item in enemies)
         {

@@ -19,11 +19,11 @@ public enum AnimationState
 public abstract class Actor
 {
     private bool _isFacingRight = true; // Напрямок персонажа
-    private  Texture2D _runningTexture; // Текстура бігу
-    private  Texture2D _jumpingTexture; // Текстура стрибка
-    private  Texture2D _attackTexture; // Текстура атаки
+    private Texture2D _runningTexture; // Текстура бігу
+    private Texture2D _jumpingTexture; // Текстура стрибка
+    private Texture2D _attackTexture; // Текстура атаки
     private Texture2D _currentTexture;
-    private  Texture2D _deathTexture;
+    private Texture2D _deathTexture;
 
     private float _invincibilityTimer; // Тривалість неуразливості
 
@@ -39,11 +39,11 @@ public abstract class Actor
     public bool IsLanded = false; // Чи персонаж приземлився
 
     // public static int Health { get; set; } = 100; // Здоров'я персонажа
-    public static int Health { get; set; } = 100; // Здоров'я персонажа
-    public static int MaxHealth { get; set; } = 100; // Максимальне здоров'я персонажа
-    
-    public static int Damage { get; set; } = 20;
-    public static int StandardDamage { get; set; } = 20;
+    public static int Health { get; set; } = 200; // Здоров'я персонажа
+    public static int MaxHealth { get; set; } = 200; // Максимальне здоров'я персонажа
+
+    public static int Damage { get; set; } = 30;
+    public static int StandardDamage { get; set; } = 30;
     public static float Speed { get; set; } = 8.5f;
     public static float StandardSpeed { get; set; } = 8.5f;
 
@@ -105,7 +105,7 @@ public abstract class Actor
         _jumpingTexture = content.Load<Texture2D>("animatedSpriteJumping");
         _attackTexture = content.Load<Texture2D>("animatedSpriteAttacking");
         _deathTexture = content.Load<Texture2D>("animatedSpriteDeath");
-        
+
         _rect = rect;
         _srect = srect;
         _velocity = Vector2.Zero;
@@ -129,7 +129,7 @@ public abstract class Actor
         {
             StartDying();
         }
-        
+
         if (_isInvincible)
         {
             _invincibilityTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -149,7 +149,6 @@ public abstract class Actor
             return;
         }
 
-        
 
         if (AnimationState != AnimationState.Attacking)
         {
@@ -180,7 +179,7 @@ public abstract class Actor
         if (keystate.IsKeyDown(Keys.Space) && previousState.IsKeyUp(Keys.Space) && _jumpCount < MaxJumps)
         {
             IsLanded = false;
-            _velocity.Y = -15;
+            _velocity.Y = -16;
             AnimationState = AnimationState.Jumping;
             IsOnGround = false;
             _jumpCount++; // Збільшуємо кількість стрибків
@@ -207,31 +206,34 @@ public abstract class Actor
         _isInvincible = true;
         _invincibilityTimer = 0f;
     }
-    
+
     public void HandleHorisontalMovement(KeyboardState keystate, KeyboardState previousState, GameTime gameTime)
     {
         Decelerate();
 
-        if (keystate.IsKeyDown(Keys.D))
-        {
-            _velocity.X = Speed;
-            _isFacingRight = true;
-            IsMoving = true;
-            UpdateFrame(gameTime);
-            if (IsOnGround) AnimationState = AnimationState.Running;
-        }
-        else if (keystate.IsKeyDown(Keys.A))
-        {
-            _velocity.X = -Speed;
-            _isFacingRight = false;
-            IsMoving = true;
-            UpdateFrame(gameTime);
-            if (IsOnGround) AnimationState = AnimationState.Running;
-        }
-        else
-        {
-            IsMoving = false;
-        }
+        
+       
+            if (keystate.IsKeyDown(Keys.D))
+            {
+                _velocity.X = Speed;
+                _isFacingRight = true;
+                IsMoving = true;
+                UpdateFrame(gameTime);
+                if (IsOnGround) AnimationState = AnimationState.Running;
+            }
+            else if (keystate.IsKeyDown(Keys.A))
+            {
+                _velocity.X = -Speed;
+                _isFacingRight = false;
+                IsMoving = true;
+                UpdateFrame(gameTime);
+                if (IsOnGround) AnimationState = AnimationState.Running;
+            }
+            else
+            {
+                IsMoving = false;
+            }
+        
     }
 
 
@@ -258,8 +260,6 @@ public abstract class Actor
         if (_velocity.X < 0.5f && _velocity.X > -0.5f)
             _velocity.X = 0;
     }
-
-   
 
 
     public void UpdateFrame(GameTime gameTime)
@@ -318,7 +318,6 @@ public abstract class Actor
             }
             else
             {
-                
                 _currentFrame = (_currentFrame + 1) % _totalFrames;
 
                 if (AnimationState == AnimationState.Running && (_currentFrame == 0 || _currentFrame == 3))
@@ -394,7 +393,7 @@ public abstract class Actor
             if (_isFacingRight)
             {
                 SourceRectangle = new Rectangle(width * column, height * row, width, height);
-                DestinationRectangle = new Rectangle((int)location.X  , (int)location.Y, width, height);
+                DestinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
                 SpriteEffects = _isFacingRight ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             }
             else

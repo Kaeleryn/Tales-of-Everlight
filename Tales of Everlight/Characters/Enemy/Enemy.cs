@@ -121,6 +121,11 @@ public abstract class Enemy
 
     public void MovementHandler()
     {
+        if (_rect.X <= 0)
+        {
+            IsFacingRight = true;
+            AnimationState = EnemyAnimationState.Idle;
+        }
         if (IsDead) return;
         Velocity = Velocity with { Y = Velocity.Y + GRAVITY };
         

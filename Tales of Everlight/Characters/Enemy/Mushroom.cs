@@ -12,6 +12,8 @@ public class Mushroom : Enemy
 {
      private const float MOVEMENT_DURATION = 4f;
     private const float IDLE_DURATION = 1.5f;
+    private const float ATTACK_COOLDOWN = 1.0f;
+    private float AttackTimer = 0f;
 
     public Mushroom(ContentManager content, Rectangle rect, Rectangle srect) : base(content, rect, srect)
     {
@@ -163,6 +165,8 @@ public class Mushroom : Enemy
                     State = EnemyState.Idle;
                     AnimationState = EnemyAnimationState.Idle;
                     StateTimer = 0f;
+                    AttackTimer = 0f;
+                    // IsFacingRight = Main.MainHero.Rect.X <= Rect.X;
                     BehaviorHandler(gametime);
                 }
             }
@@ -179,6 +183,8 @@ public class Mushroom : Enemy
 
     public override void Update(GameTime gameTime)
     {
+        
+        AttackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
         if (IsDead)
         {
             _deathAnimationTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -186,7 +192,6 @@ public class Mushroom : Enemy
             if (_deathAnimationTime >= _deathAnimationDuration)
             {
                 //Main.RemoveEnemy(this);
-                
             }
 
             return;
@@ -196,7 +201,11 @@ public class Mushroom : Enemy
         if (!IsAttacking)
         {
             BehaviorHandler(gameTime);
-            SearchEnemy();
+            if(AttackTimer >= ATTACK_COOLDOWN)
+            {
+                SearchEnemy();
+            }
+            
         }
 
         UpdateFrame(gameTime);
