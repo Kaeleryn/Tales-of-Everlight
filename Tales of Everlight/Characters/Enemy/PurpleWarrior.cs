@@ -4,40 +4,41 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Tales_of_Everlight.Damage;
 
-using static Tales_of_Everlight.Main;
-
 namespace Tales_of_Everlight;
 
-public class Mushroom : Enemy
+public class PurpleWarrior : Enemy
 {
-     private const float MOVEMENT_DURATION = 4f;
-    private const float IDLE_DURATION = 1.5f;
+    private const float MOVEMENT_DURATION = 2.0f;
+    private const float IDLE_DURATION = 3.0f;
+    private const float ATTACK_COOLDOWN = 1.8f;
+    private float AttackTimer = 0f;
 
-    public Mushroom(ContentManager content, Rectangle rect, Rectangle srect) : base(content, rect, srect)
+    public PurpleWarrior(ContentManager content, Rectangle rect, Rectangle srect) : base(content, rect, srect)
     {
-        Health = 150;
-        IdleTexture = content.Load<Texture2D>("Mushroom_idle");
-        MovingTexture = content.Load<Texture2D>("Mushroom_walk");
-        AttackTexture = content.Load<Texture2D>("Mushroom_attack");
+        Health = 200;
+        IdleTexture = content.Load<Texture2D>("PurpleWarriorIdle");
+        MovingTexture = content.Load<Texture2D>("PurpleWarriorWalk");
+        AttackTexture = content.Load<Texture2D>("PurpleWarriorAttack");
     }
 
-    public Mushroom()
+    public PurpleWarrior()
     {
-        Health = 150;
+        Health = 200;
     }
-    
+
     public override void TakeDamage(int amount)
     {
         Health -= amount;
         Console.WriteLine($"{GetType().Name} took {amount} damage. Health remaining: {Health}");
         Damaged = true;
-    
+
         if (Health <= 0)
         {
             Health = 0;
             IsDead = true;
         }
     }
+
 
     public override void BehaviorHandler(GameTime gameTime)
     {
@@ -97,24 +98,25 @@ public class Mushroom : Enemy
         {
             case EnemyAnimationState.Move:
                 CurrentTexture = MovingTexture;
-                Columns = 8;
-                Rows = 1;
+                Columns = 1;
+                Rows = 6;
                 break;
             case EnemyAnimationState.Idle:
                 CurrentTexture = IdleTexture;
-                Columns = 4;
-                Rows = 1;
+                Columns = 1;
+                Rows = 8;
                 break;
             case EnemyAnimationState.Attack:
                 CurrentTexture = AttackTexture;
-                Columns = 8;
-                Rows = 1;
+                Columns = 1;
+                Rows = 12;
                 break;
         }
     }
 
     public override void PerformAttack()
     {
+        
         Velocity = Vector2.Zero;
         AnimationState = EnemyAnimationState.Attack;
         IsFacingRight = Main.MainHero.Rect.X >= Rect.X;
@@ -124,7 +126,7 @@ public class Mushroom : Enemy
 
     public override void SearchEnemy()
     {
-        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 90 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<64)
+        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 250 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y) < 128)
         {
             //PerformAttack();  
             Console.WriteLine("Enemy found");
@@ -146,14 +148,15 @@ public class Mushroom : Enemy
                 if (_currentFrame < _totalFrames - 1)
                 {
                     _currentFrame++;
-                    if (_currentFrame == 7)
+                    if (_currentFrame == 10)
                     {
-                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 80 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<64)
+                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 200 &&
+                            Math.Abs(Main.MainHero.Rect.Y - Rect.Y) < 128)
                         {
                             Console.WriteLine("Ennemy attacked");
-                            Attack.ExecuteByEnemy(10);
+                            Attack.ExecuteByEnemy(15);
+                            
                         }
-                       
                     }
                 }
                 else
@@ -163,6 +166,8 @@ public class Mushroom : Enemy
                     State = EnemyState.Idle;
                     AnimationState = EnemyAnimationState.Idle;
                     StateTimer = 0f;
+                    AttackTimer = 0f;
+                    IsFacingRight = Main.MainHero.Rect.X <= Rect.X;
                     BehaviorHandler(gametime);
                 }
             }
@@ -179,6 +184,8 @@ public class Mushroom : Enemy
 
     public override void Update(GameTime gameTime)
     {
+        
+        AttackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
         if (IsDead)
         {
             _deathAnimationTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -186,7 +193,6 @@ public class Mushroom : Enemy
             if (_deathAnimationTime >= _deathAnimationDuration)
             {
                 //Main.RemoveEnemy(this);
-                
             }
 
             return;
@@ -196,7 +202,11 @@ public class Mushroom : Enemy
         if (!IsAttacking)
         {
             BehaviorHandler(gameTime);
-            SearchEnemy();
+            if(AttackTimer >= ATTACK_COOLDOWN)
+            {
+                SearchEnemy();
+            }
+            
         }
 
         UpdateFrame(gameTime);
@@ -205,13 +215,13 @@ public class Mushroom : Enemy
 
     public override void MoveRight()
     {
-        Velocity = Velocity with { X = 2f };
+        Velocity = Velocity with { X = 4.7f };
         IsFacingRight = true;
     }
 
     public override void MoveLeft()
     {
-        Velocity = Velocity with { X = -2f };
+        Velocity = Velocity with { X = -4.7f };
         IsFacingRight = false;
     }
 
@@ -229,35 +239,45 @@ public class Mushroom : Enemy
 
         // Set destination position based on facing direction
         Vector2 drawPosition;
-        if (AnimationState == EnemyAnimationState.Attack)
+        if (IsFacingRight)
         {
-            if (IsFacingRight)
+            if (AnimationState == EnemyAnimationState.Idle)
             {
-                drawPosition = new Vector2(location.X-180, location.Y );
+                drawPosition = new Vector2(location.X-30, location.Y +5);
                 SpriteEffects = SpriteEffects.None;
+            } else if (AnimationState == EnemyAnimationState.Attack)
+            {
+                drawPosition = new Vector2(location.X-30, location.Y -85);
+                SpriteEffects = SpriteEffects.None;
+                
             }
             else
             {
-                drawPosition = new Vector2(location.X-200 , location.Y );
-                SpriteEffects = SpriteEffects.FlipHorizontally;
+                drawPosition = new Vector2(location.X -30, location.Y + 5);
+                SpriteEffects = SpriteEffects.None;
             }
-            
+
+
         }
         else
         {
-            if (IsFacingRight)
+            if (AnimationState == EnemyAnimationState.Idle)
             {
-                drawPosition = new Vector2(location.X-220, location.Y );
-                SpriteEffects = SpriteEffects.None;
+                drawPosition = new Vector2(location.X , location.Y + 5);
+                SpriteEffects = SpriteEffects.FlipHorizontally;
+            }else if (AnimationState == EnemyAnimationState.Attack)
+            {
+                drawPosition = new Vector2(location.X-130, location.Y -85);
+                SpriteEffects = SpriteEffects.FlipHorizontally;;
+                
             }
             else
             {
-                drawPosition = new Vector2(location.X-220 , location.Y );
+                drawPosition = new Vector2(location.X -30, location.Y + 5);
                 SpriteEffects = SpriteEffects.FlipHorizontally;
             }
             
         }
-         
 
         // Draw with the appropriate color based on state
         if (IsDead)
@@ -277,7 +297,7 @@ public class Mushroom : Enemy
         }
         else
         {
-            spriteBatch.Draw(CurrentTexture, drawPosition, SourceRectangle, Color.Wheat, 0f, Vector2.Zero, 1f,
+            spriteBatch.Draw(CurrentTexture, drawPosition, SourceRectangle, Color.White, 0f, Vector2.Zero, 1f,
                 SpriteEffects,
                 0f);
         }

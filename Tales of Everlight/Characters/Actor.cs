@@ -36,6 +36,7 @@ public abstract class Actor
     private bool _isInvincible = false; // Чи персонаж неуразливий
     public bool IsDead = false; // Чи персонаж мертвий
     public bool IsDying = false;
+    public bool IsLanded = false; // Чи персонаж приземлився
 
     // public static int Health { get; set; } = 100; // Здоров'я персонажа
     public static int Health { get; set; } = 100; // Здоров'я персонажа
@@ -178,6 +179,7 @@ public abstract class Actor
 
         if (keystate.IsKeyDown(Keys.Space) && previousState.IsKeyUp(Keys.Space) && _jumpCount < MaxJumps)
         {
+            IsLanded = false;
             _velocity.Y = -15;
             AnimationState = AnimationState.Jumping;
             IsOnGround = false;
@@ -257,32 +259,7 @@ public abstract class Actor
             _velocity.X = 0;
     }
 
-    // private void UpdateFrame(GameTime gameTime)
-    // {
-    //     _timeSinceLastFrame += gameTime.ElapsedGameTime.TotalSeconds;
-    //
-    //     if (_timeSinceLastFrame >= FrameTime)
-    //     {
-    //         _timeSinceLastFrame -= FrameTime;
-    //
-    //         if (AnimationState == AnimationState.Jumping && !IsOnGround)
-    //         {
-    //             if (_currentFrame < _totalFrames - 1)
-    //             {
-    //                 _currentFrame = (_currentFrame + 1) % _totalFrames;
-    //             }
-    //         }
-    //         else
-    //         {
-    //             _currentFrame = (_currentFrame + 1) % _totalFrames;
-    //
-    //             if (AnimationState == AnimationState.Running && (_currentFrame == 0 || _currentFrame == 3))
-    //             {
-    //                 _stepsDone++;
-    //             }
-    //         }
-    //     }
-    // }
+   
 
 
     public void UpdateFrame(GameTime gameTime)
@@ -341,6 +318,7 @@ public abstract class Actor
             }
             else
             {
+                
                 _currentFrame = (_currentFrame + 1) % _totalFrames;
 
                 if (AnimationState == AnimationState.Running && (_currentFrame == 0 || _currentFrame == 3))

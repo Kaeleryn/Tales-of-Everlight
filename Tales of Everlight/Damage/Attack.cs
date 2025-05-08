@@ -27,11 +27,7 @@ public static class Attack
                 {
                     enemy.TakeDamage(MainHero.Damage);
                     enemy.Damaged= true;
-                    Console.WriteLine("Execute method called");
-                    // if (enemy.Health <= 0)
-                    // {
-                    //     Main.EnemyList.Remove(enemy);
-                    // }
+                    
                 }
             }
         }

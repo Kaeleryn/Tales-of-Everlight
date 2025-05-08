@@ -26,6 +26,21 @@ public class Goblin : Enemy
     {
         Health = 50;
     }
+    
+    public override void TakeDamage(int amount)
+    {
+        Health -= amount;
+        Console.WriteLine($"{GetType().Name} took {amount} damage. Health remaining: {Health}");
+        Damaged = true;
+    
+        if (Health <= 0)
+        {
+            Health = 0;
+            IsDead = true;
+        }
+    }
+    
+    
 
     public override void BehaviorHandler(GameTime gameTime)
     {
@@ -112,7 +127,7 @@ public class Goblin : Enemy
 
     public override void SearchEnemy()
     {
-        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 90 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<64)
+        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 90 && Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<100)
         {
             //PerformAttack();  
             Console.WriteLine("Enemy found");
@@ -134,11 +149,13 @@ public class Goblin : Enemy
                 if (_currentFrame < _totalFrames - 1)
                 {
                     _currentFrame++;
-                    if (_currentFrame == 7)
+                    if (_currentFrame == 4)
                     {
-                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 50&& Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<30)
+                        if (Math.Abs(Main.MainHero.Rect.X - Rect.X) < 64&& Math.Abs(Main.MainHero.Rect.Y - Rect.Y)<100)
+                        {
                             Console.WriteLine("Ennemy attacked");
-                        Attack.ExecuteByEnemy(15);
+                            Attack.ExecuteByEnemy(15);
+                        }
                     }
                 }
                 else
@@ -171,7 +188,7 @@ public class Goblin : Enemy
             if (_deathAnimationTime >= _deathAnimationDuration)
             {
                 //Main.RemoveEnemy(this);
-                Console.WriteLine("Enemy has been removed.");
+               
             }
 
             return;
