@@ -21,7 +21,7 @@ namespace Tales_of_Everlight
         private bool _isPaused;
         private bool _isDialog;
         public List<Buff> BuffList;
-
+        private bool _gameOverScreenShown;
         // private Texture2D _menuBackgroundTexture;
 
         private readonly GraphicsDeviceManager _graphics;
@@ -158,7 +158,7 @@ namespace Tales_of_Everlight
             // Reset game states
             _isGame = true;
             _isPaused = false;
-
+            _gameOverScreenShown = false; 
             // Reset camera position
             _camera.Position = Vector2.Zero;
             BuffList = new List<Buff>();
@@ -246,6 +246,7 @@ namespace Tales_of_Everlight
         }
         private void ShowGameOverScreen()
         {
+            
             Gum.Root.Children.Clear();
 
             var gameOverPanel = new Panel();
@@ -265,13 +266,15 @@ namespace Tales_of_Everlight
             var newGameButton = new Button();
             newGameButton.Text = "New Game";
             newGameButton.Visual.Width = 200;
-            newGameButton.Click += (sender, args) => InitGame(sender, args); // Ensure proper event signature
+            // Fix: Use the correct event signature with sender and EventArgs
+            newGameButton.Click += (sender, e) => InitGame(sender, e);
             buttonPanel.AddChild(newGameButton);
 
             var exitButton = new Button();
             exitButton.Text = "Exit";
             exitButton.Visual.Width = 200;
-            exitButton.Click += (sender, args) => InitExit(sender, args); // Ensure proper event signature
+            // Fix: Use the correct event signature with sender and EventArgs
+            exitButton.Click += (sender, e) => InitExit(sender, e);
             buttonPanel.AddChild(exitButton);
 
             gameOverPanel.AddChild(buttonPanel);
@@ -332,10 +335,11 @@ namespace Tales_of_Everlight
                 _isPaused = !_isPaused;
                 InitPause();
             }
-
-            if (MainHero.Health <= 0)
+            
+            if (_isGame && !_isPaused && !_isDialog && MainHero.IsDead && !_gameOverScreenShown)
             {
                 ShowGameOverScreen();
+                _gameOverScreenShown = true;
             }
             // if (isPaused && !isGame)
             // {
@@ -344,7 +348,7 @@ namespace Tales_of_Everlight
             //Console.WriteLine(2);
             //Attack.Execute();
 
-            if (_isGame && !_isPaused && !_isDialog)
+            if (_isGame && !_isPaused && !_isDialog && !MainHero.IsDead)
             {
                 MainHero.HandleMovement(Keyboard.GetState(), _previousKeyState, Mouse.GetState(), _previousMState,
                     gameTime);
@@ -526,9 +530,11 @@ namespace Tales_of_Everlight
             }
 
 
-            Gum.Update(gameTime);
 
             _previousKeyState = Keyboard.GetState();
+            
+            Gum.Update(gameTime);
+            
             base.Update(gameTime);
         }
 
@@ -615,8 +621,6 @@ namespace Tales_of_Everlight
             foreach (var buff in BuffList)
             {
                 buff.Draw(_spriteBatch, buff.Position);
-             
-               
             }
 
             _spriteBatch.End();
