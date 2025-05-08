@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Gum.DataTypes;
 using Gum.Managers;
@@ -21,7 +21,7 @@ namespace Tales_of_Everlight
         private bool _isPaused;
         private bool _isDialog;
         public List<Buff> BuffList;
-
+        private bool _gameOverScreenShown;
         // private Texture2D _menuBackgroundTexture;
 
         private readonly GraphicsDeviceManager _graphics;
@@ -33,9 +33,10 @@ namespace Tales_of_Everlight
         private Texture2D _mainHeroSprite;
         //private Texture2D _goblinSprite;
 
-        private Texture2D _rectangleTexture;
 
         //private Texture2D _hudTexture;
+        private Texture2D _healthIcon;
+        private Texture2D _rectangleTexture;
         private SpriteFont _hudFont;
         private readonly Color _backgroundColor = new(145, 221, 207, 255);
         public static MainHero MainHero = new();
@@ -63,8 +64,8 @@ namespace Tales_of_Everlight
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            _graphics.PreferredBackBufferHeight = 1080;
-            _graphics.PreferredBackBufferWidth = 1920;
+            _graphics.PreferredBackBufferHeight = 720;
+            _graphics.PreferredBackBufferWidth = 1280;
 
             _camera = new Camera(new Rectangle(0, 0, _graphics.PreferredBackBufferWidth,
                 _graphics.PreferredBackBufferHeight));
@@ -108,12 +109,6 @@ namespace Tales_of_Everlight
             startButton.Visual.Width = 200;
             startButton.Click += InitGame;
             buttonPanel.AddChild(startButton);
-
-            var optionsButton = new Button();
-            optionsButton.Text = "Options";
-            optionsButton.Visual.Width = 200;
-            optionsButton.Click += InitOptions;
-            buttonPanel.AddChild(optionsButton);
 
             var exitButton = new Button();
             exitButton.Text = "Exit";
@@ -164,7 +159,7 @@ namespace Tales_of_Everlight
             // Reset game states
             _isGame = true;
             _isPaused = false;
-
+            _gameOverScreenShown = false; 
             // Reset camera position
             _camera.Position = Vector2.Zero;
             BuffList = new List<Buff>();
@@ -204,77 +199,6 @@ namespace Tales_of_Everlight
 
 
             ShowDialog();
-        }
-
-        private void InitOptions(object sender, EventArgs e)
-        {
-            Gum.Root.Children.Clear();
-
-            var optionsPanel = new Panel();
-            optionsPanel.Visual.AddToRoot();
-            optionsPanel.Dock(Dock.Fill);
-
-            var label = new Label();
-            label.Text = "Options";
-            label.Anchor(Anchor.Top);
-            optionsPanel.AddChild(label);
-
-            var optionsControls = new StackPanel();
-            optionsControls.Anchor(Anchor.Center); // Center the optionsControls within the optionsPanel
-            optionsControls.Spacing = 3;
-            optionsPanel.AddChild(optionsControls);
-
-            var fullscreenCheck = new CheckBox();
-            fullscreenCheck.IsChecked = false;
-            fullscreenCheck.Text = "Fullscreen";
-            fullscreenCheck.Checked += (sender, _) => System.Diagnostics.Debug.WriteLine(
-                $"Checkbox checked? {(sender as CheckBox).IsChecked}");
-            fullscreenCheck.Unchecked += (sender, _) => System.Diagnostics.Debug.WriteLine(
-                $"Checkbox checked? {(sender as CheckBox).IsChecked}");
-            optionsControls.AddChild(fullscreenCheck);
-
-            var twoColumn = new StackPanel();
-            twoColumn.Visual.ChildrenLayout = ChildrenLayout.LeftToRightStack;
-            twoColumn.Visual.WidthUnits = DimensionUnitType.RelativeToChildren;
-            optionsControls.AddChild(twoColumn);
-
-            var spLabels = new StackPanel();
-            spLabels.Spacing = 3;
-            twoColumn.AddChild(spLabels);
-
-            var volumeLabel = new Label();
-            volumeLabel.Text = "Volume";
-            spLabels.AddChild(volumeLabel);
-
-            var musicLabel = new Label();
-            musicLabel.Text = "Music";
-            spLabels.AddChild(musicLabel);
-
-            var spOptions = new StackPanel();
-            spOptions.Spacing = 3;
-            twoColumn.AddChild(spOptions);
-
-            var volumeSlider = new Slider();
-            volumeSlider.Value = 75;
-            volumeSlider.ValueChanged += (sender, _) => System.Diagnostics.Debug.WriteLine(
-                $"Volume Slider Value is {(sender as Slider).Value}");
-            spOptions.AddChild(volumeSlider);
-
-            var musicSlider = new Slider();
-            musicSlider.Value = 50;
-            musicSlider.ValueChanged += (sender, _) => System.Diagnostics.Debug.WriteLine(
-                $"Music Slider Value is {(sender as Slider).Value}");
-            spOptions.AddChild(musicSlider);
-
-            var backButton = new Button();
-            backButton.Text = "Back to Main Menu";
-            backButton.Visual.Width = 200;
-            backButton.Click += (_, _) =>
-            {
-                Gum.Root.Children.Clear();
-                _mainPanel.AddToRoot();
-            };
-            optionsControls.AddChild(backButton);
         }
 
         private void InitExit(object sender, EventArgs e)
@@ -326,7 +250,41 @@ namespace Tales_of_Everlight
                 gamePanel.AddChild(buttonPanel);
             }
         }
+        private void ShowGameOverScreen()
+        {
+            
+            Gum.Root.Children.Clear();
 
+            var gameOverPanel = new Panel();
+            gameOverPanel.Visual.AddToRoot();
+            gameOverPanel.Dock(Dock.Fill);
+
+            var gameOverLabel = new Label();
+            gameOverLabel.Text = "Game Over";
+            gameOverLabel.Anchor(Anchor.Top);
+            gameOverLabel.Visual.FontSize = 48;
+            gameOverPanel.AddChild(gameOverLabel);
+
+            var buttonPanel = new StackPanel();
+            buttonPanel.Spacing = 3;
+            buttonPanel.Anchor(Anchor.Center);
+
+            var newGameButton = new Button();
+            newGameButton.Text = "New Game";
+            newGameButton.Visual.Width = 200;
+            // Fix: Use the correct event signature with sender and EventArgs
+            newGameButton.Click += (sender, e) => InitGame(sender, e);
+            buttonPanel.AddChild(newGameButton);
+
+            var exitButton = new Button();
+            exitButton.Text = "Exit";
+            exitButton.Visual.Width = 200;
+            // Fix: Use the correct event signature with sender and EventArgs
+            exitButton.Click += (sender, e) => InitExit(sender, e);
+            buttonPanel.AddChild(exitButton);
+
+            gameOverPanel.AddChild(buttonPanel);
+        }
         protected override void LoadContent()
         {
             //_menuBackgroundTexture = Content.Load<Texture2D>("menu_background");
@@ -383,7 +341,12 @@ namespace Tales_of_Everlight
                 _isPaused = !_isPaused;
                 InitPause();
             }
-
+            
+            if (_isGame && !_isPaused && !_isDialog && MainHero.IsDead && !_gameOverScreenShown)
+            {
+                ShowGameOverScreen();
+                _gameOverScreenShown = true;
+            }
             // if (isPaused && !isGame)
             // {
             //     _backgroundColor = new Color(100, 150, 200); // Ensure background color is set for the main menu
@@ -391,7 +354,7 @@ namespace Tales_of_Everlight
             //Console.WriteLine(2);
             //Attack.Execute();
 
-            if (_isGame && !_isPaused && !_isDialog)
+            if (_isGame && !_isPaused && !_isDialog && !MainHero.IsDead)
             {
                 MainHero.HandleMovement(Keyboard.GetState(), _previousKeyState, Mouse.GetState(), _previousMState,
                     gameTime);
@@ -578,9 +541,11 @@ namespace Tales_of_Everlight
             }
 
 
-            Gum.Update(gameTime);
 
             _previousKeyState = Keyboard.GetState();
+            
+            Gum.Update(gameTime);
+            
             base.Update(gameTime);
         }
 
@@ -667,17 +632,58 @@ namespace Tales_of_Everlight
             foreach (var buff in BuffList)
             {
                 buff.Draw(_spriteBatch, buff.Position);
-             
-               
             }
 
             _spriteBatch.End();
+        }
+        
+        private void DrawHealthBar()
+        {
+            _healthIcon = Content.Load<Texture2D>("HealthBar"); // Load the PNG image
+            _rectangleTexture = Content.Load<Texture2D>("progressbar");
+            _hudFont = Content.Load<SpriteFont>("hudFont");
+
+            // Define the position and size of the health bar
+            int barWidth = 304;
+            int barHeight = 76;
+            int xPosition = 15;
+            int yPosition = 15;
+            
+            // Calculate the width of the filled portion based on the hero's health
+            float healthPercentage = (float)MainHero.Health / (float)MainHero.MaxHealth;
+            int filledWidth = (int)(224 * healthPercentage);
+
+           
+            // Draw the background of the health bar
+            // _spriteBatch.Draw(_rectangleTexture, new Rectangle(xPosition - 5, yPosition - 5, barWidth + 10, barHeight + 10), Color.Black);
+            _spriteBatch.Draw(_rectangleTexture, new Rectangle(xPosition+76, yPosition+32, 224, 16), Color.DarkRed);
+            _spriteBatch.Draw(_rectangleTexture, new Rectangle(xPosition+76, yPosition+32, filledWidth, 16), Color.IndianRed);
+            
+            _spriteBatch.Draw(_healthIcon, new Rectangle(xPosition, yPosition, barWidth, barHeight), Color.White);
+
+            // Prepare the health text
+            var healthText = MainHero.Health >= 0 ? MainHero.Health : 0;
+            string healthString = $"{healthText}/{MainHero.MaxHealth}";
+
+            // Measure the text size
+            Vector2 textSize = _hudFont.MeasureString(healthString);
+
+            // Calculate the position to center the text in the health bar
+            Vector2 textPosition = new Vector2(
+                (xPosition + (barWidth - textSize.X) / 2) + 33,
+                (yPosition + (barHeight - textSize.Y) / 2) + 2
+            );
+
+            // Draw the health text
+            _spriteBatch.DrawString(_hudFont, healthString, textPosition, Color.White);
         }
 
         private void DrawHudElements()
         {
             _spriteBatch.Begin();
 
+            DrawHealthBar();
+            
             if (_isHudVisible)
             {
                 _spriteBatch.DrawString(_hudFont, $"Velocity: {MainHero.Velocity}", new Vector2(10, 0), Color.White);
