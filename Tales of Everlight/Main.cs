@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Gum.DataTypes;
 using Gum.Managers;
 using Gum.Wireframe;
@@ -30,10 +29,6 @@ namespace Tales_of_Everlight
 
         private readonly Camera _camera;
         private Level1 _level1 = new Level1();
-        private Level2 _level2 = new Level2();
-        public Portal Portal; 
-        public List<object> LevelList => new List<object> { _level1, _level2 };
-
         private bool _isHudVisible;
         private Texture2D _mainHeroSprite;
         //private Texture2D _goblinSprite;
@@ -66,7 +61,6 @@ namespace Tales_of_Everlight
 
         public Main()
         {
-            Console.WriteLine(LevelList.Any(level => ((dynamic)level).IsActive));
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -76,7 +70,7 @@ namespace Tales_of_Everlight
             _camera = new Camera(new Rectangle(0, 0, _graphics.PreferredBackBufferWidth,
                 _graphics.PreferredBackBufferHeight));
             _intersections = new List<Rectangle>();
-
+            _level1 = new Level1();
 
             EnemyList = new();
         }
@@ -160,19 +154,19 @@ namespace Tales_of_Everlight
 
         private void InitGame(object sender, EventArgs e)
         {
-            Gum.Root.Children.Clear();
+            Gum.Root.Children.Clear(); 
 
             // Reset game states
             _isGame = true;
             _isPaused = false;
-            _gameOverScreenShown = false;
+            _gameOverScreenShown = false; 
             // Reset camera position
             _camera.Position = Vector2.Zero;
             BuffList = new List<Buff>();
 
             // Reset main hero
             MainHero = new MainHero(Content,
-                new Rectangle(2000, 25 * Tilesize, 64,
+                new Rectangle(2000, 25*Tilesize, 64,
                     128), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static
                 new Rectangle(0, 0, 128, 128));
 
@@ -181,7 +175,6 @@ namespace Tales_of_Everlight
             EnemyList.Clear();
             _level1.SpawnBuffs(Content);
             _level1.SpawnEnemies(Content);
-            
             EnemyList = _level1.Enemies;
             BuffList = _level1.Buffs;
             // _goblin = new Goblin(Content, new Rectangle(1000, 100, 64, 64), new Rectangle(0, 0, 70, 70));
@@ -197,10 +190,8 @@ namespace Tales_of_Everlight
             // EnemyList.Add(_worm);
 
             // Reinitialize level
-            //_level1 = new Level1();
+            _level1 = new Level1();
             _level1.Initialize(Content);
-            _level2.Initialize(Content);
-            //_level1.IsActive = false;
 
             // Reset other states if needed
             _intersections.Clear();
@@ -259,9 +250,9 @@ namespace Tales_of_Everlight
                 gamePanel.AddChild(buttonPanel);
             }
         }
-
         private void ShowGameOverScreen()
         {
+            
             Gum.Root.Children.Clear();
 
             var gameOverPanel = new Panel();
@@ -294,19 +285,20 @@ namespace Tales_of_Everlight
 
             gameOverPanel.AddChild(buttonPanel);
         }
-
         protected override void LoadContent()
         {
             //_menuBackgroundTexture = Content.Load<Texture2D>("menu_background");
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-
+           
+            
+            
             MainHero = new MainHero(Content,
-                new Rectangle(2000, 25 * Tilesize, 64,
+                new Rectangle(2000, 25*Tilesize, 64,
                     128), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static
                 new Rectangle(0, 0, 128, 128));
 
-
+          
             _goblin = new Goblin(Content,
                 new Rectangle(3000, 100, 64, 64),
                 //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static);
@@ -336,7 +328,6 @@ namespace Tales_of_Everlight
 
 
             _level1.Initialize(Content);
-            Portal = new Portal(Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -350,7 +341,7 @@ namespace Tales_of_Everlight
                 _isPaused = !_isPaused;
                 InitPause();
             }
-
+            
             if (_isGame && !_isPaused && !_isDialog && MainHero.IsDead && !_gameOverScreenShown)
             {
                 ShowGameOverScreen();
@@ -368,326 +359,160 @@ namespace Tales_of_Everlight
                 MainHero.HandleMovement(Keyboard.GetState(), _previousKeyState, Mouse.GetState(), _previousMState,
                     gameTime);
 
+                #region Main Hero Collision Handler
 
-                if (_level1.IsActive)
+                // add player's velocity and grab the intersecting tiles
+                MainHero.Rect = MainHero.Rect with { X = MainHero.Rect.X + (int)MainHero.Velocity.X };
+                _intersections = GetIntersectingTilesHorizontal(MainHero.Rect);
+
+                foreach (var rect in _intersections)
                 {
-                    #region Main Hero Collision Handler
-
-                    // add player's velocity and grab the intersecting tiles
-                    MainHero.Rect = MainHero.Rect with { X = MainHero.Rect.X + (int)MainHero.Velocity.X };
-                    _intersections = GetIntersectingTilesHorizontal(MainHero.Rect);
-
-                    foreach (var rect in _intersections)
+                    // handle collisions if the tile position exists in the tile map layer.
+                    if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
                     {
-                        // handle collisions if the tile position exists in the tile map layer.
-                        if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
-                        {
-                            // create temp rect to handle collisions (not necessary, you can optimize!)
-                            Rectangle collision = new(
-                                rect.X * Tilesize,
-                                rect.Y * Tilesize,
-                                Tilesize,
-                                Tilesize
-                            );
+                        // create temp rect to handle collisions (not necessary, you can optimize!)
+                        Rectangle collision = new(
+                            rect.X * Tilesize,
+                            rect.Y * Tilesize,
+                            Tilesize,
+                            Tilesize
+                        );
 
-                            // handle collisions based on the direction the player is moving
-                            if (MainHero.Velocity.X > 0.0f)
-                            {
-                                MainHero.Rect = MainHero.Rect with { X = collision.Left - MainHero.Rect.Width };
-                            }
-                            else if (MainHero.Velocity.X < 0.0f)
-                            {
-                                MainHero.Rect = MainHero.Rect with { X = collision.Right };
-                            }
+                        // handle collisions based on the direction the player is moving
+                        if (MainHero.Velocity.X > 0.0f)
+                        {
+                            MainHero.Rect = MainHero.Rect with { X = collision.Left - MainHero.Rect.Width };
+                        }
+                        else if (MainHero.Velocity.X < 0.0f)
+                        {
+                            MainHero.Rect = MainHero.Rect with { X = collision.Right };
                         }
                     }
-
-                    // same as horizontal collisions
-
-                    MainHero.Rect = MainHero.Rect with { Y = MainHero.Rect.Y + (int)MainHero.Velocity.Y };
-                    _intersections = GetIntersectingTilesVertical(MainHero.Rect);
-
-                    MainHero.IsOnGround = false;
-
-                    foreach (var rect in _intersections)
-                    {
-                        if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
-                        {
-                            Rectangle collision = new(
-                                rect.X * Tilesize,
-                                rect.Y * Tilesize,
-                                Tilesize,
-                                Tilesize
-                            );
-
-                            if (MainHero.Velocity.Y > 0.0f)
-                            {
-                                MainHero.Rect = MainHero.Rect with { Y = collision.Top - MainHero.Rect.Height };
-                                if (!MainHero.IsLanded)
-                                {
-                                    MainHero.IsLanded = true;
-                                    MainHero._currentFrame = 0;
-                                }
-
-                                MainHero.IsOnGround = true;
-                                MainHero.Velocity = MainHero.Velocity with { Y = 0.0f };
-                                if (!MainHero.IsDead && !MainHero.IsDying)
-                                    MainHero.AnimationState = AnimationState.Running;
-
-                                //_mainHero._currentFrame = 0;
-                            }
-                            else if (MainHero.Velocity.Y < 0.0f)
-                            {
-                                MainHero.Rect = MainHero.Rect with { Y = collision.Bottom };
-                                MainHero.Velocity = MainHero.Velocity with { Y = 0.0f };
-                            }
-                        }
-                    }
-
-                    #endregion
-
-
-                    #region Main Hero Spike Damage Handler
-
-                    // add player's velocity and grab the intersecting tiles
-
-                    // same as horizontal collisions
-
-
-                    _intersections = GetIntersectingTilesVertical(MainHero.Rect);
-
-
-                    foreach (var rect in _intersections)
-                    {
-                        if (_level1.Spikes.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
-                        {
-                            MainHero.TakeDamage(10);
-                        }
-                    }
-
-                    #endregion
-
-                    #region Enemy Collision Handler
-
-                    foreach (var enemy in EnemyList)
-                    {
-                        enemy.Rect = enemy.Rect with { X = enemy.Rect.X + (int)enemy.Velocity.X };
-                        _intersections = GetIntersectingTilesHorizontal(enemy.Rect);
-
-                        foreach (var rect in _intersections)
-                        {
-                            if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
-                            {
-                                Rectangle collision = new(
-                                    rect.X * Tilesize,
-                                    rect.Y * Tilesize,
-                                    Tilesize,
-                                    Tilesize
-                                );
-
-                                if (enemy.Velocity.X > 0.0f)
-                                {
-                                    enemy.Rect = enemy.Rect with { X = collision.Left - enemy.Rect.Width };
-                                }
-                                else if (enemy.Velocity.X < 0.0f)
-                                {
-                                    enemy.Rect = enemy.Rect with { X = collision.Right };
-                                }
-                            }
-                        }
-
-                        enemy.Rect = enemy.Rect with { Y = enemy.Rect.Y + (int)enemy.Velocity.Y };
-                        _intersections = GetIntersectingTilesVertical(enemy.Rect);
-
-                        enemy.IsOnGround = false;
-
-                        foreach (var rect in _intersections)
-                        {
-                            if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
-                            {
-                                Rectangle collision = new(
-                                    rect.X * Tilesize,
-                                    rect.Y * Tilesize,
-                                    Tilesize,
-                                    Tilesize
-                                );
-
-                                if (enemy.Velocity.Y > 0.0f)
-                                {
-                                    enemy.Rect = enemy.Rect with { Y = collision.Top - enemy.Rect.Height };
-                                    enemy.IsOnGround = true;
-                                    enemy.Velocity = enemy.Velocity with { Y = 0.0f };
-                                }
-                                else if (enemy.Velocity.Y < 0.0f)
-                                {
-                                    enemy.Rect = enemy.Rect with { Y = collision.Bottom };
-                                }
-                            }
-                        }
-                    }
-
-                    #endregion
-                }
-                else
-                {
-                    #region Main Hero Collision Handler
-
-                    // add player's velocity and grab the intersecting tiles
-                    MainHero.Rect = MainHero.Rect with { X = MainHero.Rect.X + (int)MainHero.Velocity.X };
-                    _intersections = GetIntersectingTilesHorizontal(MainHero.Rect);
-
-                    foreach (var rect in _intersections)
-                    {
-                        // handle collisions if the tile position exists in the tile map layer.
-                        if (_level2.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
-                        {
-                            // create temp rect to handle collisions (not necessary, you can optimize!)
-                            Rectangle collision = new(
-                                rect.X * Tilesize,
-                                rect.Y * Tilesize,
-                                Tilesize,
-                                Tilesize
-                            );
-
-                            // handle collisions based on the direction the player is moving
-                            if (MainHero.Velocity.X > 0.0f)
-                            {
-                                MainHero.Rect = MainHero.Rect with { X = collision.Left - MainHero.Rect.Width };
-                            }
-                            else if (MainHero.Velocity.X < 0.0f)
-                            {
-                                MainHero.Rect = MainHero.Rect with { X = collision.Right };
-                            }
-                        }
-                    }
-
-                    // same as horizontal collisions
-
-                    MainHero.Rect = MainHero.Rect with { Y = MainHero.Rect.Y + (int)MainHero.Velocity.Y };
-                    _intersections = GetIntersectingTilesVertical(MainHero.Rect);
-
-                    MainHero.IsOnGround = false;
-
-                    foreach (var rect in _intersections)
-                    {
-                        if (_level2.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
-                        {
-                            Rectangle collision = new(
-                                rect.X * Tilesize,
-                                rect.Y * Tilesize,
-                                Tilesize,
-                                Tilesize
-                            );
-
-                            if (MainHero.Velocity.Y > 0.0f)
-                            {
-                                MainHero.Rect = MainHero.Rect with { Y = collision.Top - MainHero.Rect.Height };
-                                if (!MainHero.IsLanded)
-                                {
-                                    MainHero.IsLanded = true;
-                                    MainHero._currentFrame = 0;
-                                }
-
-                                MainHero.IsOnGround = true;
-                                MainHero.Velocity = MainHero.Velocity with { Y = 0.0f };
-                                if (!MainHero.IsDead && !MainHero.IsDying)
-                                    MainHero.AnimationState = AnimationState.Running;
-
-                                //_mainHero._currentFrame = 0;
-                            }
-                            else if (MainHero.Velocity.Y < 0.0f)
-                            {
-                                MainHero.Rect = MainHero.Rect with { Y = collision.Bottom };
-                                MainHero.Velocity = MainHero.Velocity with { Y = 0.0f };
-                            }
-                        }
-                    }
-
-                    #endregion
-
-
-                    // #region Main Hero Spike Damage Handler
-                    //
-                    // // add player's velocity and grab the intersecting tiles
-                    //
-                    // // same as horizontal collisions
-                    //
-                    //
-                    // _intersections = GetIntersectingTilesVertical(MainHero.Rect);
-                    //
-                    //
-                    // foreach (var rect in _intersections)
-                    // {
-                    //     if (_level2.Spikes.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
-                    //     {
-                    //         MainHero.TakeDamage(10);
-                    //     }
-                    // }
-                    //
-                    // #endregion
-
-                    #region Enemy Collision Handler
-
-                    foreach (var enemy in EnemyList)
-                    {
-                        enemy.Rect = enemy.Rect with { X = enemy.Rect.X + (int)enemy.Velocity.X };
-                        _intersections = GetIntersectingTilesHorizontal(enemy.Rect);
-
-                        foreach (var rect in _intersections)
-                        {
-                            if (_level2.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
-                            {
-                                Rectangle collision = new(
-                                    rect.X * Tilesize,
-                                    rect.Y * Tilesize,
-                                    Tilesize,
-                                    Tilesize
-                                );
-
-                                if (enemy.Velocity.X > 0.0f)
-                                {
-                                    enemy.Rect = enemy.Rect with { X = collision.Left - enemy.Rect.Width };
-                                }
-                                else if (enemy.Velocity.X < 0.0f)
-                                {
-                                    enemy.Rect = enemy.Rect with { X = collision.Right };
-                                }
-                            }
-                        }
-
-                        enemy.Rect = enemy.Rect with { Y = enemy.Rect.Y + (int)enemy.Velocity.Y };
-                        _intersections = GetIntersectingTilesVertical(enemy.Rect);
-
-                        enemy.IsOnGround = false;
-
-                        foreach (var rect in _intersections)
-                        {
-                            if (_level2.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
-                            {
-                                Rectangle collision = new(
-                                    rect.X * Tilesize,
-                                    rect.Y * Tilesize,
-                                    Tilesize,
-                                    Tilesize
-                                );
-
-                                if (enemy.Velocity.Y > 0.0f)
-                                {
-                                    enemy.Rect = enemy.Rect with { Y = collision.Top - enemy.Rect.Height };
-                                    enemy.IsOnGround = true;
-                                    enemy.Velocity = enemy.Velocity with { Y = 0.0f };
-                                }
-                                else if (enemy.Velocity.Y < 0.0f)
-                                {
-                                    enemy.Rect = enemy.Rect with { Y = collision.Bottom };
-                                }
-                            }
-                        }
-                    }
-
-                    #endregion
                 }
 
+                // same as horizontal collisions
+
+                MainHero.Rect = MainHero.Rect with { Y = MainHero.Rect.Y + (int)MainHero.Velocity.Y };
+                _intersections = GetIntersectingTilesVertical(MainHero.Rect);
+
+                MainHero.IsOnGround = false;
+
+                foreach (var rect in _intersections)
+                {
+                    if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
+                    {
+                        Rectangle collision = new(
+                            rect.X * Tilesize,
+                            rect.Y * Tilesize,
+                            Tilesize,
+                            Tilesize
+                        );
+
+                        if (MainHero.Velocity.Y > 0.0f)
+                        {
+                            MainHero.Rect = MainHero.Rect with { Y = collision.Top - MainHero.Rect.Height };
+                            if (!MainHero.IsLanded)
+                            {
+                                MainHero.IsLanded = true;
+                                MainHero._currentFrame = 0;
+                            }
+                            MainHero.IsOnGround = true;
+                            MainHero.Velocity = MainHero.Velocity with { Y = 0.0f };
+                            if(!MainHero.IsDead && !MainHero.IsDying)MainHero.AnimationState = AnimationState.Running;
+
+                            //_mainHero._currentFrame = 0;
+                        }
+                        else if (MainHero.Velocity.Y < 0.0f)
+                        {
+                            MainHero.Rect = MainHero.Rect with { Y = collision.Bottom };
+                            MainHero.Velocity = MainHero.Velocity with { Y = 0.0f };
+                        }
+                    }
+                }
+
+                #endregion
+
+
+                #region Main Hero Spike Damage Handler
+
+                // add player's velocity and grab the intersecting tiles
+
+                // same as horizontal collisions
+
+
+                _intersections = GetIntersectingTilesVertical(MainHero.Rect);
+
+
+                foreach (var rect in _intersections)
+                {
+                    if (_level1.Spikes.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
+                    {
+                        MainHero.TakeDamage(10);
+                    }
+                }
+
+                #endregion
+
+                #region Enemy Collision Handler
+
+                foreach (var enemy in EnemyList)
+                {
+                    enemy.Rect = enemy.Rect with { X = enemy.Rect.X + (int)enemy.Velocity.X };
+                    _intersections = GetIntersectingTilesHorizontal(enemy.Rect);
+
+                    foreach (var rect in _intersections)
+                    {
+                        if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
+                        {
+                            Rectangle collision = new(
+                                rect.X * Tilesize,
+                                rect.Y * Tilesize,
+                                Tilesize,
+                                Tilesize
+                            );
+
+                            if (enemy.Velocity.X > 0.0f)
+                            {
+                                enemy.Rect = enemy.Rect with { X = collision.Left - enemy.Rect.Width };
+                            }
+                            else if (enemy.Velocity.X < 0.0f)
+                            {
+                                enemy.Rect = enemy.Rect with { X = collision.Right };
+                            }
+                        }
+                    }
+
+                    enemy.Rect = enemy.Rect with { Y = enemy.Rect.Y + (int)enemy.Velocity.Y };
+                    _intersections = GetIntersectingTilesVertical(enemy.Rect);
+
+                    enemy.IsOnGround = false;
+
+                    foreach (var rect in _intersections)
+                    {
+                        if (_level1.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
+                        {
+                            Rectangle collision = new(
+                                rect.X * Tilesize,
+                                rect.Y * Tilesize,
+                                Tilesize,
+                                Tilesize
+                            );
+
+                            if (enemy.Velocity.Y > 0.0f)
+                            {
+                                enemy.Rect = enemy.Rect with { Y = collision.Top - enemy.Rect.Height };
+                                enemy.IsOnGround = true;
+                                enemy.Velocity = enemy.Velocity with { Y = 0.0f };
+                            }
+                            else if (enemy.Velocity.Y < 0.0f)
+                            {
+                                enemy.Rect = enemy.Rect with { Y = collision.Bottom };
+                            }
+                        }
+                    }
+                }
+
+                #endregion
 
                 foreach (var enemy in EnemyList)
                 {
@@ -697,9 +522,9 @@ namespace Tales_of_Everlight
 
                 foreach (var buff in BuffList)
                 {
-                    Rectangle buffRect = new Rectangle((int)buff.Position.X, (int)buff.Position.Y,
+                    Rectangle buffRect = new Rectangle((int)buff.Position.X, (int)buff.Position.Y, 
                         buff.Texture.Width, buff.Texture.Height);
-
+                    
                     buff.Update(gameTime);
 
                     if (MainHero.Rect.Intersects(buffRect) && !buff.IsActive)
@@ -707,6 +532,7 @@ namespace Tales_of_Everlight
                         buff.IsActive = true;
                         buff.ApplyEffect();
                     }
+                    
                 }
 
                 HandleInput();
@@ -714,13 +540,12 @@ namespace Tales_of_Everlight
                 // UpdateGameElements(gameTime);
             }
 
-            Portal.Update(gameTime);
 
 
             _previousKeyState = Keyboard.GetState();
-
+            
             Gum.Update(gameTime);
-
+            
             base.Update(gameTime);
         }
 
@@ -791,18 +616,8 @@ namespace Tales_of_Everlight
 
 
             //_mainHero.Draw(_spriteBatch);
-            if (_level1.IsActive)
-            {
-                _level1.Draw(_spriteBatch);
-                Portal.Draw(_spriteBatch);
-            }
-            else
-            {
-                _level2.Draw(_spriteBatch);
-                
-            }
-            
-           
+
+            _level1.Draw(_spriteBatch);
             MainHero.Draw(_spriteBatch, new Vector2(MainHero.Rect.X, MainHero.Rect.Y)
                 // , _hitboxTexture
             );
@@ -813,7 +628,7 @@ namespace Tales_of_Everlight
                 enemy.Draw(_spriteBatch, new Vector2(enemy.Rect.X, enemy.Rect.Y), _hitboxTexture);
                 enemy.DrawBoundingBox(_spriteBatch, _hitboxTexture);
             }
-
+            
             foreach (var buff in BuffList)
             {
                 buff.Draw(_spriteBatch, buff.Position);
@@ -821,7 +636,7 @@ namespace Tales_of_Everlight
 
             _spriteBatch.End();
         }
-
+        
         private void DrawHealthBar()
         {
             _healthIcon = Content.Load<Texture2D>("HealthBar"); // Load the PNG image
@@ -833,18 +648,17 @@ namespace Tales_of_Everlight
             int barHeight = 76;
             int xPosition = 15;
             int yPosition = 15;
-
+            
             // Calculate the width of the filled portion based on the hero's health
             float healthPercentage = (float)MainHero.Health / (float)MainHero.MaxHealth;
             int filledWidth = (int)(224 * healthPercentage);
 
-
+           
             // Draw the background of the health bar
             // _spriteBatch.Draw(_rectangleTexture, new Rectangle(xPosition - 5, yPosition - 5, barWidth + 10, barHeight + 10), Color.Black);
-            _spriteBatch.Draw(_rectangleTexture, new Rectangle(xPosition + 76, yPosition + 32, 224, 16), Color.DarkRed);
-            _spriteBatch.Draw(_rectangleTexture, new Rectangle(xPosition + 76, yPosition + 32, filledWidth, 16),
-                Color.IndianRed);
-
+            _spriteBatch.Draw(_rectangleTexture, new Rectangle(xPosition+76, yPosition+32, 224, 16), Color.DarkRed);
+            _spriteBatch.Draw(_rectangleTexture, new Rectangle(xPosition+76, yPosition+32, filledWidth, 16), Color.IndianRed);
+            
             _spriteBatch.Draw(_healthIcon, new Rectangle(xPosition, yPosition, barWidth, barHeight), Color.White);
 
             // Prepare the health text
@@ -869,7 +683,7 @@ namespace Tales_of_Everlight
             _spriteBatch.Begin();
 
             DrawHealthBar();
-
+            
             if (_isHudVisible)
             {
                 _spriteBatch.DrawString(_hudFont, $"Velocity: {MainHero.Velocity}", new Vector2(10, 0), Color.White);
