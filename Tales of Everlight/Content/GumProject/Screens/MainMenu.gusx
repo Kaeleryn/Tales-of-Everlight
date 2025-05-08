@@ -191,7 +191,7 @@
       <IsFile>true</IsFile>
       <Type>string</Type>
       <Name>SpriteInstance.SourceFile</Name>
-      <Value xsi:type="xsd:string">C:\Users\xdjmv\OneDrive\Рабочий стол\Level1_background_high.png</Value>
+      <Value xsi:type="xsd:string">Level1_background_high.png</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
