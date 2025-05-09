@@ -11,7 +11,7 @@ public class Camera
     {
         Viewport = viewport;
         Position = new Vector2(viewport.Width / 2, viewport.Height / 2);
-        Zoom = 1.0f;
+        Zoom = 0.8f;
     }
 
     public Vector2 ScaleMouseCoordinates(Vector2 mousePosition, Vector2 currentResolution, Vector2 targetResolution)

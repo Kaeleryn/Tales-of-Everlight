@@ -18,11 +18,12 @@ public class Buff
    
     public Texture2D Texture { get; set; }
     public Vector2 Position { get; set; }
-    public const float DURATION  = 15f;
-    public float TimeLeft { get; set; } = DURATION;
+    protected float DURATION  = 15f;
+    protected float TimeLeft { get; set; } = 0;
     
     public bool IsActive { get; set; }
-    public float Amount { get; set; }
+    private bool IsExpired { get; set; } = false;
+    protected float Amount { get; set; }
 
 
     public Buff(BuffType type, Vector2 position, float amount, ContentManager content)
@@ -30,6 +31,7 @@ public class Buff
         Type = type;
         Position = position;
         Amount = amount;
+        TimeLeft = 0;
         
         switch (type)
         {
@@ -59,26 +61,35 @@ public class Buff
             case BuffType.IncreaseDamage:
                 MainHero.Damage += (int)Amount;
                 IsActive = true;
+                TimeLeft = 0;
                 break;
             case BuffType.IncreaseSpeed:
                 MainHero.Speed += Amount;
                 IsActive = true;
+                TimeLeft = 0;
                 break;
         }
     }
     
     private void RemoveEffect()
     {
-        // Only remove effects for buffs that need to be reversed
-        switch (Type)
+        if (!IsExpired)
         {
-            case BuffType.IncreaseDamage:
-                MainHero.Damage = MainHero.StandardDamage;
-                break;
-            case BuffType.IncreaseSpeed:
-                MainHero.Speed = MainHero.StandardSpeed;
-                break;
-            // Heal doesn't need to be reversed as it's an instant effect
+            IsExpired = true;
+
+
+
+            // Only remove effects for buffs that need to be reversed
+            switch (Type)
+            {
+                case BuffType.IncreaseDamage:
+                    MainHero.Damage = (int)Amount;
+                    break;
+                case BuffType.IncreaseSpeed:
+                    MainHero.Speed -= Amount;
+                    break;
+                // Heal doesn't need to be reversed as it's an instant effect
+            }
         }
     }
     
@@ -92,10 +103,10 @@ public class Buff
             RemoveEffect();
             
         // Decrease the timer
-        TimeLeft -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+        TimeLeft += (float)gameTime.ElapsedGameTime.TotalSeconds;
         
         // Check if the buff has expired
-        if (TimeLeft <= 0)
+        if (TimeLeft >= DURATION)
         {
             RemoveEffect();
             

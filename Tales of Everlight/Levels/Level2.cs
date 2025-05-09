@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms.VisualStyles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -62,8 +63,8 @@ public class Level2
         decor = LoadMap("Content/map/level2_decoration.csv");
         decor2 = LoadMap("Content/map/level2_decoration2.csv");
         forest = LoadMap("Content/map/level2_forest.csv");
-       // enemies = LoadMap("Content/map/level1_enemies.csv");
-        //buffs = LoadMap("Content/map/level1_buffs.csv");
+       enemies = LoadMap("Content/map/level2_enemy.csv");
+        buffs = LoadMap("Content/map/level2_buffs.csv");
 
 
         textureAtlas_foreground = content.Load<Texture2D>("level2_foreground");
@@ -83,17 +84,8 @@ public class Level2
     public void SpawnEnemies(ContentManager content)
     {
         Enemies.Clear(); 
-        PurpleWarrior purpleWarrior1 = new PurpleWarrior(
-            content,
-            new Rectangle(234*Tilesize, 28*Tilesize, 128, 128),
-            new Rectangle(0, 0, 128, 128)
-        );PurpleWarrior purpleWarrior2 = new PurpleWarrior(
-            content,
-            new Rectangle(229*Tilesize, 60*Tilesize, 128, 128),
-            new Rectangle(0, 0, 128, 128)
-        );
-        Enemies.Add(purpleWarrior1);
-        Enemies.Add(purpleWarrior2);
+        
+       
 
         foreach (var item in enemies)
         {
@@ -101,7 +93,7 @@ public class Level2
             {
                 switch (item.Value)
                 {
-                    case 0:
+                    case 3:
 
 
                         Goblin goblin = new Goblin(
@@ -123,18 +115,18 @@ public class Level2
                         Enemies.Add(skeleton);
                         break;
 
-                    case 2:
-                       
+                    case 0:
 
-                        Mushroom mushroom = new Mushroom(
+
+                        Ghoul ghoul = new Ghoul(
                             content,
-                            new Rectangle((int)item.Key.X * Tilesize, (int)item.Key.Y * Tilesize, 64, 128),
-                            new Rectangle(0, 0, 128, 128)
-                        );
-                        Enemies.Add(mushroom);
+                            new Rectangle((int)item.Key.X * Tilesize, (int)item.Key.Y * Tilesize, 64, 64),
+                            new Rectangle(0,0, 64,64)
+                            );
+                        Enemies.Add(ghoul);
                         break;
 
-                    case 3:
+                    case 2:
                         // Worm enemy
 
                         Worm worm = new Worm(
@@ -144,6 +136,19 @@ public class Level2
                         );
                         Enemies.Add(worm);
                         break;
+                    
+                    case 4:
+                        
+                        DarkKnightFB darkKnight = new DarkKnightFB(
+                            content,
+                            new Rectangle((int)item.Key.X * Tilesize, (int)item.Key.Y * Tilesize, 128, 192),
+                            new Rectangle(0, 0, 128, 192)
+                        );
+                        
+                        Enemies.Add(darkKnight);
+
+                        break;
+                    
                 }
             }
         }
@@ -163,7 +168,7 @@ public class Level2
             {
                 switch (item.Value)
                 {
-                    case 0:
+                    case 2:
                         Buff healthBuff = new Buff(
                             BuffType.Heal,
                             new Vector2(item.Key.X * Tilesize, item.Key.Y * Tilesize),
@@ -185,7 +190,7 @@ public class Level2
                         
                         break;
 
-                    case 2:
+                    case 0:
                         Buff damageBuff = new Buff(
                             BuffType.IncreaseDamage,
                             new Vector2(item.Key.X * Tilesize, item.Key.Y * Tilesize),
@@ -195,6 +200,7 @@ public class Level2
                         Buffs.Add(damageBuff);
                         
                         break;
+                    
                 }
             }
         }

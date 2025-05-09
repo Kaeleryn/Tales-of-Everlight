@@ -162,23 +162,7 @@ namespace Tales_of_Everlight
                 new Rectangle(0, 0, 128, 128));
 
 
-            _goblin = new Goblin(Content,
-                new Rectangle(3000, 100, 64, 64),
-                //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static);
-                new Rectangle(0, 0, 70, 70));
-            _skeleton = new Sceleton(Content,
-                new Rectangle(3000, 100, 64, 128),
-                new Rectangle(0, 0, 128, 128));
-            _mushroom = new Mushroom(Content,
-                new Rectangle(3000, 100, 64, 128),
-                new Rectangle(0, 0, 128, 128));
-            _worm = new Worm(Content,
-                new Rectangle(3000, 100, 64, 64),
-                new Rectangle(0, 0, 128, 128));
-            EnemyList.Add(_goblin);
-            EnemyList.Add(_skeleton);
-            EnemyList.Add(_mushroom);
-            EnemyList.Add(_worm);
+           
 
             //_hudTexture = Content.Load<Texture2D>("hud+");
             _hudFont = Content.Load<SpriteFont>("hudFont");
@@ -191,6 +175,7 @@ namespace Tales_of_Everlight
 
 
             _level1.Initialize(Content);
+            
         }
 
         private async void GameOver()
@@ -581,11 +566,20 @@ namespace Tales_of_Everlight
                 foreach (var portal in Portals)
                 {
                     portal.Update(gameTime);
-                    if (MainHero.Rect.Intersects(portal.Rect) && _level1.IsActive)
+                    if (MainHero.Rect.Intersects(portal.Rect) && _level1.IsActive && portal.IsVisible)
                     {
                         _level1.IsActive = false;
+                        
+                        EnemyList.Clear();
+                        _level2.SpawnEnemies(content);
+                        EnemyList= _level2.Enemies;
+                        
+                        BuffList.Clear();
+                        _level2.SpawnBuffs(content);
+                        BuffList = _level2.Buffs;
+                        
                         portal.IsVisible = false;
-                        MainHero.Rect = new Rectangle(87*Tilesize, 2 * Tilesize, 64, 128);
+                        MainHero.Rect = new Rectangle(87*Tilesize, 20 * Tilesize, 64, 128);
                         
                     }
                 }
@@ -663,14 +657,14 @@ namespace Tales_of_Everlight
 
             if (_level1.IsActive)
             {
-                cameraX = Math.Clamp(cameraX, _graphics.PreferredBackBufferWidth / 2.0f,
-                    _level1.Width - (_graphics.PreferredBackBufferWidth / 2.0f));
+                cameraX = Math.Clamp(cameraX, ((_graphics.PreferredBackBufferWidth / 2.0f)/ _camera.Zoom),
+                    _level1.Width - ((_graphics.PreferredBackBufferWidth / 2.0f)/ _camera.Zoom));
                 
             }
             else
             {
-                cameraX = Math.Clamp(cameraX, _graphics.PreferredBackBufferWidth / 2.0f,
-                    _level2.Width - (_graphics.PreferredBackBufferWidth / 2.0f));
+                cameraX = Math.Clamp(cameraX, ((_graphics.PreferredBackBufferWidth / 2.0f)/ _camera.Zoom),
+                    _level2.Width - ((_graphics.PreferredBackBufferWidth / 2.0f)/ _camera.Zoom));
             }
             // Clamp the camera position to the level boundaries
             
