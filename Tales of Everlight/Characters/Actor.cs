@@ -207,8 +207,6 @@ public abstract class Actor
     public void HandleHorisontalMovement(KeyboardState keystate, KeyboardState previousState, GameTime gameTime)
     {
         Decelerate();
-
-        
        
             if (keystate.IsKeyDown(Keys.D))
             {

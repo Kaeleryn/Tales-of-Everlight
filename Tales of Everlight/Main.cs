@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
+using System.Linq;
 using System.Threading.Tasks;
 using Gum.DataTypes;
 using Gum.Managers;
@@ -27,6 +28,8 @@ namespace Tales_of_Everlight
         public static List<Buff> BuffList;
         public static Portal Portal1;
         public static Portal Portal2;
+        private static bool dialogShown = false;
+        private static bool dialog2shown = false;
         public static List<Portal> Portals => new List<Portal> { Portal1, Portal2 };
         public static Main Instance { get; set; }
         public static bool isGameOver;
@@ -435,7 +438,7 @@ namespace Tales_of_Everlight
                         _intersections = GetIntersectingTilesVertical(MainHero.Rect);
 
                         MainHero.IsOnGround = false;
-
+                        
                         foreach (var rect in _intersections)
                         {
                             if (_level2.Collisions.TryGetValue(new Vector2(rect.X, rect.Y), out int _))
@@ -471,6 +474,14 @@ namespace Tales_of_Everlight
                             }
                         }
 
+                        if (!dialogShown)
+                        {
+                            isDialog = true;
+                            Gum.Root.Children.Clear();
+                            new DialogScreenSecond().AddToRoot();
+                            dialogShown = true;
+                        }
+                        
                         #endregion
 
                         #region Main Hero Spike Damage Handler
@@ -551,9 +562,22 @@ namespace Tales_of_Everlight
                                 }
                             }
                         }
-
+                        var darkKnight = EnemyList.OfType<DarkKnightFB>().FirstOrDefault();
+                        if (darkKnight.IsDead && !dialog2shown)
+                        {
+                            isDialog = true;
+                            Gum.Root.Children.Clear();
+                            new DialogScreenTheEnd().AddToRoot();
+                            dialog2shown = true;
+                        }
                         #endregion
-
+                        if (!dialogShown)
+                        {
+                            isDialog = true;
+                            Gum.Root.Children.Clear();
+                            new DialogScreenSecond().AddToRoot();
+                            dialogShown = true;
+                        }
                     }
                 }
 
@@ -763,6 +787,24 @@ namespace Tales_of_Everlight
             _spriteBatch.Begin();
 
             DrawHealthBar();
+
+            
+            
+            // Draw up to 3 active buff icons in the top right corner
+            int iconSize = 48;
+            int spacing = 30;
+            int startX = _graphics.PreferredBackBufferWidth - iconSize - spacing;
+            int y = spacing;
+
+            // Get only active buffs, take up to 3
+            var activeBuffs = BuffList.Where(b => b.IsActive).Take(3).ToList();
+
+            for (int i = 0; i < activeBuffs.Count; i++)
+            {
+                var buff = activeBuffs[i];
+                int x = startX - i * (iconSize + spacing);
+                _spriteBatch.Draw(buff.Texture, new Rectangle(x, y, iconSize, iconSize), Color.White);
+            }
 
             _spriteBatch.End();
         }

@@ -13,26 +13,20 @@ using MonoGameGum.Forms.Controls;
 
 namespace Tales_of_Everlight.Screens
 {
-    partial class PauseScreen
+    partial class DialogScreenSecond
     {
         partial void CustomInitialize()
         {
-            TitleScreenButtonInstance.IsFocused = true;
-            TitleScreenButtonInstance.Click += (x, y) =>
-            {
-                Main.isPaused = false;
-                GumService.Default.Root.Children.Clear();
-            };
+            TitleScreenButtonCopyInstance.IsFocused = true;
+            TitleScreenButtonCopyInstance.Click += HandleExitClicked;
             
-            TitleScreenButtonInstance2.Click += (_,_) => GoToScreen(new MainMenu());
             FrameworkElement.GamePadsForUiControl.Clear();
             FrameworkElement.GamePadsForUiControl.AddRange(FormsUtilities.Gamepads);
         }
-        private void GoToScreen(FrameworkElement newScreen)
+        private void HandleExitClicked(object sender, EventArgs e)
         {
-            Main.isGame = false;
+            Main.isDialog = false;
             GumService.Default.Root.Children.Clear();
-            newScreen.AddToRoot();
         }
     }
 }
