@@ -241,16 +241,18 @@ public abstract class Enemy
 
     public void DrawBoundingBox(SpriteBatch spriteBatch, Texture2D hitboxTexture)
     {
-        Rectangle boundingBox = Rect;
-        spriteBatch.Draw(hitboxTexture, new Rectangle(boundingBox.X, boundingBox.Y, boundingBox.Width, 1),
-            Color.Red);
-        spriteBatch.Draw(hitboxTexture, new Rectangle(boundingBox.X, boundingBox.Y, 1, boundingBox.Height),
-            Color.Red);
-        spriteBatch.Draw(hitboxTexture,
-            new Rectangle(boundingBox.X, boundingBox.Y + boundingBox.Height - 1, boundingBox.Width, 1),
-            Color.Red);
-        spriteBatch.Draw(hitboxTexture,
-            new Rectangle(boundingBox.X + boundingBox.Width - 1, boundingBox.Y, 1, boundingBox.Height),
-            Color.Red);
+        if (IsDead) return;
+        
+        int barWidth = Rect.Width;
+        int barHeight = 6;
+        int barX = Rect.X;
+        int barY = Rect.Y - barHeight - 4; // 4px above the enemy
+
+        float healthPercent = Math.Clamp((float)Health / 100f, 0f, 1f);
+
+        // Draw background
+        spriteBatch.Draw(hitboxTexture, new Rectangle(barX, barY, barWidth, barHeight), Color.DarkRed);
+        // Draw filled part
+        spriteBatch.Draw(hitboxTexture, new Rectangle(barX, barY, (int)(barWidth * healthPercent), barHeight), Color.LimeGreen);
     }
 }

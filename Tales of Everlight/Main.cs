@@ -711,7 +711,6 @@ namespace Tales_of_Everlight
             MainHero.Draw(_spriteBatch, new Vector2(MainHero.Rect.X, MainHero.Rect.Y)
                 // , _hitboxTexture
             );
-            MainHero.DrawBoundingBox(_spriteBatch, _hitboxTexture);
             foreach (var portal in Portals)
             {
                 portal.Draw(_spriteBatch);
@@ -757,22 +756,6 @@ namespace Tales_of_Everlight
                 Color.IndianRed);
 
             _spriteBatch.Draw(_healthIcon, new Rectangle(xPosition, yPosition, barWidth, barHeight), Color.White);
-
-            // Prepare the health text
-            var healthText = MainHero.Health >= 0 ? MainHero.Health : 0;
-            string healthString = $"{healthText}/{MainHero.MaxHealth}";
-
-            // Measure the text size
-            Vector2 textSize = _hudFont.MeasureString(healthString);
-
-            // Calculate the position to center the text in the health bar
-            Vector2 textPosition = new Vector2(
-                (xPosition + (barWidth - textSize.X) / 2) + 33,
-                (yPosition + (barHeight - textSize.Y) / 2) + 2
-            );
-
-            // Draw the health text
-            _spriteBatch.DrawString(_hudFont, healthString, textPosition, Color.White);
         }
 
         private void DrawHudElements()
@@ -780,16 +763,6 @@ namespace Tales_of_Everlight
             _spriteBatch.Begin();
 
             DrawHealthBar();
-
-            if (_isHudVisible)
-            {
-                _spriteBatch.DrawString(_hudFont, $"Velocity: {MainHero.Velocity}", new Vector2(10, 0), Color.White);
-                _spriteBatch.DrawString(_hudFont, $"isMoving: {MainHero.IsMoving}", new Vector2(10, 30), Color.White);
-                _spriteBatch.DrawString(_hudFont, $"IsOnGround: {MainHero.IsOnGround}", new Vector2(10, 60),
-                    Color.White);
-                _spriteBatch.DrawString(_hudFont, $"Steps done: {MainHero.StepsDone}", new Vector2(10, 90),
-                    Color.White);
-            }
 
             _spriteBatch.End();
         }

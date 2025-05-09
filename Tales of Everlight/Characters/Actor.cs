@@ -126,10 +126,6 @@ public abstract class Actor
     public void HandleMovement(KeyboardState keystate, KeyboardState previousState, MouseState mouseState,
         MouseState previousMState, GameTime gameTime)
     {
-        if (keystate.IsKeyDown(Keys.Left))
-        {
-            StartDying();
-        }
 
         if (_isInvincible)
         {
@@ -158,7 +154,7 @@ public abstract class Actor
         }
         // HandleAttack(mouseState, previousMState, gameTime);
 
-        HandleAttackMovement(mouseState, previousMState, gameTime);
+        HandleAttackMovement(keystate, mouseState, previousMState, gameTime);
     }
 
     public void HandleVerticalMovement(KeyboardState keystate, KeyboardState previousState, GameTime gameTime)
@@ -238,9 +234,9 @@ public abstract class Actor
     }
 
 
-    public void HandleAttackMovement(MouseState mousestate, MouseState previousMState, GameTime gameTime)
+    public void HandleAttackMovement(KeyboardState keystate, MouseState mousestate, MouseState previousMState, GameTime gameTime)
     {
-        if (mousestate.LeftButton == ButtonState.Pressed && !IsAttacking && IsOnGround)
+        if ((mousestate.LeftButton == ButtonState.Pressed || keystate.IsKeyDown(Keys.Enter)) && !IsAttacking && IsOnGround)
         {
             _velocity = Vector2.Zero; // Зупиняємо персонажа
             IsAttacking = true;
