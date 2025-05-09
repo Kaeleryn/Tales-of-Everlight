@@ -21,6 +21,7 @@ namespace Tales_of_Everlight.Screens
             TitleScreenButtonInstance.IsFocused = true;
             TitleScreenButtonInstance.Click += (x, y) =>
             {
+                Main.isGameOver = false;
                 Main.InitGame(x,y);
                 GoToScreen(new DialogScreen());
                 ChangeIsDialog();
