@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Threading.Tasks;
 using Gum.DataTypes;
 using Gum.Managers;
@@ -637,16 +638,42 @@ namespace Tales_of_Everlight
             float cameraX = _camera.Position.X;
             float cameraY = MainHero.Rect.Y + 100;
 
-            // Ensure the camera stays within level boundaries
-            if (MainHero.Rect.X >= (_graphics.PreferredBackBufferWidth / 2.0f) &&
-                MainHero.Rect.X <= _level1.Width - (_graphics.PreferredBackBufferWidth / 2.0f))
-            {
-                cameraX = MainHero.Rect.X;
-            }
 
+            if (_level1.IsActive)
+            {
+                if ( (MainHero.Rect.X >= (_graphics.PreferredBackBufferWidth / 2.0f) &&
+                      MainHero.Rect.X <= _level1.Width - (_graphics.PreferredBackBufferWidth / 2.0f)))
+                {
+                    cameraX = MainHero.Rect.X;
+                }
+                
+            }
+            else
+            {
+                if ( (MainHero.Rect.X >= (_graphics.PreferredBackBufferWidth / 2.0f) &&
+                     MainHero.Rect.X <= _level2.Width - (_graphics.PreferredBackBufferWidth / 2.0f)))
+                {
+                    cameraX = MainHero.Rect.X;
+                }
+                
+            }
+            // Ensure the camera stays within level boundaries
+            
+           
+
+            if (_level1.IsActive)
+            {
+                cameraX = Math.Clamp(cameraX, _graphics.PreferredBackBufferWidth / 2.0f,
+                    _level1.Width - (_graphics.PreferredBackBufferWidth / 2.0f));
+                
+            }
+            else
+            {
+                cameraX = Math.Clamp(cameraX, _graphics.PreferredBackBufferWidth / 2.0f,
+                    _level2.Width - (_graphics.PreferredBackBufferWidth / 2.0f));
+            }
             // Clamp the camera position to the level boundaries
-            cameraX = Math.Clamp(cameraX, _graphics.PreferredBackBufferWidth / 2.0f,
-                _level1.Width - (_graphics.PreferredBackBufferWidth / 2.0f));
+            
 
             _camera.Position = new Vector2(cameraX, cameraY);
         }

@@ -38,6 +38,7 @@ public class Level2
     private Texture2D textureAtlas_spikes;
     private Texture2D textureAtlas_decor;
     private Texture2D textureAtlas_forest;
+    private Texture2D background;
 
    // public Texture2D BackgroundHigh { get; set; }
    // public Texture2D BackgroundLow { get; set; }
@@ -70,6 +71,8 @@ public class Level2
         textureAtlas_spikes = content.Load<Texture2D>("tileset_spikes");
         textureAtlas_decor = content.Load<Texture2D>("level2_decor");
         textureAtlas_forest = content.Load<Texture2D>("tileset_ground");
+        
+        background = content.Load<Texture2D>("level2_background");
         
 
 
@@ -201,48 +204,22 @@ public class Level2
     public void Draw(SpriteBatch spriteBatch)
     {
         
-            // float parallaxFactor = 0.03f; // Very subtle horizontal movement
-            // float offsetX = Main.MainHero.Rect.X * parallaxFactor;
-            //
-            // // Calculate blend factor based on player's Y position
-            // float transitionHeight = 40 * 64; // 34 * Tilesize
-            // float blendRange = 10 * 64; // Transition range (10 tiles)
-            // float blendFactor = 0f;
-            //
-            // // Calculate how far the player is into the transition zone
-            // if (Main.MainHero.Rect.Y > transitionHeight - blendRange &&
-            //     Main.MainHero.Rect.Y < transitionHeight + blendRange)
-            // {
-            //     blendFactor = (Main.MainHero.Rect.Y - (transitionHeight - blendRange)) / (2 * blendRange);
-            //     blendFactor = MathHelper.Clamp(blendFactor, 0f, 1f);
-            // }
-            // else if (Main.MainHero.Rect.Y >= transitionHeight + blendRange)
-            // {
-            //     blendFactor = 1f; // Fully transitioned to BackgroundLow
-            // }
-            //
-            // for (int i = 0; i < Width; i += BackgroundHigh.Width)
-            // {
-            //     // Position for background
-            //     Vector2 position = new Vector2(
-            //         i - offsetX % BackgroundHigh.Width,
-            //         Main.MainHero.Rect.Y - BackgroundHigh.Height / 2
-            //     );
-            //
-            //     // Draw BackgroundHigh with decreasing opacity
-            //     spriteBatch.Draw(
-            //         BackgroundHigh,
-            //         position,
-            //         Color.White * (1f - blendFactor)
-            //     );
-            //
-            //     // Draw BackgroundLow with increasing opacity
-            //     spriteBatch.Draw(
-            //         BackgroundLow,
-            //         position,
-            //         Color.White * blendFactor
-            //     );
-            // }
+            float parallaxFactor = 0.03f; // Very subtle horizontal movement
+            float offsetX = Main.MainHero.Rect.X * parallaxFactor;
+            
+            // Calculate blend factor based on player's Y position
+            
+            for (int i = 0; i < Width; i += background.Width)
+            {
+                // Position for background
+                Vector2 position = new Vector2(
+                    i - offsetX % background.Width,
+                    Main.MainHero.Rect.Y - background.Height / 2
+                );
+                
+                spriteBatch.Draw(background, position, Color.White);
+               
+            }
 
 
             foreach (var item in foreground)
