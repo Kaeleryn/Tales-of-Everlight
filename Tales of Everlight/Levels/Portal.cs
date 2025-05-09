@@ -16,11 +16,12 @@ public class Portal
     public int CurrentFrame = 0;
     public const int TILESIZE = 64;
     public const float FRAME_DURATION = 0.1f;
-    public  float FrameTimer = 0f;
+    public float FrameTimer = 0f;
+    public bool IsVisible = false;
 
-    public Portal(ContentManager content)
+    public Portal(ContentManager content, Rectangle rect)
     {
-        Rect = new Rectangle(28*TILESIZE,27*TILESIZE,128,128);
+        Rect = rect;
         PortalTexture = content.Load<Texture2D>("Portal");
     }
     
@@ -30,7 +31,7 @@ public class Portal
         if (FrameTimer >= FRAME_DURATION)
         {
             CurrentFrame++;
-            ;
+            
             FrameTimer = 0f;
             
             if (CurrentFrame >= TotalFrames)
@@ -44,22 +45,23 @@ public class Portal
 
     public void Draw(SpriteBatch spriteBatch)
     {
-        
-        
-        
-        Vector2 drawPosition;
-        Srect = new Rectangle(128, 128, 128, 128);
-        
-        spriteBatch.Draw(PortalTexture, new Vector2(Rect.X,Rect.Y), Srect, Color.White, 0f, Vector2.Zero, 1f,
+        if(!IsVisible) return;
+        // Calculate the source rectangle based on the current animation frame
+        // Assuming portal sprite sheet has frames arranged horizontally
+        Srect = new Rectangle(CurrentFrame * 128, 0, 128, 128);
+
+        // Draw the portal at its position using the correct frame
+        spriteBatch.Draw(
+            PortalTexture, 
+            new Vector2(Rect.X, Rect.Y), 
+            Srect, 
+            Color.White, 
+            0f, 
+            Vector2.Zero, 
+            1f,
             SpriteEffects.None,
-            0f);
-        
-        
-        
-        
-        
-        
-        
+            0f
+        );
     }
 
 

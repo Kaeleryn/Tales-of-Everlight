@@ -14,6 +14,11 @@ public class Level2
     private Dictionary<Vector2, int> spikes;
     public Dictionary<Vector2, int> enemies;
     public Dictionary<Vector2, int> buffs;
+    public Dictionary<Vector2, int> decor;
+    public Dictionary<Vector2, int> decor2;
+    public Dictionary<Vector2, int> forest;
+    
+    
     public readonly int Width = 295 * 64;
     public int Tilesize = 64;
     
@@ -31,6 +36,8 @@ public class Level2
     private Texture2D textureAtlas_foreground;
     private Texture2D textureAtlas_collisions;
     private Texture2D textureAtlas_spikes;
+    private Texture2D textureAtlas_decor;
+    private Texture2D textureAtlas_forest;
 
    // public Texture2D BackgroundHigh { get; set; }
    // public Texture2D BackgroundLow { get; set; }
@@ -40,7 +47,7 @@ public class Level2
     {
         foreground = new Dictionary<Vector2, int>();
         collisions = new Dictionary<Vector2, int>();
-        //spikes = new Dictionary<Vector2, int>();
+        spikes = new Dictionary<Vector2, int>();
        // enemies = new Dictionary<Vector2, int>();
        // buffs = new Dictionary<Vector2, int>();
     }
@@ -50,7 +57,10 @@ public class Level2
     {
         foreground = LoadMap("Content/map/level2_cave.csv");
         collisions = LoadMap("Content/map/level2_collision.csv");
-       // spikes = LoadMap("Content/map/level2_spikes.csv");
+        spikes = LoadMap("Content/map/level2_spikes.csv");
+        decor = LoadMap("Content/map/level2_decoration.csv");
+        decor2 = LoadMap("Content/map/level2_decoration2.csv");
+        forest = LoadMap("Content/map/level2_forest.csv");
        // enemies = LoadMap("Content/map/level1_enemies.csv");
         //buffs = LoadMap("Content/map/level1_buffs.csv");
 
@@ -58,6 +68,9 @@ public class Level2
         textureAtlas_foreground = content.Load<Texture2D>("level2_foreground");
         textureAtlas_collisions = content.Load<Texture2D>("tileset_collisions");
         textureAtlas_spikes = content.Load<Texture2D>("tileset_spikes");
+        textureAtlas_decor = content.Load<Texture2D>("level2_decor");
+        textureAtlas_forest = content.Load<Texture2D>("tileset_ground");
+        
 
 
        // BackgroundHigh = content.Load<Texture2D>("Level1_background_high");
@@ -286,30 +299,118 @@ public class Level2
                 // _spriteBatch.Draw(textureAtlas_collisions, drect, src, Color.White);
             }
 
-            // foreach (var item in spikes)
-            // {
-            //     int display_tilesize = 64;
-            //     int num_tiles_per_row = 3;
-            //     int pixel_tilesize = 64;
-            //
-            //     Rectangle drect = new(
-            //         (int)item.Key.X * display_tilesize,
-            //         (int)item.Key.Y * display_tilesize,
-            //         display_tilesize,
-            //         display_tilesize
-            //     );
-            //
-            //
-            //     int x = item.Value % num_tiles_per_row;
-            //     int y = item.Value / num_tiles_per_row;
-            //
-            //     Rectangle src = new(
-            //         x * pixel_tilesize,
-            //         y * pixel_tilesize,
-            //         pixel_tilesize,
-            //         pixel_tilesize
-            //     );
-            // }
+            foreach (var item in spikes)
+            {
+                int display_tilesize = 64;
+                int num_tiles_per_row = 3;
+                int pixel_tilesize = 64;
+            
+                Rectangle drect = new(
+                    (int)item.Key.X * display_tilesize,
+                    (int)item.Key.Y * display_tilesize,
+                    display_tilesize,
+                    display_tilesize
+                );
+            
+            
+                int x = item.Value % num_tiles_per_row;
+                int y = item.Value / num_tiles_per_row;
+            
+                Rectangle src = new(
+                    x * pixel_tilesize,
+                    y * pixel_tilesize,
+                    pixel_tilesize,
+                    pixel_tilesize
+                );
+            }
+            
+            foreach (var item in decor2)
+            {
+                int display_tilesize = 64;
+                int num_tiles_per_row = 19;
+                int pixel_tilesize = 64;
+            
+                Rectangle drect = new(
+                    (int)item.Key.X * display_tilesize,
+                    (int)item.Key.Y * display_tilesize,
+                    display_tilesize,
+                    display_tilesize
+                );
+            
+            
+                int x = item.Value % num_tiles_per_row;
+                int y = item.Value / num_tiles_per_row;
+            
+                Rectangle src = new(
+                    x * pixel_tilesize,
+                    y * pixel_tilesize,
+                    pixel_tilesize,
+                    pixel_tilesize
+                );
+                
+                spriteBatch.Draw(textureAtlas_decor, drect, src, Color.White);
+
+            }
+            
+            
+            foreach (var item in decor)
+            {
+                int display_tilesize = 64;
+                int num_tiles_per_row = 19;
+                int pixel_tilesize = 64;
+            
+                Rectangle drect = new(
+                    (int)item.Key.X * display_tilesize,
+                    (int)item.Key.Y * display_tilesize,
+                    display_tilesize,
+                    display_tilesize
+                );
+            
+            
+                int x = item.Value % num_tiles_per_row;
+                int y = item.Value / num_tiles_per_row;
+            
+                Rectangle src = new(
+                    x * pixel_tilesize,
+                    y * pixel_tilesize,
+                    pixel_tilesize,
+                    pixel_tilesize
+                );
+                
+                spriteBatch.Draw(textureAtlas_decor, drect, src, Color.White);
+
+            }
+            
+            
+            
+            
+            foreach (var item in forest)
+            {
+                int display_tilesize = 64;
+                int num_tiles_per_row = 15;
+                int pixel_tilesize = 64;
+            
+                Rectangle drect = new(
+                    (int)item.Key.X * display_tilesize,
+                    (int)item.Key.Y * display_tilesize,
+                    display_tilesize,
+                    display_tilesize
+                );
+            
+            
+                int x = item.Value % num_tiles_per_row;
+                int y = item.Value / num_tiles_per_row;
+            
+                Rectangle src = new(
+                    x * pixel_tilesize,
+                    y * pixel_tilesize,
+                    pixel_tilesize,
+                    pixel_tilesize
+                );
+                
+                spriteBatch.Draw(textureAtlas_forest, drect, src, Color.White);
+
+            }
         
     }
 

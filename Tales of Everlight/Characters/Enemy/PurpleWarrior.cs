@@ -194,6 +194,11 @@ public class PurpleWarrior : Enemy
             {
                 //Main.RemoveEnemy(this);
             }
+            
+            foreach(var portal in Main.Portals)
+            {
+                portal.IsVisible = true;
+            }
 
             return;
         }
