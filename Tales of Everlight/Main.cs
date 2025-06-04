@@ -113,21 +113,24 @@ namespace Tales_of_Everlight
         public static void InitGame(object sender, EventArgs e)
         {
             Gum.Root.Children.Clear();
-
+            
             // Reset game states
             isGame = true;
             isPaused = false;
             isGameOver = false;
+            isDialog = false;
+            dialogShown = false;
+            dialog2shown = false;
             // Reset camera position
             _camera.Position = Vector2.Zero;
             BuffList = new List<Buff>();
-
             // Reset main hero
             MainHero = new MainHero(content,
                 new Rectangle(2000, 25 * Tilesize, 64,
                     128), //rect це позиція персонажа, srect треба для відладки, але тоді треба використовувати інший Draw метод і текстурку player_static
                 new Rectangle(0, 0, 128, 128));
-
+            MainHero.Damage = MainHero.StandardDamage; // or your default value
+            MainHero.Speed = MainHero.StandardSpeed; 
             // Reset enemies
             BuffList.Clear();
             EnemyList.Clear();
@@ -474,6 +477,9 @@ namespace Tales_of_Everlight
 
                         if (!dialogShown)
                         {
+                            MainHero.Health = MainHero.MaxHealth;
+                            MainHero.Damage = MainHero.StandardDamage; // or your default value
+                            MainHero.Speed = MainHero.StandardSpeed; 
                             isDialog = true;
                             Gum.Root.Children.Clear();
                             new DialogScreenSecond().AddToRoot();

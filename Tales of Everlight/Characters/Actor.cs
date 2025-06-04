@@ -40,7 +40,7 @@ public abstract class Actor
 
     // public static int Health { get; set; } = 100; // Здоров'я персонажа
     public static int Health { get; set; } = 200; // Здоров'я персонажа
-    public static int MaxHealth { get; set; } = 20000; // Максимальне здоров'я персонажа
+    public static int MaxHealth { get; set; } = 2000; // Максимальне здоров'я персонажа
 
     public static int Damage { get; set; } = 30;
     public static int StandardDamage { get; set; } = 30;
