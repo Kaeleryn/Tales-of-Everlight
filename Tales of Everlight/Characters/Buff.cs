@@ -1,136 +1,125 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-
-namespace Tales_of_Everlight.Characters;
-public enum BuffType
+namespace Tales_of_Everlight.Characters
 {
-    Heal,
-    IncreaseDamage,
-    IncreaseSpeed,
-}
-
-public class Buff
-{
-    
-    public BuffType Type;
-   
-    public Texture2D Texture { get; set; }
-    public Vector2 Position { get; set; }
-    protected float DURATION  = 15f;
-    protected float TimeLeft { get; set; } = 0;
-    
-    public bool IsActive { get; set; }
-    private bool IsExpired { get; set; } = false;
-    protected float Amount { get; set; }
-
-
-    public Buff(BuffType type, Vector2 position, float amount, ContentManager content)
+    public enum BuffType
     {
-        Type = type;
-        Position = position;
-        Amount = amount;
-        TimeLeft = 0;
-        
-        switch (type)
-        {
-            case BuffType.Heal:
-                Texture = content.Load<Texture2D>("buff_health");
-                break;
-            case BuffType.IncreaseDamage:
-                Texture = content.Load<Texture2D>("buff_damage");
-                break;
-            case BuffType.IncreaseSpeed:
-                Texture = content.Load<Texture2D>("buff_speed");
-                break;
-        }
-        
+        Heal,
+        IncreaseDamage,
+        IncreaseSpeed,
     }
 
-
-    public void ApplyEffect()
+    public class Buff
     {
-        switch (Type)
+        public BuffType Type;
+        public Texture2D Texture { get; set; }
+        public Vector2 Position { get; set; }
+        private const float DURATION = 15f;
+        private float TimeLeft { get; set; }
+        public bool IsActive { get; set; }
+        public bool IsExpired { get; set; }
+        private float Amount { get; set; }
+        public bool IsOnMap { get; set; } = true;
+        public Buff(BuffType type, Vector2 position, float amount, ContentManager content)
         {
-            case BuffType.Heal:
-                Heal((int)Amount);
-                // Healing is instant, so we can deactivate the buff immediately
-                IsActive = true;
-                break;
-            case BuffType.IncreaseDamage:
-                MainHero.Damage += (int)Amount;
-                IsActive = true;
-                TimeLeft = 0;
-                break;
-            case BuffType.IncreaseSpeed:
-                MainHero.Speed += Amount;
-                IsActive = true;
-                TimeLeft = 0;
-                break;
+            Type = type;
+            Position = position;
+            Amount = amount;
+            IsActive = false;
+            IsExpired = false;
+            TimeLeft = 0;
+
+            switch (type)
+            {
+                case BuffType.Heal:
+                    Texture = content.Load<Texture2D>("buff_health");
+                    break;
+                case BuffType.IncreaseDamage:
+                    Texture = content.Load<Texture2D>("buff_damage");
+                    break;
+                case BuffType.IncreaseSpeed:
+                    Texture = content.Load<Texture2D>("buff_speed");
+                    break;
+            }
         }
-    }
-    
-    private void RemoveEffect()
-    {
-        if (!IsExpired)
+
+        public void ApplyEffect()
         {
-            IsExpired = true;
+            if (IsActive || IsExpired) return;
 
+            Console.WriteLine($"Buff {Type} activated at {Position}");
 
+            switch (Type)
+            {
+                case BuffType.Heal:
+                    Heal((int)Amount);
+                    IsExpired = true;
+                    break;
+                case BuffType.IncreaseDamage:
+                    MainHero.Damage += (int)Amount;
+                    IsActive = true;
+                    TimeLeft = DURATION;
+                    break;
+                case BuffType.IncreaseSpeed:
+                    MainHero.Speed += Amount;
+                    IsActive = true;
+                    TimeLeft = DURATION;
+                    break;
+            }
+        }
 
-            // Only remove effects for buffs that need to be reversed
+        private void RemoveEffect()
+        {
+            if (!IsActive || IsExpired) return;
+
+            Console.WriteLine($"Buff {Type} expired at {Position}");
+
             switch (Type)
             {
                 case BuffType.IncreaseDamage:
-                    MainHero.Damage = (int)Amount;
+                    MainHero.Damage -= (int)Amount;
                     break;
                 case BuffType.IncreaseSpeed:
                     MainHero.Speed -= Amount;
                     break;
-                // Heal doesn't need to be reversed as it's an instant effect
+            }
+            IsActive = false;
+            IsExpired = true;
+        }
+
+        public void Update(GameTime gameTime)
+        {
+            if (!IsActive || IsExpired) return;
+
+            if (Type == BuffType.Heal)
+            {
+                RemoveEffect();
+                return;
+            }
+
+            TimeLeft -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (TimeLeft <= 0)
+            {
+                RemoveEffect();
+            }
+        }
+
+        private void Heal(int amount)
+        {
+            MainHero.Health += amount;
+            if (MainHero.Health > MainHero.MaxHealth)
+                MainHero.Health = MainHero.MaxHealth;
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Vector2 position)
+        {
+            if (!IsExpired && IsOnMap)
+            {
+                spriteBatch.Draw(Texture, position, Color.White);
             }
         }
     }
-    
-    public void Update(GameTime gameTime)
-    {
-        if (!IsActive)
-            return;
-            
-        // If it's a healing buff, it's already been applied and deactivated
-        if (Type == BuffType.Heal)
-            RemoveEffect();
-            
-        // Decrease the timer
-        TimeLeft += (float)gameTime.ElapsedGameTime.TotalSeconds;
-        
-        // Check if the buff has expired
-        if (TimeLeft >= DURATION)
-        {
-            RemoveEffect();
-            
-        }
-    }
-    
-
-    public void Heal(int amount)
-    {
-        MainHero.Health += amount;
-        if (MainHero.Health > MainHero.MaxHealth)
-        {
-            MainHero.Health = MainHero.MaxHealth;
-        }
-    }
-    
-    
-    public void Draw(SpriteBatch spriteBatch, Vector2 position)
-    {
-        if (!IsActive)
-        {
-            spriteBatch.Draw(Texture, position, Color.White);
-        }
-    }
-    
-    
 }

@@ -616,12 +616,19 @@ namespace Tales_of_Everlight
 
                         buff.Update(gameTime);
 
-                        if (MainHero.Rect.Intersects(buffRect) && !buff.IsActive)
+                        // In Main.cs, inside the foreach (var buff in BuffList)
+                        if (MainHero.Rect.Intersects(buffRect) && !buff.IsActive && !buff.IsExpired && buff.IsOnMap)
                         {
-                            buff.IsActive = true;
                             buff.ApplyEffect();
+                            buff.IsOnMap = false; // Remove from map immediately
+                            if (buff.Type == BuffType.Heal)
+                            {
+                                BuffList.Remove(buff); // Heal buffs can still be removed
+                                break;
+                            }
                         }
                     }
+                    BuffList.RemoveAll(b => b.IsExpired && b.Type != BuffType.Heal);
                 }
 
                 HandleInput();
@@ -793,16 +800,17 @@ namespace Tales_of_Everlight
             _spriteBatch.Begin();
 
             DrawHealthBar();
-            
-            // Draw up to 3 active buff icons in the top right corner
+
             int iconSize = 48;
             int spacing = 30;
             int startX = _graphics.PreferredBackBufferWidth - iconSize - spacing;
             int y = spacing;
 
-            // Get only active buffs, take up to 3
-            var activeBuffs = BuffList.Where(b => b.IsActive).Take(3).ToList();
-
+            // Show all active buffs except health
+            var activeBuffs = BuffList
+                .Where(b => b.IsActive && !IsHealthBuff(b))
+                .ToList();
+            activeBuffs.RemoveAll(b => !b.IsActive && b.Type != BuffType.Heal);
             for (int i = 0; i < activeBuffs.Count; i++)
             {
                 var buff = activeBuffs[i];
@@ -811,6 +819,11 @@ namespace Tales_of_Everlight
             }
 
             _spriteBatch.End();
+        }
+
+        private bool IsHealthBuff(Buff buff)
+        {
+            return buff.Type == BuffType.Heal;
         }
 
         private List<Rectangle> GetIntersectingTilesHorizontal(Rectangle target)
