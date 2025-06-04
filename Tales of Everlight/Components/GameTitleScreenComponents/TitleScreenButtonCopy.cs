@@ -15,9 +15,12 @@ namespace Tales_of_Everlight.Components
         partial void CustomInitialize()
         {
             Click += (_, _) => IsFocused = true;
-            KeyDown += (_,_) =>
+            KeyDown += (obj,e) =>
             {
-                PerformClick(GumService.Default.Keyboard);
+                if (e.Key == Microsoft.Xna.Framework.Input.Keys.Enter)
+                {
+                    PerformClick(GumService.Default.Keyboard);
+                }
             };
         }
     }

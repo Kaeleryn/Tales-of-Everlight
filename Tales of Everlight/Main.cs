@@ -560,14 +560,18 @@ namespace Tales_of_Everlight
                                 }
                             }
                         }
-                        var darkKnight = EnemyList.OfType<DarkKnightFB>().FirstOrDefault();
-                        if (darkKnight.IsDead && !dialog2shown)
+                        var darkKnight = EnemyList.OfType<DarkKnightFB>();
+                        foreach (var dk in darkKnight)
                         {
-                            isDialog = true;
-                            Gum.Root.Children.Clear();
-                            new DialogScreenTheEnd().AddToRoot();
-                            dialog2shown = true;
+                            if (dk.IsDead && !dialog2shown)
+                            {
+                                isDialog = true;
+                                Gum.Root.Children.Clear();
+                                new DialogScreenTheEnd().AddToRoot();
+                                dialog2shown = true;
+                            }
                         }
+                        
                         #endregion
                         if (!dialogShown)
                         {
@@ -784,8 +788,6 @@ namespace Tales_of_Everlight
             _spriteBatch.Begin();
 
             DrawHealthBar();
-
-            
             
             // Draw up to 3 active buff icons in the top right corner
             int iconSize = 48;

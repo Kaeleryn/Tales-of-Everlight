@@ -234,7 +234,7 @@ public abstract class Actor
 
     public void HandleAttackMovement(KeyboardState keystate, MouseState mousestate, MouseState previousMState, GameTime gameTime)
     {
-        if ((mousestate.LeftButton == ButtonState.Pressed || keystate.IsKeyDown(Keys.Enter)) && !IsAttacking && IsOnGround)
+        if ((mousestate.LeftButton == ButtonState.Pressed || keystate.IsKeyDown(Keys.RightShift)) && !IsAttacking && IsOnGround)
         {
             _velocity = Vector2.Zero; // Зупиняємо персонажа
             IsAttacking = true;

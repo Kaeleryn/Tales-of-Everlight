@@ -22,9 +22,6 @@
       <Compile Remove="GUI\Menus\MainMenu.cs" />
     </ItemGroup>
     <ItemGroup>
-      <Folder Include="GUI\Menus\" />
-    </ItemGroup>
-    <ItemGroup>
       <None Update="Content\GumProject\**\*.*">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

@@ -75,12 +75,6 @@ public class Level1
         //     new Rectangle(1000, 500, 64, 64),
         //     new Rectangle(0, 0, 64, 64)
         // );
-        DarkKnightFB DarkKnight = new DarkKnightFB(
-            content,
-            new Rectangle(1000, 500, 128, 192),
-            new Rectangle(0, 0, 64, 64)
-        );
-        Enemies.Add(DarkKnight);
        // Enemies.Add(ghoul);
         PurpleWarrior purpleWarrior1 = new PurpleWarrior(
             content,
