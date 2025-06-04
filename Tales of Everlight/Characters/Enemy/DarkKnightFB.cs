@@ -17,6 +17,7 @@ public class DarkKnightFB : Enemy
     public DarkKnightFB(ContentManager content, Rectangle rect, Rectangle srect) : base(content, rect, srect)
     {
         Health = 300;
+        MaxHealth = Health;
         IdleTexture = content.Load<Texture2D>("Knight-Idle-Sheet");
         MovingTexture = content.Load<Texture2D>("Knight-Walk-Sheet");
         AttackTexture = content.Load<Texture2D>("Knight-Attack-Sheet");

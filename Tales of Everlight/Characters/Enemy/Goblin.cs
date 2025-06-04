@@ -19,6 +19,7 @@ public class Goblin : Enemy
     public Goblin(ContentManager content, Rectangle rect, Rectangle srect) : base(content, rect, srect)
     {
         Health = 50;
+        MaxHealth = Health;
         IdleTexture = content.Load<Texture2D>("GoblinIdle-Sheet");
         MovingTexture = content.Load<Texture2D>("GoblinWalk-Sheet");
         AttackTexture = content.Load<Texture2D>("GoblinAttack-Sheet");

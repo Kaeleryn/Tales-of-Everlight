@@ -16,6 +16,7 @@ public class Ghoul : Enemy
     public Ghoul(ContentManager content, Rectangle rect, Rectangle srect) : base(content, rect, srect)
     {
         Health = 50;
+        MaxHealth = Health;
         IdleTexture = content.Load<Texture2D>("Ghoul_idle");
         MovingTexture = content.Load<Texture2D>("Ghoul_walk");
         AttackTexture = content.Load<Texture2D>("Ghoul_attack");

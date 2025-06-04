@@ -49,7 +49,6 @@ namespace Tales_of_Everlight
         //private Texture2D _hudTexture;
         private Texture2D _healthIcon;
         private Texture2D _rectangleTexture;
-        private SpriteFont _hudFont;
         private readonly Color _backgroundColor = new(145, 221, 207, 255);
         public static MainHero MainHero = new();
 
@@ -168,7 +167,6 @@ namespace Tales_of_Everlight
            
 
             //_hudTexture = Content.Load<Texture2D>("hud+");
-            _hudFont = Content.Load<SpriteFont>("hudFont");
 
             _rectangleTexture = new Texture2D(GraphicsDevice, 1, 1);
             _rectangleTexture.SetData(new Color[] { new(255, 0, 0, 255) });
@@ -760,25 +758,24 @@ namespace Tales_of_Everlight
         {
             _healthIcon = Content.Load<Texture2D>("HealthBar"); // Load the PNG image
             _rectangleTexture = Content.Load<Texture2D>("progressbar");
-            _hudFont = Content.Load<SpriteFont>("hudFont");
-
+        
             // Define the position and size of the health bar
             int barWidth = 304;
             int barHeight = 76;
             int xPosition = 15;
             int yPosition = 15;
-
+        
             // Calculate the width of the filled portion based on the hero's health
             float healthPercentage = (float)MainHero.Health / (float)MainHero.MaxHealth;
             int filledWidth = (int)(224 * healthPercentage);
-
-
+        
+        
             // Draw the background of the health bar
             // _spriteBatch.Draw(_rectangleTexture, new Rectangle(xPosition - 5, yPosition - 5, barWidth + 10, barHeight + 10), Color.Black);
             _spriteBatch.Draw(_rectangleTexture, new Rectangle(xPosition + 76, yPosition + 32, 224, 16), Color.DarkRed);
             _spriteBatch.Draw(_rectangleTexture, new Rectangle(xPosition + 76, yPosition + 32, filledWidth, 16),
                 Color.IndianRed);
-
+        
             _spriteBatch.Draw(_healthIcon, new Rectangle(xPosition, yPosition, barWidth, barHeight), Color.White);
         }
 

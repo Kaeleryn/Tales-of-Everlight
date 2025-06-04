@@ -18,6 +18,7 @@ public class Mushroom : Enemy
     public Mushroom(ContentManager content, Rectangle rect, Rectangle srect) : base(content, rect, srect)
     {
         Health = 150;
+        MaxHealth = Health;
         IdleTexture = content.Load<Texture2D>("Mushroom_idle");
         MovingTexture = content.Load<Texture2D>("Mushroom_walk");
         AttackTexture = content.Load<Texture2D>("Mushroom_attack");

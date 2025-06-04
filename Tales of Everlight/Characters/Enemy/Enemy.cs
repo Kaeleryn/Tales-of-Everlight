@@ -11,7 +11,7 @@ namespace Tales_of_Everlight;
 public abstract class Enemy
 {
     protected  int Health { get; set; }
-
+    protected int MaxHealth;
     public EnemyState State;
     public EnemyAnimationState AnimationState;
 
@@ -104,8 +104,7 @@ public abstract class Enemy
     protected Enemy(ContentManager content, Rectangle rect, Rectangle srect)
     {
         Health = 100;
-
-
+        MaxHealth = Health;
         _currentFrame = 0;
 
 
@@ -238,7 +237,6 @@ public abstract class Enemy
         }
     }
 
-
     public void DrawBoundingBox(SpriteBatch spriteBatch, Texture2D hitboxTexture)
     {
         if (IsDead) return;
@@ -248,7 +246,7 @@ public abstract class Enemy
         int barX = Rect.X;
         int barY = Rect.Y - barHeight - 4; // 4px above the enemy
 
-        float healthPercent = Math.Clamp((float)Health / 100f, 0f, 1f);
+        float healthPercent = Math.Clamp((float)Health / MaxHealth, 0f, 1f);
 
         // Draw background
         spriteBatch.Draw(hitboxTexture, new Rectangle(barX, barY, barWidth, barHeight), Color.DarkRed);

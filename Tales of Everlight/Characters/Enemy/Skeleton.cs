@@ -18,6 +18,7 @@ public class Sceleton : Enemy
     public Sceleton(ContentManager content, Rectangle rect, Rectangle srect) : base(content, rect, srect)
     {
         Health = 80;
+        MaxHealth = Health;
         IdleTexture = content.Load<Texture2D>("Skeleton_idle");
         MovingTexture = content.Load<Texture2D>("Skeleton_walk");
         AttackTexture = content.Load<Texture2D>("Skeleton_attack");

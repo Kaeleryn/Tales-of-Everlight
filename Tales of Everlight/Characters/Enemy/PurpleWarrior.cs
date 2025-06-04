@@ -16,6 +16,7 @@ public class PurpleWarrior : Enemy
     public PurpleWarrior(ContentManager content, Rectangle rect, Rectangle srect) : base(content, rect, srect)
     {
         Health = 200;
+        MaxHealth = Health;
         IdleTexture = content.Load<Texture2D>("PurpleWarriorIdle");
         MovingTexture = content.Load<Texture2D>("PurpleWarriorWalk");
         AttackTexture = content.Load<Texture2D>("PurpleWarriorAttack");

@@ -19,6 +19,7 @@ public class Worm : Enemy
     public Worm(ContentManager content, Rectangle rect, Rectangle srect) : base(content, rect, srect)
     {
         Health = 80;
+        MaxHealth = Health;
         IdleTexture = content.Load<Texture2D>("Worm_idle");
         MovingTexture = content.Load<Texture2D>("Worm_walk");
         AttackTexture = content.Load<Texture2D>("Worm_attack");
