@@ -565,10 +565,7 @@ namespace Tales_of_Everlight
                         {
                             if (dk.IsDead && !dialog2shown)
                             {
-                                isDialog = true;
-                                Gum.Root.Children.Clear();
-                                new DialogScreenTheEnd().AddToRoot();
-                                dialog2shown = true;
+                                theEnd();
                             }
                         }
                         
@@ -653,6 +650,14 @@ namespace Tales_of_Everlight
             _previousMState = mouseState;
         }
 
+        private async void theEnd()
+        {
+            await Task.Delay(1500);
+            isDialog = true;
+            Gum.Root.Children.Clear();
+            new DialogScreenTheEnd().AddToRoot();
+            dialog2shown = true;
+        }
         private void UpdateCameraPosition()
         {
             float cameraX = _camera.Position.X;
