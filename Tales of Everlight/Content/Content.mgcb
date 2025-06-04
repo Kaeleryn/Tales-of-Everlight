@@ -61,18 +61,6 @@
 /processorParam:TextureFormat=Color
 /build:animatedSpriteJumping.png
 
-#begin animatedSpriteJumping.psd
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:animatedSpriteJumping.psd
-
 #begin background_layer_1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -277,12 +265,17 @@
 /processorParam:TextureFormat=Color
 /build:hud+.png
 
-#begin hudFont.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
+#begin kindpng_5697892.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
 /processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:hudFont.spritefont
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:kindpng_5697892.png
 
 #begin Knight-Attack-Sheet.png
 /importer:TextureImporter
@@ -320,13 +313,6 @@
 /processorParam:TextureFormat=Color
 /build:Knight-Walk-Sheet.png
 
-#begin KnightWarrior.spritefont
-/importer:FontDescriptionImporter
-/processor:LocalizedFontProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:KnightWarrior.spritefont
-
 #begin Level1_background_high.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -350,18 +336,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Level1_background_low.png
-
-#begin level2_background.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:level2_background.png
 
 #begin level2_background.png
 /importer:TextureImporter
@@ -410,13 +384,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:menuBackground.png
-
-#begin menuButtonFont.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:menuButtonFont.spritefont
 
 #begin Mushroom_attack.png
 /importer:TextureImporter

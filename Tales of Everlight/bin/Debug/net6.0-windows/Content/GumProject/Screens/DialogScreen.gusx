@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ScreenSave xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ScreenSave xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>DialogScreen</Name>
   <State>
     <Name>Default</Name>
@@ -101,7 +101,7 @@
     <Variable>
       <Type>float</Type>
       <Name>ContainerInstance.Width</Name>
-      <Value xsi:type="xsd:float">650</Value>
+      <Value xsi:type="xsd:float">786</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
@@ -161,7 +161,7 @@
     <Variable>
       <Type>float</Type>
       <Name>ContainerInstance1.Width</Name>
-      <Value xsi:type="xsd:float">650</Value>
+      <Value xsi:type="xsd:float">798</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
@@ -258,7 +258,7 @@
     <Variable>
       <Type>float</Type>
       <Name>SpriteInstance.Width</Name>
-      <Value xsi:type="xsd:float">0</Value>
+      <Value xsi:type="xsd:float">192</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
@@ -373,7 +373,11 @@
     <Variable>
       <Type>string</Type>
       <Name>TextInstance.Text</Name>
-      <Value xsi:type="xsd:string">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Value>
+      <Value xsi:type="xsd:string">The clouds hung low over the path as the old knight walked alone — sword at his side, shield on his back, the faded red cross barely visible. Eldmar wasn’t seeking glory, but fulfilling one final duty.
+
+Years ago, Castle Morden stood as a hidden stronghold within a vast cave. There, Eldmar and his comrade Armund had defended the kingdom against the northern tribes. But during the final battle, the entrance collapsed. When Eldmar returned with reinforcements, all that remained was silence and stone.
+
+No trace of Armund was ever found. Two decades passed, yet Eldmar’s hope endured — he refused to believe his friend had died.</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
@@ -397,7 +401,7 @@
     <Variable>
       <Type>float</Type>
       <Name>TextInstance.Width</Name>
-      <Value xsi:type="xsd:float">374</Value>
+      <Value xsi:type="xsd:float">550</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
@@ -440,6 +444,12 @@
       <Type>PositionUnitType</Type>
       <Name>TextInstance.YUnits</Name>
       <Value xsi:type="xsd:int">1</Value>
+      <SetsValue>true</SetsValue>
+    </Variable>
+    <Variable>
+      <Type>string</Type>
+      <Name>TitleScreenButtonCopyInstance.ButtonDisplayText</Name>
+      <Value xsi:type="xsd:string">Start</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>

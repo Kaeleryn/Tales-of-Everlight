@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ScreenSave xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ScreenSave xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>DialogScreenSecond</Name>
   <State>
     <Name>Default</Name>
@@ -101,7 +101,7 @@
     <Variable>
       <Type>float</Type>
       <Name>ContainerInstance.Width</Name>
-      <Value xsi:type="xsd:float">1230</Value>
+      <Value xsi:type="xsd:float">1178</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
@@ -161,7 +161,7 @@
     <Variable>
       <Type>float</Type>
       <Name>ContainerInstance1.Width</Name>
-      <Value xsi:type="xsd:float">1230</Value>
+      <Value xsi:type="xsd:float">1178</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
@@ -337,7 +337,7 @@
     <Variable>
       <Type>float</Type>
       <Name>TextInstance.Height</Name>
-      <Value xsi:type="xsd:float">486</Value>
+      <Value xsi:type="xsd:float">453</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
@@ -373,7 +373,13 @@
     <Variable>
       <Type>string</Type>
       <Name>TextInstance.Text</Name>
-      <Value xsi:type="xsd:string">Eldmar moved deeper into the cave. The silence around him was so thick it seemed like it could suffocate him. He didn’t stop, because he knew — this was not just a tomb, but something more. After just a few steps, they began to appear: skeletons that had long become part of this earth. Their eyes were empty, and their armor was dirty and rusted. But unlike other dead, these were not just remnants of war. They moved. Slowly, almost silently. Their bones creaked, and their bare skulls were covered in mold and moss. It seemed as if they had come alive again in their ancient armor, leaving behind a trace of cold, misty air. But the scariest thing was that among these abandoned bodies, there was something more. Something that had no place among the dead. Figures in the darkness. People who had become monsters. They no longer had the features that once belonged to humans. Their faces were twisted, their eyes glowing red, and the hands that reached out to Eldmar looked as if they were woven from shadows themselves. And in Eldmar's heart, an inexplicable anxiety flared again. This was not just oblivion. This was a cursed reality. Warriors who once defended this land had now become the horrors that had come to life in the dark. And he didn’t know if he would return alive, or if he would become part of this nightmare. But he kept moving forward, feeling the darkness fill his soul.</Value>
+      <Value xsi:type="xsd:string">Eldmar moved deeper into the cave, the silence pressing in like a weight. This wasn’t just a tomb — it was something far worse. Soon, he saw them: skeletons, long merged with the earth, their rusted armor still clinging to them.
+
+But these dead did not rest. They moved — slow, creaking, trailing cold mist. And worse still were the figures beyond them: once human, now twisted, red-eyed monsters, their shadowy limbs reaching for him.
+
+A deep unease stirred in Eldmar’s heart. This place wasn’t death — it was a curse. Once-defenders of the land had become its horrors. He didn’t know if he’d make it out… or become one of them.
+
+Still, he walked on, the darkness seeping into his soul.</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
@@ -391,13 +397,13 @@
     <Variable>
       <Type>VerticalAlignment</Type>
       <Name>TextInstance.VerticalAlignment</Name>
-      <Value xsi:type="xsd:int">1</Value>
+      <Value xsi:type="xsd:int">0</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
       <Type>float</Type>
       <Name>TextInstance.Width</Name>
-      <Value xsi:type="xsd:float">938</Value>
+      <Value xsi:type="xsd:float">646</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
@@ -409,7 +415,7 @@
     <Variable>
       <Type>float</Type>
       <Name>TextInstance.X</Name>
-      <Value xsi:type="xsd:float">14</Value>
+      <Value xsi:type="xsd:float">7</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
@@ -427,19 +433,19 @@
     <Variable>
       <Type>float</Type>
       <Name>TextInstance.Y</Name>
-      <Value xsi:type="xsd:float">6</Value>
+      <Value xsi:type="xsd:float">80</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
       <Type>VerticalAlignment</Type>
       <Name>TextInstance.YOrigin</Name>
-      <Value xsi:type="xsd:int">1</Value>
+      <Value xsi:type="xsd:int">0</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
       <Type>PositionUnitType</Type>
       <Name>TextInstance.YUnits</Name>
-      <Value xsi:type="xsd:int">7</Value>
+      <Value xsi:type="xsd:int">1</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>

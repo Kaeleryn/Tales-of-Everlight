@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>I:/IT-ХУЮНІВЕРС/ToE/Tales of Everlight/Content/menuBackground.png</SourceFile>
-  <SourceTime>2025-01-28T15:03:49.1861503+02:00</SourceTime>
-  <DestFile>I:/IT-ХУЮНІВЕРС/ToE/Tales of Everlight/Content/bin/Windows/menuBackground.xnb</DestFile>
-  <DestTime>2025-04-16T20:14:03.8120675+03:00</DestTime>
+  <SourceFile>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/menuBackground.png</SourceFile>
+  <SourceTime>2025-06-04T00:51:42.0329601+03:00</SourceTime>
+  <DestFile>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/bin/Windows/menuBackground.xnb</DestFile>
+  <DestTime>2025-06-04T18:28:48.3052254+03:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T14:44:56+03:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Tales of Everlight")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4d4d0e9e0a9854cad087e503a4370097b3fdebf1")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
 [assembly: System.Reflection.AssemblyProductAttribute("Tales of Everlight")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Tales of Everlight")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ScreenSave xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<ScreenSave xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Name>DialogScreenTheEnd</Name>
   <State>
     <Name>Default</Name>
@@ -101,7 +101,7 @@
     <Variable>
       <Type>float</Type>
       <Name>ContainerInstance.Width</Name>
-      <Value xsi:type="xsd:float">1230</Value>
+      <Value xsi:type="xsd:float">1202</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
@@ -161,7 +161,7 @@
     <Variable>
       <Type>float</Type>
       <Name>ContainerInstance1.Width</Name>
-      <Value xsi:type="xsd:float">1230</Value>
+      <Value xsi:type="xsd:float">1202</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
@@ -373,7 +373,15 @@
     <Variable>
       <Type>string</Type>
       <Name>TextInstance.Text</Name>
-      <Value xsi:type="xsd:string">Eldmar continued walking through the dark corridors of the cave, each step echoing in the heavy silence. Soon, a figure appeared before him — in black armor, with a helmet that concealed its face. "You left me..." — the words barely escaped its lips. No one else’s words could have been, but Armund’s. Eldmar immediately realized that this was his friend, though in a different form. Eldmar could no longer bear the pain that lived in his heart. He felt how difficult it was to watch this semblance of his friend, still walking this earth, though in truth, it had long since ceased to exist. Without a word, he raised his sword. The blade tore through the shadow that had once been his friend. Armund fell, and with him fell all the pain that had weighed on Eldmar’s heart. Standing over him, Eldmar felt both sorrow and relief at once. Armund’s soul could now find peace, and though his heart was heavy, he felt that he had done what he was meant to do. He had finished the story that had no ending. As he exited the cave, he looked back. Though his heart was full of sorrow, he finally felt at peace. Armund had found peace, and Eldmar had completed his journey. Now his path was clear.</Value>
+      <Value xsi:type="xsd:string">Eldmar walked through the dark corridors, his steps echoing in silence — until a figure in black armor appeared.
+
+"You left me..." the voice said. It was Armund. Changed, but unmistakable.
+
+Pain surged through Eldmar. This was no longer his friend, only a shadow. Without a word, he raised his sword. One strike, and Armund fell — along with the weight in Eldmar’s heart.
+
+Grief and relief washed over him. Armund’s soul was free, and the story finally had its end.
+
+As Eldmar left the cave, he looked back one last time. Sorrow lingered, but so did peace. His journey was over — and his path was clear.</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
@@ -397,7 +405,7 @@
     <Variable>
       <Type>float</Type>
       <Name>TextInstance.Width</Name>
-      <Value xsi:type="xsd:float">850</Value>
+      <Value xsi:type="xsd:float">690</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
@@ -445,7 +453,7 @@
     <Variable>
       <Type>string</Type>
       <Name>TitleScreenButtonCopyInstance.ButtonDisplayText</Name>
-      <Value xsi:type="xsd:string">The end</Value>
+      <Value xsi:type="xsd:string">To MainMenu</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>

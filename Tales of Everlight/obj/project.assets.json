@@ -2,6 +2,99 @@
   "version": 3,
   "targets": {
     "net6.0-windows7.0": {
+      "FlatRedBall.GumCommon/2025.5.1.1": {
+        "type": "package",
+        "dependencies": {
+          "FlatRedBall.GumDataTypes": "2025.5.1.1",
+          "FlatRedBall.ToolsUtilities.NetStandard": "2025.5.1.1"
+        },
+        "compile": {
+          "lib/net6.0/GumCommon.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/GumCommon.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "FlatRedBall.GumDataTypes/2025.5.1.1": {
+        "type": "package",
+        "dependencies": {
+          "FlatRedBall.InterpolationCore": "2025.4.22.1",
+          "FlatRedBall.ToolsUtilities.NetStandard": "2025.5.1.1"
+        },
+        "compile": {
+          "lib/net6.0/GumDataTypesNet6.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/GumDataTypesNet6.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "FlatRedBall.InterpolationCore/2025.4.22.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.CSharp": "4.7.0",
+          "System.Data.DataSetExtensions": "4.5.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/FlatRedBall.InterpolationCore.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/FlatRedBall.InterpolationCore.dll": {
+            "related": ".xml"
+          }
+        },
+        "contentFiles": {
+          "contentFiles/any/any/_._": {
+            "buildAction": "None",
+            "codeLanguage": "any",
+            "copyToOutput": false
+          }
+        }
+      },
+      "FlatRedBall.ToolsUtilities.NetStandard/2025.5.1.1": {
+        "type": "package",
+        "dependencies": {
+          "System.Numerics.Vectors": "4.5.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/ToolsUtilitiesStandard.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/ToolsUtilitiesStandard.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Gum.MonoGame/2025.5.1.1": {
+        "type": "package",
+        "dependencies": {
+          "FlatRedBall.GumCommon": "2025.5.1.1",
+          "FlatRedBall.GumDataTypes": "2025.5.1.1",
+          "FlatRedBall.ToolsUtilities.NetStandard": "2025.5.1.1",
+          "TextCopy": "6.2.1"
+        },
+        "compile": {
+          "lib/net6.0/MonoGameGum.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/MonoGameGum.dll": {
+            "related": ".xml"
+          }
+        }
+      },
       "Libuv/1.9.1": {
         "type": "package",
         "dependencies": {
@@ -131,33 +224,29 @@
           }
         }
       },
-      "Microsoft.CSharp/4.0.1": {
+      "Microsoft.CSharp/4.7.0": {
         "type": "package",
-        "dependencies": {
-          "System.Collections": "4.0.11",
-          "System.Diagnostics.Debug": "4.0.11",
-          "System.Dynamic.Runtime": "4.0.11",
-          "System.Globalization": "4.0.11",
-          "System.Linq": "4.1.0",
-          "System.Linq.Expressions": "4.1.0",
-          "System.ObjectModel": "4.0.12",
-          "System.Reflection": "4.1.0",
-          "System.Reflection.Extensions": "4.0.1",
-          "System.Reflection.Primitives": "4.0.1",
-          "System.Reflection.TypeExtensions": "4.1.0",
-          "System.Resources.ResourceManager": "4.0.1",
-          "System.Runtime": "4.1.0",
-          "System.Runtime.Extensions": "4.1.0",
-          "System.Runtime.InteropServices": "4.1.0",
-          "System.Threading": "4.0.11"
-        },
         "compile": {
-          "ref/netstandard1.0/Microsoft.CSharp.dll": {
+          "ref/netcoreapp2.0/_._": {}
+        },
+        "runtime": {
+          "lib/netcoreapp2.0/_._": {}
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions/7.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/netstandard1.3/Microsoft.CSharp.dll": {}
+          "lib/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
         }
       },
       "Microsoft.NETCore.App/1.0.5": {
@@ -773,6 +862,15 @@
           "ref/netstandard1.3/System.Console.dll": {
             "related": ".xml"
           }
+        }
+      },
+      "System.Data.DataSetExtensions/4.5.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard2.0/System.Data.DataSetExtensions.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Data.DataSetExtensions.dll": {}
         }
       },
       "System.Diagnostics.Debug/4.0.11": {
@@ -1504,23 +1602,13 @@
           "lib/netstandard1.3/System.Net.WebHeaderCollection.dll": {}
         }
       },
-      "System.Numerics.Vectors/4.1.1": {
+      "System.Numerics.Vectors/4.5.0": {
         "type": "package",
-        "dependencies": {
-          "System.Globalization": "4.0.11",
-          "System.Resources.ResourceManager": "4.0.1",
-          "System.Runtime": "4.1.0",
-          "System.Runtime.Extensions": "4.1.0"
-        },
         "compile": {
-          "ref/netstandard1.0/System.Numerics.Vectors.dll": {
-            "related": ".xml"
-          }
+          "ref/netcoreapp2.0/_._": {}
         },
         "runtime": {
-          "lib/netstandard1.0/System.Numerics.Vectors.dll": {
-            "related": ".xml"
-          }
+          "lib/netcoreapp2.0/_._": {}
         }
       },
       "System.ObjectModel/4.0.12": {
@@ -2485,10 +2573,97 @@
         "runtime": {
           "lib/netstandard1.3/System.Xml.XPath.XDocument.dll": {}
         }
+      },
+      "TextCopy/6.2.1": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0"
+        },
+        "compile": {
+          "lib/net6.0/TextCopy.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/TextCopy.dll": {
+            "related": ".xml"
+          }
+        }
       }
     }
   },
   "libraries": {
+    "FlatRedBall.GumCommon/2025.5.1.1": {
+      "sha512": "FL+hxn3VCgpHj9f3EdQQ0qTya2ubz9mR5xLEnTmA8Z0tR9INUHdO1Y0z3p1fIbaLUvKKFRs87yCBF30hfUDSdg==",
+      "type": "package",
+      "path": "flatredball.gumcommon/2025.5.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "flatredball.gumcommon.2025.5.1.1.nupkg.sha512",
+        "flatredball.gumcommon.nuspec",
+        "lib/net6.0/GumCommon.dll",
+        "lib/net6.0/GumCommon.xml",
+        "lib/netstandard2.0/GumCommon.dll",
+        "lib/netstandard2.0/GumCommon.xml"
+      ]
+    },
+    "FlatRedBall.GumDataTypes/2025.5.1.1": {
+      "sha512": "6ZuplJTjShNvaVwcbgM0vPvMtENtPIKfPtCz4cIe8b7UXo5X+ZGh/XFt40N5CRewWt2CJ131vs6YS8gnj/h/iQ==",
+      "type": "package",
+      "path": "flatredball.gumdatatypes/2025.5.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "flatredball.gumdatatypes.2025.5.1.1.nupkg.sha512",
+        "flatredball.gumdatatypes.nuspec",
+        "lib/net6.0/GumDataTypesNet6.dll",
+        "lib/net6.0/GumDataTypesNet6.xml",
+        "lib/netstandard2.0/GumDataTypesNet6.dll",
+        "lib/netstandard2.0/GumDataTypesNet6.xml"
+      ]
+    },
+    "FlatRedBall.InterpolationCore/2025.4.22.1": {
+      "sha512": "x95teSPBlV88KKbivY+peQ8AjqfXFgmGFnHw4Adds8UaO81zJKZAZZrXeetp5K+5mgd4t2hdtW4ItBFJ7ZwWig==",
+      "type": "package",
+      "path": "flatredball.interpolationcore/2025.4.22.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/InfoAboutProject.txt",
+        "contentFiles/any/netstandard2.0/InfoAboutProject.txt",
+        "flatredball.interpolationcore.2025.4.22.1.nupkg.sha512",
+        "flatredball.interpolationcore.nuspec",
+        "lib/netstandard2.0/FlatRedBall.InterpolationCore.dll",
+        "lib/netstandard2.0/FlatRedBall.InterpolationCore.xml"
+      ]
+    },
+    "FlatRedBall.ToolsUtilities.NetStandard/2025.5.1.1": {
+      "sha512": "7uZ+510dVIk2JbH3u4cLN4ZooGNK2JzPXaPF2A7yMdkxsYEa4YvydpCVMjVIuKGsxs3mH8XPYuxK3WCi73YfRg==",
+      "type": "package",
+      "path": "flatredball.toolsutilities.netstandard/2025.5.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "flatredball.toolsutilities.netstandard.2025.5.1.1.nupkg.sha512",
+        "flatredball.toolsutilities.netstandard.nuspec",
+        "lib/netstandard2.0/ToolsUtilitiesStandard.dll",
+        "lib/netstandard2.0/ToolsUtilitiesStandard.xml"
+      ]
+    },
+    "Gum.MonoGame/2025.5.1.1": {
+      "sha512": "j2MvhgQZXDzem94m7EgL7iRppKWmzV5AZnGctS9aiCRqlsJQeLIotywctHNBvyA26ANA/SXAYrriFD7KUPlkkQ==",
+      "type": "package",
+      "path": "gum.monogame/2025.5.1.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "gum.monogame.2025.5.1.1.nupkg.sha512",
+        "gum.monogame.nuspec",
+        "lib/net6.0/MonoGameGum.dll",
+        "lib/net6.0/MonoGameGum.xml"
+      ]
+    },
     "Libuv/1.9.1": {
       "sha512": "uqX2Frwf9PW8MaY7PRNY6HM5BpW1D8oj1EdqzrmbEFD5nH63Yat3aEjN/tws6Tw6Fk7LwmLBvtUh32tTeTaHiA==",
       "type": "package",
@@ -2582,21 +2757,25 @@
         "microsoft.codeanalysis.visualbasic.nuspec"
       ]
     },
-    "Microsoft.CSharp/4.0.1": {
-      "sha512": "17h8b5mXa87XYKrrVqdgZ38JefSUqLChUQpXgSnpzsM0nDOhE40FTeNWOJ/YmySGV6tG6T8+hjz6vxbknHJr6A==",
+    "Microsoft.CSharp/4.7.0": {
+      "sha512": "pTj+D3uJWyN3My70i2Hqo+OXixq3Os2D1nJ2x92FFo6sk8fYS1m1WLNTs0Dc1uPaViH0YvEEwvzddQ7y4rhXmA==",
       "type": "package",
-      "path": "microsoft.csharp/4.0.1",
+      "path": "microsoft.csharp/4.7.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "ThirdPartyNotices.txt",
-        "dotnet_library_license.txt",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
         "lib/MonoAndroid10/_._",
         "lib/MonoTouch10/_._",
         "lib/net45/_._",
         "lib/netcore50/Microsoft.CSharp.dll",
+        "lib/netcoreapp2.0/_._",
         "lib/netstandard1.3/Microsoft.CSharp.dll",
+        "lib/netstandard2.0/Microsoft.CSharp.dll",
+        "lib/netstandard2.0/Microsoft.CSharp.xml",
         "lib/portable-net45+win8+wp8+wpa81/_._",
+        "lib/uap10.0.16299/_._",
         "lib/win8/_._",
         "lib/wp80/_._",
         "lib/wpa81/_._",
@@ -2604,7 +2783,7 @@
         "lib/xamarinmac20/_._",
         "lib/xamarintvos10/_._",
         "lib/xamarinwatchos10/_._",
-        "microsoft.csharp.4.0.1.nupkg.sha512",
+        "microsoft.csharp.4.7.0.nupkg.sha512",
         "microsoft.csharp.nuspec",
         "ref/MonoAndroid10/_._",
         "ref/MonoTouch10/_._",
@@ -2620,6 +2799,7 @@
         "ref/netcore50/ru/Microsoft.CSharp.xml",
         "ref/netcore50/zh-hans/Microsoft.CSharp.xml",
         "ref/netcore50/zh-hant/Microsoft.CSharp.xml",
+        "ref/netcoreapp2.0/_._",
         "ref/netstandard1.0/Microsoft.CSharp.dll",
         "ref/netstandard1.0/Microsoft.CSharp.xml",
         "ref/netstandard1.0/de/Microsoft.CSharp.xml",
@@ -2631,14 +2811,48 @@
         "ref/netstandard1.0/ru/Microsoft.CSharp.xml",
         "ref/netstandard1.0/zh-hans/Microsoft.CSharp.xml",
         "ref/netstandard1.0/zh-hant/Microsoft.CSharp.xml",
+        "ref/netstandard2.0/Microsoft.CSharp.dll",
+        "ref/netstandard2.0/Microsoft.CSharp.xml",
         "ref/portable-net45+win8+wp8+wpa81/_._",
+        "ref/uap10.0.16299/_._",
         "ref/win8/_._",
         "ref/wp80/_._",
         "ref/wpa81/_._",
         "ref/xamarinios10/_._",
         "ref/xamarinmac20/_._",
         "ref/xamarintvos10/_._",
-        "ref/xamarinwatchos10/_._"
+        "ref/xamarinwatchos10/_._",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
+    "Microsoft.Extensions.DependencyInjection.Abstractions/7.0.0": {
+      "sha512": "h3j/QfmFN4S0w4C2A6X7arXij/M/OVw3uQHSOFxnND4DyAzO1F9eMX7Eti7lU/OkSthEE0WzRsfT/Dmx86jzCw==",
+      "type": "package",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/7.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.DependencyInjection.Abstractions.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.Abstractions.targets",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/net7.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net7.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "microsoft.extensions.dependencyinjection.abstractions.7.0.0.nupkg.sha512",
+        "microsoft.extensions.dependencyinjection.abstractions.nuspec",
+        "useSharedDesignerContext.txt"
       ]
     },
     "Microsoft.NETCore.App/1.0.5": {
@@ -3584,6 +3798,25 @@
         "ref/xamarinwatchos10/_._",
         "system.console.4.0.0.nupkg.sha512",
         "system.console.nuspec"
+      ]
+    },
+    "System.Data.DataSetExtensions/4.5.0": {
+      "sha512": "221clPs1445HkTBZPL+K9sDBdJRB8UN8rgjO3ztB0CQ26z//fmJXtlsr6whGatscsKGBrhJl5bwJuKSA8mwFOw==",
+      "type": "package",
+      "path": "system.data.datasetextensions/4.5.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net45/_._",
+        "lib/netstandard2.0/System.Data.DataSetExtensions.dll",
+        "ref/net45/_._",
+        "ref/netstandard2.0/System.Data.DataSetExtensions.dll",
+        "system.data.datasetextensions.4.5.0.nupkg.sha512",
+        "system.data.datasetextensions.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
       ]
     },
     "System.Diagnostics.Debug/4.0.11": {
@@ -5248,39 +5481,51 @@
         "system.net.webheadercollection.nuspec"
       ]
     },
-    "System.Numerics.Vectors/4.1.1": {
-      "sha512": "Ex1NSKycC2wi5XBMWUGWPc3lumh6OQWFFmmpZFZz0oLht5lQ+wWPHVZumOrMJuckfUiVMd4p67BrkBos8lcF+Q==",
+    "System.Numerics.Vectors/4.5.0": {
+      "sha512": "QQTlPTl06J/iiDbJCiepZ4H//BVraReU4O4EoRw1U02H5TLUIT7xn3GnDp9AXPSlJUDyFs4uWjWafNX6WrAojQ==",
       "type": "package",
-      "path": "system.numerics.vectors/4.1.1",
+      "path": "system.numerics.vectors/4.5.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
-        "ThirdPartyNotices.txt",
-        "dotnet_library_license.txt",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
         "lib/MonoAndroid10/_._",
         "lib/MonoTouch10/_._",
         "lib/net46/System.Numerics.Vectors.dll",
         "lib/net46/System.Numerics.Vectors.xml",
+        "lib/netcoreapp2.0/_._",
         "lib/netstandard1.0/System.Numerics.Vectors.dll",
         "lib/netstandard1.0/System.Numerics.Vectors.xml",
+        "lib/netstandard2.0/System.Numerics.Vectors.dll",
+        "lib/netstandard2.0/System.Numerics.Vectors.xml",
         "lib/portable-net45+win8+wp8+wpa81/System.Numerics.Vectors.dll",
         "lib/portable-net45+win8+wp8+wpa81/System.Numerics.Vectors.xml",
+        "lib/uap10.0.16299/_._",
         "lib/xamarinios10/_._",
         "lib/xamarinmac20/_._",
         "lib/xamarintvos10/_._",
         "lib/xamarinwatchos10/_._",
         "ref/MonoAndroid10/_._",
         "ref/MonoTouch10/_._",
+        "ref/net45/System.Numerics.Vectors.dll",
+        "ref/net45/System.Numerics.Vectors.xml",
         "ref/net46/System.Numerics.Vectors.dll",
         "ref/net46/System.Numerics.Vectors.xml",
+        "ref/netcoreapp2.0/_._",
         "ref/netstandard1.0/System.Numerics.Vectors.dll",
         "ref/netstandard1.0/System.Numerics.Vectors.xml",
+        "ref/netstandard2.0/System.Numerics.Vectors.dll",
+        "ref/netstandard2.0/System.Numerics.Vectors.xml",
+        "ref/uap10.0.16299/_._",
         "ref/xamarinios10/_._",
         "ref/xamarinmac20/_._",
         "ref/xamarintvos10/_._",
         "ref/xamarinwatchos10/_._",
-        "system.numerics.vectors.4.1.1.nupkg.sha512",
-        "system.numerics.vectors.nuspec"
+        "system.numerics.vectors.4.5.0.nupkg.sha512",
+        "system.numerics.vectors.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
       ]
     },
     "System.ObjectModel/4.0.12": {
@@ -7522,28 +7767,53 @@
         "system.xml.xpath.xdocument.4.0.1.nupkg.sha512",
         "system.xml.xpath.xdocument.nuspec"
       ]
+    },
+    "TextCopy/6.2.1": {
+      "sha512": "ryejViUBmHQ2XMie2AiRBn7KVKu2Gh/hqrctGSAUf1BufwfPjr+MWuACNBaiG+40TMbWRDJZgV73Tpl9hggeRw==",
+      "type": "package",
+      "path": "textcopy/6.2.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "icon.png",
+        "lib/monoandroid90/TextCopy.dll",
+        "lib/monoandroid90/TextCopy.xml",
+        "lib/net462/TextCopy.dll",
+        "lib/net462/TextCopy.xml",
+        "lib/net6.0/TextCopy.dll",
+        "lib/net6.0/TextCopy.xml",
+        "lib/netstandard2.0/TextCopy.dll",
+        "lib/netstandard2.0/TextCopy.xml",
+        "lib/netstandard2.1/TextCopy.dll",
+        "lib/netstandard2.1/TextCopy.xml",
+        "lib/xamarinios10/TextCopy.dll",
+        "lib/xamarinios10/TextCopy.xml",
+        "textcopy.6.2.1.nupkg.sha512",
+        "textcopy.nuspec"
+      ]
     }
   },
   "projectFileDependencyGroups": {
     "net6.0-windows7.0": [
+      "Gum.MonoGame >= 2025.5.1.1",
       "MonoGame.Content.Builder.Task >= 3.8.1.303",
       "MonoGame.Framework.WindowsDX >= 3.8.1.303"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Kaeleryn\\.nuget\\packages\\": {}
+    "C:\\Users\\xdjmv\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\itpohuiiverse\\ToE\\Tasles of everpohui\\Tales of Everlight\\Tales of Everlight.csproj",
+      "projectUniqueName": "D:\\Programming\\Rider\\Tales-of-Everlight\\Tales of Everlight\\Tales of Everlight.csproj",
       "projectName": "Tales of Everlight",
-      "projectPath": "E:\\itpohuiiverse\\ToE\\Tasles of everpohui\\Tales of Everlight\\Tales of Everlight.csproj",
-      "packagesPath": "C:\\Users\\Kaeleryn\\.nuget\\packages\\",
-      "outputPath": "E:\\itpohuiiverse\\ToE\\Tasles of everpohui\\Tales of Everlight\\obj\\",
+      "projectPath": "D:\\Programming\\Rider\\Tales-of-Everlight\\Tales of Everlight\\Tales of Everlight.csproj",
+      "packagesPath": "C:\\Users\\xdjmv\\.nuget\\packages\\",
+      "outputPath": "D:\\Programming\\Rider\\Tales-of-Everlight\\Tales of Everlight\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Kaeleryn\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\xdjmv\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net6.0-windows"
@@ -7561,18 +7831,16 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
-      },
-      "SdkAnalysisLevel": "9.0.200"
+      }
     },
     "frameworks": {
       "net6.0-windows7.0": {
         "targetAlias": "net6.0-windows",
         "dependencies": {
+          "Gum.MonoGame": {
+            "target": "Package",
+            "version": "[2025.5.1.1, )"
+          },
           "MonoGame.Content.Builder.Task": {
             "target": "Package",
             "version": "[3.8.1.303, )"
@@ -7593,24 +7861,6 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[6.0.36, 6.0.36]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Host.win-x64",
-            "version": "[6.0.36, 6.0.36]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[6.0.36, 6.0.36]"
-          },
-          {
-            "name": "Microsoft.WindowsDesktop.App.Ref",
-            "version": "[6.0.36, 6.0.36]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
@@ -7619,7 +7869,7 @@
             "privateAssets": "none"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.428\\RuntimeIdentifierGraph.json"
       }
     }
   }
