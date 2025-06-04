@@ -377,11 +377,11 @@
 
 "You left me..." the voice said. It was Armund. Changed, but unmistakable.
 
-Pain surged through Eldmar. This was no longer his friend, only a shadow. Without a word, he raised his sword. One strike, and Armund fell — along with the weight in Eldmar’s heart.
+Pain surged through Eldmar. This was no longer his friend, only a shadow. Without a word, he raised his sword. One strike, and Armund fell — along with the weight in Eldmar`s heart.
 
 Grief and relief washed over him. Armund’s soul was free, and the story finally had its end.
 
-As Eldmar left the cave, he looked back one last time. Sorrow lingered, but so did peace. His journey was over — and his path was clear.</Value>
+As Eldmar left the cave, he looked back one last time. Sorrow lingered, but so did peace. His journey was over - and his path was clear.</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
@@ -453,7 +453,7 @@ As Eldmar left the cave, he looked back one last time. Sorrow lingered, but so d
     <Variable>
       <Type>string</Type>
       <Name>TitleScreenButtonCopyInstance.ButtonDisplayText</Name>
-      <Value xsi:type="xsd:string">To MainMenu</Value>
+      <Value xsi:type="xsd:string">To Main Menu</Value>
       <SetsValue>true</SetsValue>
     </Variable>
     <Variable>
