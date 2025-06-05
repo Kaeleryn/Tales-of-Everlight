@@ -1,0 +1,20 @@
+{
+  "UserEvents": {
+    "44e38edcf7a1f3dce4c997982c11f3e9141307ccfc5821fb1b3897ec94e41bc3": [
+      {
+        "NewName": "DialogScreenSecond",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 0,
+        "TimestampUtc": "2025-06-04T15:41:34.6411614Z"
+      },
+      {
+        "NewName": "DialogScreenTheEnd",
+        "OldName": null,
+        "ElementType": "Screens",
+        "EventType": 0,
+        "TimestampUtc": "2025-06-04T15:41:55.6599035Z"
+      }
+    ]
+  }
+}

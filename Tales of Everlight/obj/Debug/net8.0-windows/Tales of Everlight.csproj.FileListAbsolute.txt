@@ -1,0 +1,83 @@
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\animatedSprite.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\animatedSpriteAttacking.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\animatedSpriteJumping.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\background_layer_1.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\background_layer_2.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\background_layer_3.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\background_sky.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\enemy1.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\Ghoul_attack.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\Ghoul_idle.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\Ghoul_walk.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\GoblinAttack-Sheet.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\GoblinDamage-Sheet.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\GoblinDead-Sheet.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\GoblinIdle-Sheet.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\GoblinWalk-Sheet.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\hud+.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\hudFont.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\menuBackground.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\menuButtonFont.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\Mushroom_attack.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\Mushroom_idle.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\Mushroom_walk.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\player_static.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\Skeleton_attack.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\Skeleton_idle.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\Skeleton_walk.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\splashScreen.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\tileset_collisions.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\tileset_ground.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\Worm_attack.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\Worm_idle.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\Worm_walk.xnb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Tales of Everlight.exe
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Tales of Everlight.deps.json
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Tales of Everlight.runtimeconfig.json
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Tales of Everlight.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Tales of Everlight.pdb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\AssetManagementBase.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Cyotek.Drawing.BitmapFont.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\DdsKtxXna.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\FontStashSharp.Base.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\FontStashSharp.MonoGame.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\FontStashSharp.Rasterizers.StbTrueTypeSharp.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\info.lundin.math.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Microsoft.CodeAnalysis.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Microsoft.CodeAnalysis.CSharp.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Microsoft.CodeAnalysis.VisualBasic.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\MonoGame.Framework.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Myra.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\SharpDX.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\SharpDX.Direct2D1.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\SharpDX.Direct3D11.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\SharpDX.Direct3D9.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\SharpDX.DXGI.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\SharpDX.Mathematics.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\SharpDX.MediaFoundation.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\SharpDX.XAudio2.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\SharpDX.XInput.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\StbImageSharp.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\StbTrueTypeSharp.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\XNAssets.MonoGame.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\runtimes\debian-x64\native\libuv.so
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\runtimes\fedora-x64\native\libuv.so
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\runtimes\opensuse-x64\native\libuv.so
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\runtimes\osx\native\libuv.dylib
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\runtimes\rhel-x64\native\libuv.so
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\runtimes\win7-arm\native\libuv.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\runtimes\win7-x64\native\libuv.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\runtimes\win7-x86\native\libuv.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\obj\Debug\net8.0-windows\Tales of Everlight.csproj.AssemblyReference.cache
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\obj\Debug\net8.0-windows\Tales of Everlight.GeneratedMSBuildEditorConfig.editorconfig
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\obj\Debug\net8.0-windows\Tales of Everlight.AssemblyInfoInputs.cache
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\obj\Debug\net8.0-windows\Tales of Everlight.AssemblyInfo.cs
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\obj\Debug\net8.0-windows\Tales of Everlight.csproj.CoreCompileInputs.cache
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\obj\Debug\net8.0-windows\Tales of Everlight.sourcelink.json
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\obj\Debug\net8.0-windows\Tales of.5C2A26EB.Up2Date
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\obj\Debug\net8.0-windows\Tales of Everlight.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\obj\Debug\net8.0-windows\refint\Tales of Everlight.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\obj\Debug\net8.0-windows\Tales of Everlight.pdb
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\obj\Debug\net8.0-windows\Tales of Everlight.genruntimeconfig.cache
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\obj\Debug\net8.0-windows\ref\Tales of Everlight.dll
+E:\itpohuiiverse\ToE\Tasles of everpohui\Tales of Everlight\bin\Debug\net8.0-windows\Content\animatedSpriteDeath.xnb

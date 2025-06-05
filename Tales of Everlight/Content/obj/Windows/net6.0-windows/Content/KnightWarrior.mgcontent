@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/KnightWarrior.spritefont</SourceFile>
+  <SourceTime>2025-05-08T17:38:27.4973885+03:00</SourceTime>
+  <DestFile>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/bin/Windows/Content/KnightWarrior.xnb</DestFile>
+  <DestTime>2025-06-04T19:09:33.3667186+03:00</DestTime>
+  <Importer>FontDescriptionImporter</Importer>
+  <ImporterTime>2022-07-26T14:44:56+03:00</ImporterTime>
+  <Processor>LocalizedFontProcessor</Processor>
+  <ProcessorTime>2022-07-26T14:44:56+03:00</ProcessorTime>
+  <Parameters>
+    <Key>PremultiplyAlpha</Key>
+    <Value>True</Value>
+  </Parameters>
+  <Parameters>
+    <Key>TextureFormat</Key>
+    <Value>Compressed</Value>
+  </Parameters>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>
