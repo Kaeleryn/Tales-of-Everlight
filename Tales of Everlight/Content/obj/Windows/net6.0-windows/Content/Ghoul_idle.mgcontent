@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Ghoul_idle.png</SourceFile>
-  <SourceTime>2025-06-04T00:51:41.0258833+03:00</SourceTime>
-  <DestFile>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/bin/Windows/Content/Ghoul_idle.xnb</DestFile>
-  <DestTime>2025-06-04T18:26:02.8140803+03:00</DestTime>
+  <SourceFile>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Ghoul_idle.png</SourceFile>
+  <SourceTime>2025-05-08T23:20:24.4271649+03:00</SourceTime>
+  <DestFile>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/bin/Windows/Content/Ghoul_idle.xnb</DestFile>
+  <DestTime>2025-06-05T00:09:02.4955552+03:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T14:44:56+03:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

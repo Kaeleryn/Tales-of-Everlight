@@ -4,56 +4,56 @@
   <Platform>Windows</Platform>
   <Config />
   <SourceFiles>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/animatedSprite.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/animatedSpriteAttacking.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/animatedSpriteDeath.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/animatedSpriteJumping.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/background_layer_1.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/background_layer_2.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/background_layer_3.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/background_sky.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/buff_damage.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/buff_health.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/buff_speed.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Ghoul_attack.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Ghoul_idle.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Ghoul_walk.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/GoblinAttack-Sheet.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/GoblinDamage-Sheet.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/GoblinDead-Sheet.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/GoblinIdle-Sheet.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/GoblinWalk-Sheet.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/HealthBar.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/hud+.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/kindpng_5697892.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Knight-Attack-Sheet.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Knight-Idle-Sheet.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Knight-Walk-Sheet.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Level1_background_high.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Level1_background_low.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/level2_background.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/level2_decor.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/level2_foreground.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/menuBackground.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Mushroom_attack.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Mushroom_idle.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Mushroom_walk.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/player_static.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Portal.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/progressbar.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/PurpleWarriorAttack.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/PurpleWarriorIdle.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/PurpleWarriorWalk.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Skeleton_attack.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Skeleton_idle.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Skeleton_walk.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/splashScreen.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/tileset_collisions.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/tileset_ground.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/tileset_spikes.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Worm_attack.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Worm_idle.png</File>
-    <File>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/Worm_walk.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/animatedSprite.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/animatedSpriteAttacking.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/animatedSpriteDeath.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/animatedSpriteJumping.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/background_layer_1.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/background_layer_2.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/background_layer_3.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/background_sky.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/buff_damage.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/buff_health.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/buff_speed.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Ghoul_attack.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Ghoul_idle.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Ghoul_walk.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/GoblinAttack-Sheet.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/GoblinDamage-Sheet.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/GoblinDead-Sheet.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/GoblinIdle-Sheet.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/GoblinWalk-Sheet.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/HealthBar.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/hud+.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/kindpng_5697892.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Knight-Attack-Sheet.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Knight-Idle-Sheet.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Knight-Walk-Sheet.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Level1_background_high.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Level1_background_low.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/level2_background.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/level2_decor.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/level2_foreground.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/menuBackground.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Mushroom_attack.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Mushroom_idle.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Mushroom_walk.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/player_static.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Portal.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/progressbar.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/PurpleWarriorAttack.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/PurpleWarriorIdle.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/PurpleWarriorWalk.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Skeleton_attack.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Skeleton_idle.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Skeleton_walk.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/splashScreen.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/tileset_collisions.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/tileset_ground.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/tileset_spikes.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Worm_attack.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Worm_idle.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Worm_walk.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SourceFile>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/tileset_collisions.png</SourceFile>
-  <SourceTime>2025-06-04T00:51:42.0779919+03:00</SourceTime>
-  <DestFile>D:/Programming/Rider/Tales-of-Everlight/Tales of Everlight/Content/bin/Windows/Content/tileset_collisions.xnb</DestFile>
-  <DestTime>2025-06-04T18:26:05.7974968+03:00</DestTime>
+  <SourceFile>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/tileset_collisions.png</SourceFile>
+  <SourceTime>2024-11-26T04:29:40.0572862+02:00</SourceTime>
+  <DestFile>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/bin/Windows/Content/tileset_collisions.xnb</DestFile>
+  <DestTime>2025-06-05T00:09:03.0492393+03:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2022-07-26T14:44:56+03:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

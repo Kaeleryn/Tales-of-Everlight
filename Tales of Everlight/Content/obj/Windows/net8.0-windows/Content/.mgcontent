@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SourceFileCollection xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Profile>Reach</Profile>
+  <Platform>Windows</Platform>
+  <Config />
+  <SourceFiles>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/animatedSprite.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/animatedSpriteAttacking.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/animatedSpriteDeath.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/animatedSpriteJumping.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/background_layer_1.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/background_layer_2.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/background_layer_3.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/background_sky.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Ghoul_attack.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Ghoul_idle.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Ghoul_walk.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/GoblinAttack-Sheet.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/GoblinDamage-Sheet.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/GoblinDead-Sheet.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/GoblinIdle-Sheet.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/GoblinWalk-Sheet.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/hud+.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/hudFont.spritefont</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/menuBackground.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/menuButtonFont.spritefont</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Mushroom_attack.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Mushroom_idle.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Mushroom_walk.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/player_static.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Skeleton_attack.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Skeleton_idle.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Skeleton_walk.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/splashScreen.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/tileset_collisions.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/tileset_ground.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Worm_attack.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Worm_idle.png</File>
+    <File>E:/itpohuiiverse/ToE/Tasles of everpohui/Tales of Everlight/Content/Worm_walk.png</File>
+  </SourceFiles>
+  <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+  </DestFiles>
+</SourceFileCollection>
